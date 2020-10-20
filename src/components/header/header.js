@@ -7,6 +7,7 @@ import {AppBar, Toolbar, Typography, Button, IconButton, Switch} from '@material
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
+
 const useStyles = makeStyles((theme) => ({
     header: {
       position: "relative",
@@ -32,11 +33,16 @@ function Header(props) {
           <MenuIcon />
           </IconButton>
           
-          <Typography variant="h6" className={classes.title}>
-            E-learning Plattform
-          </Typography>
-          <Switch label="Dark Mode" onChange={props.toggleDarkMode}/>
-          <Link to="/login" className="buttonLink">
+          
+            <Typography variant="h6" className={classes.title}>
+              <Link to="/" className="whiteLink">
+                Mexle E-Learning
+              </Link>
+            </Typography>
+          
+
+          <Switch label="Dark Mode" onChange={props.toggleDarkMode} checked={props.darkMode}/>
+          <Link to="/login" className="whiteLink">
             <Button color="inherit">
               <AccountCircleIcon/>
             </Button>

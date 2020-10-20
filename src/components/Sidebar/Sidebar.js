@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: drawerWidth,
     flexShrink: 0,
-    zIndex: 1,
+    zIndex: 1401,
   },
   pad: {
     height: 64,

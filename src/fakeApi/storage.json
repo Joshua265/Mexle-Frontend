@@ -1,0 +1,33 @@
+{
+  "courses":[
+    {
+      "id": 1,
+      "title": "Digitaltechnik",
+      "metadata": {
+          "chapterCount": 1,
+          "chapters": [
+            {
+              "title": "Binär zu Hex umrechnen",
+              "html": "<p>alle 4 bits in einen hex wert umrechnen!</p>"
+            }
+          ],
+          "picture": "https://d3f6gjnauy613m.cloudfront.net/system/production/topics/000/021/a26ad768aecad2c1da679a79f835d1e3275f94c5/digitaltechnik.png?1543602437"
+        }
+    },
+    {
+      "id": 2,
+      "title": "Elektro 1",
+      "metadata": {
+          "chapterCount": 5,
+          "chapters": [
+            {
+              "title": "Strom und Spannung",
+              "html": "<p>Elektrischer Strom entsteht dann, wenn es Spannung gibt. Und wenn sich die elektrischen Ladungen ausgleichen können, weil es einen elektrischen Leiter gibt. Elektrischer Strom ist das Fließen von elektrisch geladenen Teilchen.</p>"
+            }
+          ],
+          "picture": "https://www.elektrotechnik-einfach.de/wp-content/uploads/2019/03/Wasserzeichen_Quadrat.png"
+        }         
+    }
+
+  ]
+}

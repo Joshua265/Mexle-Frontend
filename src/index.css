@@ -12,6 +12,7 @@ code {
     monospace;
 }
 
-.buttonLink {
+.whiteLink {
   color: white;
+  text-decoration: none;
 }
