@@ -19,7 +19,7 @@ function MediaCard(props) {
   const classes = useStyles();
 
   return (
-    <Card variant="outlined" className={classes.root}>
+    <Card raised variant="outlined" className={classes.root}>
       <Link to={`/course/${props.title}`} className="whiteLink">
         <CardActionArea>
           <img className={classes.media} src={props.imageLink}></img>

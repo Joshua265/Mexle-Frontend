@@ -8,7 +8,13 @@
           "chapters": [
             {
               "title": "Binär zu Hex umrechnen",
+              "description": "Binäre Zahlen in das Hexadezimale Zahlensystem umrechnen",
               "html": "<p>alle 4 bits in einen hex wert umrechnen!</p>"
+            },
+            {
+              "title": "Hex zu Binär umrechnen",
+              "description": "Hexadezimale Zahlen in das Binäre Zahlensystem umrechnen",
+              "html": "<p>Jede Stelle wird in 4-bit Binär umgerechnet.</p>"
             }
           ],
           "picture": "https://d3f6gjnauy613m.cloudfront.net/system/production/topics/000/021/a26ad768aecad2c1da679a79f835d1e3275f94c5/digitaltechnik.png?1543602437"

@@ -6,7 +6,6 @@ import {
 } from "react-router-dom";
 import Cookies from 'universal-cookie';
 
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
@@ -25,7 +24,7 @@ const cookies = new Cookies();
 
 export default function App() {
   const [open, setOpen ] = useState(false);
-  const [prefersDarkMode, setPreferesDarkMode] = useState(cookies.get('darkMode', { path: '/' })=='true' ? true : false || false);
+  const [prefersDarkMode, setPreferesDarkMode] = useState(cookies.get('darkMode', { path: '/' })==='true' ? true : false || false);
 
   const handleDrawer = () => {
     setOpen(!open);
@@ -41,6 +40,15 @@ export default function App() {
     palette: {
       type: prefersDarkMode ? 'dark' : 'light',
     },
+    overrides: {
+      MuiPaper: {
+        elevation1: {
+          margin: '20px',
+          padding: '20px'
+        }
+    }
+    }
+    
   });
 
 
