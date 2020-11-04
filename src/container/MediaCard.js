@@ -1,8 +1,15 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { Card, CardActionArea , CardActions,CardContent, CardMedia ,Button, Typography   } from '@material-ui/core';
-import {Link} from 'react-router-dom';
-
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import {
+  Card,
+  CardActionArea,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Button,
+  Typography,
+} from "@material-ui/core";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles({
   root: {
@@ -11,7 +18,7 @@ const useStyles = makeStyles({
   },
   media: {
     height: 140,
-    margin: 20
+    margin: 20,
   },
 });
 
@@ -20,7 +27,7 @@ function MediaCard(props) {
 
   return (
     <Card raised variant="outlined" className={classes.root}>
-      <Link to={`/course/${props.title}`} className="whiteLink">
+      <Link to={`/course/${props.link}`} className="whiteLink">
         <CardActionArea>
           <img className={classes.media} src={props.imageLink}></img>
           <CardContent>
