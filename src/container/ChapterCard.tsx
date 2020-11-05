@@ -25,7 +25,7 @@ function ChapterCard(props) {
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography className={classes.heading}>Accordion 1</Typography>
+          <Typography>Accordion 1</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>

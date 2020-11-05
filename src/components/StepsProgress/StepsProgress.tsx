@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function getSteps(chapters) {
-  let steps = [];
+  let steps: string[] = [];
   chapters.forEach((el) => steps.push(el.title));
   return steps;
 }
@@ -68,7 +68,7 @@ function StepsProgress(props) {
           <Step key={index}>
             <StepLabel>{label}</StepLabel>
             <StepContent>
-              <Typography>{getStepContent(index)}</Typography>
+              <Typography>{getStepContent}</Typography>
               <div className={classes.actionsContainer}>
                 <div>
                   <Button

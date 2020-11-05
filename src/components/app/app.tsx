@@ -6,9 +6,7 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
 import PrivateRoute from "PrivateRoute";
-import { AuthContext } from "context/auth";
-import { useUserStore } from "context/UserContext";
-import { useObserver } from "mobx-react";
+
 
 import Header from "components/header";
 import Sidebar from "components/Sidebar";
@@ -23,10 +21,9 @@ import ChapterPage from "components/ChapterPage";
 const cookies = new Cookies();
 
 export default function App() {
-  const userStore = useUserStore();
   const [open, setOpen] = useState(false);
   const [prefersDarkMode, setPreferesDarkMode] = useState(
-    cookies.get("darkMode", { path: "/" }) === "true" ? true : false || false
+    cookies.get("darkMode") === "true" ? true : false || false
   );
 
   const handleDrawer = () => {
@@ -54,10 +51,9 @@ export default function App() {
     },
   });
 
-  return useObserver(() => (
+  return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <AuthContext.Provider value={userStore.loggedIn}>
         <Router>
           <Header
             handleDrawer={handleDrawer}
@@ -83,7 +79,6 @@ export default function App() {
             <PrivateRoute path="/account" exact component={AccountPage} />
           </Switch>
         </Router>
-      </AuthContext.Provider>
     </ThemeProvider>
-  ));
+  );
 }

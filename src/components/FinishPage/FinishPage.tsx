@@ -4,10 +4,8 @@ import {makeStyles} from '@material-ui/core/styles';
 import Image from './finish.png';
 import {Link} from 'react-router-dom';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   root: {
-    position: 'center',
-    maxWidth: '400px',
     margin: 'auto',
     marginTop: '20px',
     padding: '20px',
@@ -22,10 +20,9 @@ const useStyles = makeStyles((theme) => ({
     maxwidth: '360px'
   },
   text: {
-    position: 'center',
     margin: '20px',
   }
-}));
+});
 
 function FinishPage(props) {
   const classes = useStyles();

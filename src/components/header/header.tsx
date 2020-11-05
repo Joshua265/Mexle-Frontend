@@ -14,7 +14,8 @@ import {
 import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
-import { useUserStore } from "context/UserContext";
+import { UseRootStore } from "context/RootStateContext";
+import { useObserver } from "mobx-react";
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -32,9 +33,9 @@ const useStyles = makeStyles((theme) => ({
 
 function Header(props) {
   const classes = useStyles();
-  const userStore = useUserStore();
+  const {userStore} = UseRootStore();
 
-  return (
+  return useObserver(() => (
     <div className={classes.header}>
       <AppBar position="static">
         <Toolbar>
@@ -62,7 +63,6 @@ function Header(props) {
           )}
 
           <Switch
-            label="Dark Mode"
             onChange={props.toggleDarkMode}
             checked={props.darkMode}
           />
@@ -77,7 +77,7 @@ function Header(props) {
         </Toolbar>
       </AppBar>
     </div>
-  );
+  ));
 }
 
 export default Header;

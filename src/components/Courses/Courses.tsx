@@ -4,6 +4,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import courseList from "fakeApi/courses.json";
 import MediaCard from "container/MediaCard";
 
+interface ICourse {
+  courseId: string,
+  title: string,
+  description: string,
+  picture: string,
+}
+
 function Courses() {
   return (
     <Paper>
@@ -12,9 +19,9 @@ function Courses() {
         return (
           <MediaCard
             title={course.title}
-            key={course.id}
+            key={course.courseId}
             imageLink={course.picture}
-            link={course.id}
+            link={course.courseId}
           />
         );
       })}

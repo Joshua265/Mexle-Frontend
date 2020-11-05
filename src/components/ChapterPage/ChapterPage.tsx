@@ -14,6 +14,13 @@ const useStyles = makeStyles({
   },
 });
 
+interface IChapters {
+  chapterId: number,
+  courseId: string,
+  title: string,
+  description: string
+}
+
 function ChapterPage() {
   //equivalent to componentDidmount
   useEffect(() => {
@@ -21,13 +28,13 @@ function ChapterPage() {
   }, []);
   const classes = useStyles();
   const location = useLocation();
-  const [chapters, setChapters] = useState(undefined);
+  const [chapters, setChapters] = useState<IChapters[]>([]);
 
   function getChapters() {
-    let sortedChapters = [];
+    let sortedChapters: IChapters[] = [];
     chapterList.forEach((chapter) => {
       if (chapter.courseId === location.pathname.replace("/course/", "")) {
-        sortedChapters.push(chapters);
+        sortedChapters.push(chapter);
       }
     });
     setChapters(sortedChapters);
@@ -44,7 +51,7 @@ function ChapterPage() {
     );
   }
 
-  return <Backdrop />;
+  return <Backdrop open={true}/>;
 }
 
 export default ChapterPage;
