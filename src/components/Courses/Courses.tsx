@@ -1,31 +1,35 @@
 import React from "react";
-import { Paper } from "@material-ui/core";
+import { Paper, Divider, Typography, Box } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import courseList from "fakeApi/courses.json";
 import MediaCard from "container/MediaCard";
+import AddButton from "container/AddButton";
 
 interface ICourse {
-  courseId: string,
-  title: string,
-  description: string,
-  picture: string,
+  courseId: string;
+  title: string;
+  description: string;
+  picture: string;
 }
 
 function Courses() {
   return (
-    <Paper>
-      <h1>Courses</h1>
+    <React.Fragment>
+      <Typography variant="h2" component="h3">
+        Kurse
+      </Typography>
       {courseList.map((course) => {
         return (
           <MediaCard
             title={course.title}
             key={course.courseId}
             imageLink={course.picture}
-            link={course.courseId}
+            link={`/course/${course.courseId}`}
           />
         );
       })}
-    </Paper>
+      <AddButton add="course" />
+    </React.Fragment>
   );
 }
 

@@ -19,4 +19,4 @@ export const RootStateProvider: React.FC<React.PropsWithChildren<{}>> = ({
 );
 };
 
-export const UseRootStore = () => React.useContext(RootStateContext);
+export const useRootStore = () => React.useContext(RootStateContext);

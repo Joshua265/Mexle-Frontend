@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import Drawer from "@material-ui/core/Drawer";
+
 
 import { makeStyles } from "@material-ui/core/styles";
-import List from "@material-ui/core/List";
 import {
   Stepper,
   StepLabel,
@@ -30,9 +29,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function getSteps(chapters) {
+interface props {
+  steps: Array<Object>;
+  activeStepCallback: Function;
+}
+
+
+//get list of titles from props
+function getSteps(stepList) {
   let steps: string[] = [];
-  chapters.forEach((el) => steps.push(el.title));
+  stepList.forEach((el) => steps.push(el.title));
   return steps;
 }
 
@@ -40,24 +46,24 @@ function StepsProgress(props) {
   const [activeChapter, setActiveChapter] = useState(0);
   const classes = useStyles();
 
-  const steps = getSteps(props.chapters);
+  const steps = getSteps(props.steps);
 
   const getStepContent = () => {
-    return props.chapters[activeChapter].description;
+    return props.steps[activeChapter].description;
   };
 
   const handleNext = () => {
-    props.activeChapterCallback(activeChapter + 1);
+    props.activeStepCallback(activeChapter + 1);
     setActiveChapter((activeChapter) => activeChapter + 1);
   };
 
   const handleFinish = () => {
-    props.activeChapterCallback(-1);
+    props.activeStepCallback(-1);
     setActiveChapter(-1);
   };
 
   const handleBack = () => {
-    props.activeChapterCallback(activeChapter - 1);
+    props.activeStepCallback(activeChapter - 1);
     setActiveChapter((activeChapter) => activeChapter - 1);
   };
 

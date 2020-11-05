@@ -1,16 +1,18 @@
 import React, { useState } from "react";
-import { Redirect } from "react-router-dom";
+import { Redirect, useLocation } from "react-router-dom";
 import { useHistory } from "react-router";
+import qs from "qs";
 
 import { TextField, Button, Paper, Link } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { UseRootStore } from "context/RootStateContext";
+import { useRootStore } from "context/RootStateContext";
 
 const useStyles = makeStyles((th) => ({
   root: {
     margin: "auto",
     width: "30%",
+    minWidth: "400px",
     padding: "20px",
     "& > *": {
       margin: th.spacing(1),
@@ -33,16 +35,16 @@ const useStyles = makeStyles((th) => ({
 
 function LoginPage() {
   const classes = useStyles();
-  const {userStore} = UseRootStore();
-  let history = useHistory();
+  const {userStore} = useRootStore();
+  const history = useHistory();
+  const location = useLocation();
   let [username, setUsername] = useState("");
   let [password, setPassword] = useState("");
 
   const handleLogin = () => {
     userStore.login(username, password);
-    console.log(userStore);
 
-    history.push("/");
+    history.push(qs.parse(location.search, { ignoreQueryPrefix: true }).path || "/");
   };
   if(userStore.loggedIn) {
     return(<Redirect to="/account"/>)

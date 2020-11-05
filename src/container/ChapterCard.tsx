@@ -18,7 +18,6 @@ function ChapterCard(props) {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
       <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -34,7 +33,6 @@ function ChapterCard(props) {
           </Typography>
         </AccordionDetails>
       </Accordion>
-    </div>
   );
 }
 

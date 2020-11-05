@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import { App } from "./components";
 import * as serviceWorker from "./serviceWorker";
-import {RootStateProvider} from './context/RootStateContext';
+import { RootStateProvider } from "./context/RootStateContext";
 
 ReactDOM.render(
   <React.StrictMode>

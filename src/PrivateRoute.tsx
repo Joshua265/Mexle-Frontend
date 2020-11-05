@@ -1,15 +1,15 @@
 import React from "react";
-import { Route, Redirect } from "react-router-dom";
-import { UseRootStore } from "context/RootStateContext";
+import { Route, Redirect, useLocation } from "react-router-dom";
+import { useRootStore } from "context/RootStateContext";
 
 function PrivateRoute({ component: Component, ...rest }) {
-  const {userStore} = UseRootStore();
-
+  const {userStore} = useRootStore();
+  const location = useLocation();
   return (
     <Route
       {...rest}
       render={(props) =>
-        userStore.loggedIn ? <Component {...props} /> : <Redirect to="/login" />
+        userStore.loggedIn ? <Component {...props} /> : <Redirect to={`/login?path=${location.pathname}`} />
       }
     />
   );

@@ -14,12 +14,17 @@ import {
 import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
-import { UseRootStore } from "context/RootStateContext";
-import { useObserver } from "mobx-react";
+import { useRootStore } from "context/RootStateContext";
+import { useObserver, observer } from "mobx-react";
+
+import DarkLogo from "./mexle_dark.svg";
+import LightLogo from "./mexle_light.svg";
 
 const useStyles = makeStyles((theme) => ({
   header: {
-    position: "relative",
+    position: "sticky",
+    width: "100%",
+    margin: 0,
     flexGrow: 1,
     zIndex: 1400,
   },
@@ -29,17 +34,20 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
   },
+  logo: {
+    height: "38px",
+    marginTop: "10px",
+  },
 }));
 
 function Header(props) {
   const classes = useStyles();
-  const {userStore} = UseRootStore();
+  const { userStore } = useRootStore();
 
   return useObserver(() => (
-    <div className={classes.header}>
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton
+    <AppBar className={classes.header}>
+      <Toolbar>
+        {/* <IconButton
             edge="start"
             className={classes.menuButton}
             color="inherit"
@@ -47,37 +55,36 @@ function Header(props) {
             onClick={props.handleDrawer}
           >
             <MenuIcon />
-          </IconButton>
+          </IconButton> */}
 
-          <Typography variant="h6" className={classes.title}>
-            <Link to="/" className="whiteLink">
-              Mexle E-Learning
-            </Link>
-          </Typography>
-          {userStore.role === "admin" ? (
-            <Link to="/create" className="whiteLink">
-              <Button>Neuer Kurs</Button>
-            </Link>
-          ) : (
-            <div />
-          )}
-
-          <Switch
-            onChange={props.toggleDarkMode}
-            checked={props.darkMode}
-          />
-          <Link
-            to={userStore.loggedIn ? "/account" : "/login"}
-            className="whiteLink"
-          >
-            <Button color="inherit">
-              <AccountCircleIcon />
-            </Button>
+        <Typography variant="h6" className={classes.title}>
+          <Link to="/" className="whiteLink">
+            <img
+              className={classes.logo}
+              src={props.darkMode ? LightLogo : DarkLogo}
+            />
           </Link>
-        </Toolbar>
-      </AppBar>
-    </div>
+        </Typography>
+        {userStore.role === "admin" ? (
+          <Link to="/create" className="whiteLink">
+            <Button>Neuer Kurs</Button>
+          </Link>
+        ) : (
+          <div />
+        )}
+
+        <Switch onChange={props.toggleDarkMode} checked={props.darkMode} />
+        <Link
+          to={userStore.loggedIn ? "/account" : "/login"}
+          className="whiteLink"
+        >
+          <Button color="inherit">
+            <AccountCircleIcon />
+          </Button>
+        </Link>
+      </Toolbar>
+    </AppBar>
   ));
 }
 
-export default Header;
+export default observer(Header);

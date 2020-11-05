@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/styles";
 import { useLocation } from "react-router-dom";
-import Backdrop from "@material-ui/core/Backdrop";
+import { Backdrop, Typography } from "@material-ui/core";
 
 import ChapterCard from "container/ChapterCard";
 import chapterList from "fakeApi/chapters.json";
+import MediaCard from "container/MediaCard";
+import AddButton from "container/AddButton";
 
 const useStyles = makeStyles({
   root: {
@@ -15,14 +17,13 @@ const useStyles = makeStyles({
 });
 
 interface IChapters {
-  chapterId: number,
-  courseId: string,
-  title: string,
-  description: string
+  chapterId: string;
+  courseId: string;
+  title: string;
+  description: string;
 }
 
 function ChapterPage() {
-  //equivalent to componentDidmount
   useEffect(() => {
     getChapters();
   }, []);
@@ -33,7 +34,7 @@ function ChapterPage() {
   function getChapters() {
     let sortedChapters: IChapters[] = [];
     chapterList.forEach((chapter) => {
-      if (chapter.courseId === location.pathname.replace("/course/", "")) {
+      if (chapter.courseId === location.pathname.split("/")[2]) {
         sortedChapters.push(chapter);
       }
     });
@@ -42,16 +43,24 @@ function ChapterPage() {
 
   if (chapters) {
     return (
-      <div className={classes.root}>
-        <h1>Kapitel</h1>
+      <React.Fragment>
+        <Typography variant="h2" component="h3">
+          Kapitel
+        </Typography>
         {chapters.map((chapter) => (
-          <ChapterCard key={chapter.chapterId} />
+          <MediaCard
+            key={chapter.chapterId}
+            title={chapter.title}
+            description={chapter.description}
+            link={`${location.pathname}/${chapter.chapterId}`}
+          />
         ))}
-      </div>
+        <AddButton add="chapter" />
+      </React.Fragment>
     );
   }
 
-  return <Backdrop open={true}/>;
+  return <Backdrop open={true} />;
 }
 
 export default ChapterPage;

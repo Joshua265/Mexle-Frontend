@@ -1,22 +1,22 @@
 [
   {
-    "StepId": 3,
-    "chapterId": 1,
+    "StepId": 1,
+    "chapterId": "bhrklsb",
     "title": "Binär zu Hex umrechnen",
     "description": "Binäre Zahlen in das Hexadezimale Zahlensystem umrechnen",
     "html": "<p>alle 4 bits in einen hex wert umrechnen!</p>",
     "exercise": ""
   },
   {
-    "StepId": 3,
-    "chapterId": 2,
+    "StepId": 2,
+    "chapterId": "bhrklsb",
     "title": "Hex zu Binär umrechnen",
     "description": "Hexadezimale Zahlen in das Binäre Zahlensystem umrechnen",
     "html": "<p>Jede Stelle wird in 4-bit Binär umgerechnet.</p>"
   },
   {
     "StepId": 3,
-    "chapterId": 2,
+    "chapterId": "bvhesabv",
     "title": "Strom und Spannung",
     "description": "",
     "html": "<p>Elektrischer Strom entsteht dann, wenn es Spannung gibt. Und wenn sich die elektrischen Ladungen ausgleichen können, weil es einen elektrischen Leiter gibt. Elektrischer Strom ist das Fließen von elektrisch geladenen Teilchen.</p>"

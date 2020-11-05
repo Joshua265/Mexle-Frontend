@@ -5,9 +5,7 @@
     "sourceMap": true,
     "target": "es2015",
     "jsx": "react",
-    "types": [
-      "react"
-    ],
+    "types": ["react"],
     "module": "esNext",
     "moduleResolution": "node",
     "experimentalDecorators": true,
@@ -18,17 +16,10 @@
     "strict": true,
     "outDir": "dist",
     "baseUrl": "src",
-    "typeRoots": [
-      "./types",
-      "node_modules/@types"
-    ],
+    "typeRoots": ["./types", "node_modules/@types"],
     "strictNullChecks": true,
     "allowJs": true,
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "skipLibCheck": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -36,11 +27,6 @@
     "isolatedModules": true,
     "noEmit": true
   },
-  "exclude": [
-    "dist",
-    "node_modules"
-  ],
-  "include": [
-    "src"
-  ]
+  "exclude": ["dist", "node_modules"],
+  "include": ["src"]
 }

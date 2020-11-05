@@ -10,6 +10,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
+import { useRootStore } from "context/RootStateContext";
 
 const useStyles = makeStyles({
   root: {
@@ -22,12 +23,20 @@ const useStyles = makeStyles({
   },
 });
 
-function MediaCard(props) {
+interface props {
+  title: string;
+  description?: string;
+  imageLink?: string;
+  link?: string;
+}
+
+function MediaCard(props: props) {
   const classes = useStyles();
+  const { userStore } = useRootStore();
 
   return (
     <Card raised variant="outlined" className={classes.root}>
-      <Link to={`/course/${props.link}`} className="whiteLink">
+      <Link to={props.link} className="whiteLink">
         <CardActionArea>
           <img className={classes.media} src={props.imageLink}></img>
           <CardContent>
@@ -40,14 +49,18 @@ function MediaCard(props) {
           </CardContent>
         </CardActionArea>
       </Link>
-      {/* <CardActions>
-        <Button size="small" color="primary">
-          Share
-        </Button>
-        <Button size="small" color="primary">
-          Learn More
-        </Button>
-      </CardActions> */}
+      {userStore.role === "admin" ? (
+        <CardActions>
+          <Button size="small" color="primary">
+            Löschen
+          </Button>
+          <Button size="small" color="primary">
+            KursDetails ändern
+          </Button>
+        </CardActions>
+      ) : (
+        <React.Fragment />
+      )}
     </Card>
   );
 }
