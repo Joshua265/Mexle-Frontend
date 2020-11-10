@@ -3,6 +3,7 @@ import AddIcon from "@material-ui/icons/Add";
 import { Fab } from "@material-ui/core";
 import { useRootStore } from "context/RootStateContext";
 import CreateCourse from "components/CreateCourse";
+import CreateChapter from "components/CreateChapter";
 
 interface IProps {
   add: string;
@@ -40,15 +41,18 @@ function AddButton(props: IProps) {
 
   if (userStore.role == "admin") {
     return (
-      <Fab
-        color="primary"
-        aria-label="add"
-        style={{ position: "absolute", bottom: 20, right: 20 }}
-        onClick={handleOnClick}
-      >
-        <AddIcon />
+      <React.Fragment>
+        <Fab
+          color="primary"
+          aria-label="add"
+          style={{ position: "absolute", bottom: 20, right: 20 }}
+          onClick={handleOnClick}
+        >
+          <AddIcon />
+        </Fab>
         <CreateCourse open={openCourseCreate} handleClose={handleClose} />
-      </Fab>
+        <CreateChapter open={openChapterCreate} handleClose={handleClose} />
+      </React.Fragment>
     );
   }
   return <React.Fragment />;

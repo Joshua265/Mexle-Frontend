@@ -65,13 +65,6 @@ function Header(props) {
             />
           </Link>
         </Typography>
-        {userStore.role === "admin" ? (
-          <Link to="/create" className="whiteLink">
-            <Button>Neuer Kurs</Button>
-          </Link>
-        ) : (
-          <div />
-        )}
 
         <Switch onChange={props.toggleDarkMode} checked={props.darkMode} />
         <Link

@@ -4,9 +4,9 @@ import { useLocation } from "react-router-dom";
 import { Backdrop, Typography } from "@material-ui/core";
 
 import ChapterCard from "container/ChapterCard";
-import chapterList from "fakeApi/chapters.json";
 import MediaCard from "container/MediaCard";
 import AddButton from "container/AddButton";
+import webServiceProvider from "helpers/webServiceProvider";
 
 const useStyles = makeStyles({
   root: {
@@ -17,7 +17,7 @@ const useStyles = makeStyles({
 });
 
 interface IChapters {
-  chapterId: string;
+  _id: string;
   courseId: string;
   title: string;
   description: string;
@@ -31,17 +31,14 @@ function ChapterPage() {
   const location = useLocation();
   const [chapters, setChapters] = useState<IChapters[]>([]);
 
-  function getChapters() {
-    let sortedChapters: IChapters[] = [];
-    chapterList.forEach((chapter) => {
-      if (chapter.courseId === location.pathname.split("/")[2]) {
-        sortedChapters.push(chapter);
-      }
-    });
-    setChapters(sortedChapters);
-  }
+  const getChapters = async () => {
+    const chapterList = await webServiceProvider.get(
+      `chapters/${location.pathname.split("/")[2]}`
+    );
+    setChapters(chapterList.chapters);
+  };
 
-  if (chapters) {
+  if (chapters && chapters.length !== 0) {
     return (
       <React.Fragment>
         <Typography variant="h2" component="h3">
@@ -49,12 +46,21 @@ function ChapterPage() {
         </Typography>
         {chapters.map((chapter) => (
           <MediaCard
-            key={chapter.chapterId}
+            key={chapter._id}
             title={chapter.title}
             description={chapter.description}
-            link={`${location.pathname}/${chapter.chapterId}`}
+            link={`${location.pathname}/${chapter._id}`}
           />
         ))}
+        <AddButton add="chapter" />
+      </React.Fragment>
+    );
+  }
+
+  if (chapters.length === 0) {
+    return (
+      <React.Fragment>
+        <p>Es sind noch keine Kaptitel für diesen Kurs verfügbar!</p>{" "}
         <AddButton add="chapter" />
       </React.Fragment>
     );

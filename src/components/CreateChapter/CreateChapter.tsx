@@ -12,6 +12,7 @@ import TextField from "@material-ui/core/TextField";
 import { TransitionProps } from "@material-ui/core/transitions";
 import { Paper } from "@material-ui/core";
 import webServiceProvider from "helpers/webServiceProvider";
+import { useLocation } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -46,13 +47,15 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function CreateCourse(props) {
+function CreateChapter(props) {
   const classes = useStyles();
+  const location = useLocation();
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({
     title: "",
     description: "",
     picture: "",
+    courseId: location.pathname.split("/")[2],
   });
 
   useEffect(() => {
@@ -65,7 +68,7 @@ function CreateCourse(props) {
   };
 
   const handleSave = async () => {
-    await webServiceProvider.post("courses/create", form);
+    await webServiceProvider.post("chapters/create", form);
     handleClose();
   };
 
@@ -92,7 +95,7 @@ function CreateCourse(props) {
             <CloseIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            Neuen Kurs erstellen
+            Neues Kapitel erstellen
           </Typography>
           <Button autoFocus color="inherit" onClick={handleSave}>
             Hinzufügen
@@ -120,4 +123,4 @@ function CreateCourse(props) {
   );
 }
 
-export default CreateCourse;
+export default CreateChapter;
