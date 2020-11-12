@@ -3,7 +3,6 @@ import { makeStyles } from "@material-ui/styles";
 import { useLocation } from "react-router-dom";
 import { Backdrop, Typography } from "@material-ui/core";
 
-import ChapterCard from "container/ChapterCard";
 import MediaCard from "container/MediaCard";
 import AddButton from "container/AddButton";
 import webServiceProvider from "helpers/webServiceProvider";

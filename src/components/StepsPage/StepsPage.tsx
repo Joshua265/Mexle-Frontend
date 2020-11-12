@@ -4,12 +4,11 @@ import ReactHtmlParser from "react-html-parser";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { Backdrop, Paper, Typography } from "@material-ui/core";
-import stepList from "fakeApi/steps.json";
-import MediaCard from "container/MediaCard";
 import FinishPage from "components/FinishPage";
 
 import StepsProgress from "components/StepsProgress";
 import AddButton from "container/AddButton";
+import webServiceProvider from "helpers/webServiceProvider";
 
 const useStyles = makeStyles((theme) => ({
   coursePage: {
@@ -42,27 +41,30 @@ interface IStep {
 }
 
 function StepsPage() {
-  useEffect(() => {
-    fetchSteps(stepList);
-  }, []);
   const [currentStep, setCurrentStep] = useState(0);
   const [steps, setSteps] = useState<IStep[]>([]);
+  const [error, setError] = useState(false);
   const classes = useStyles();
   const location = useLocation();
+
+  useEffect(() => {
+    fetchSteps();
+  }, []);
 
   const getActiveStep = (step) => {
     setCurrentStep(step);
   };
 
   //replace with fetch steps by chapterId function
-  const fetchSteps = (stepList) => {
-    let sortedSteps: IStep[] = [];
-    stepList.forEach((step) => {
-      if (step.chapterId === location.pathname.split("/")[3]) {
-        sortedSteps.push(step);
-      }
-      setSteps(sortedSteps);
-    });
+  const fetchSteps = async () => {
+    try {
+      const stepList = await webServiceProvider.get(
+        `steps/${location.pathname.split("/")[3]}`
+      );
+      setSteps(stepList.steps);
+    } catch {
+      setError(true);
+    }
   };
 
   //when pressed finish
@@ -91,7 +93,16 @@ function StepsPage() {
   }
 
   if (steps && steps.length === 0) {
-    return <p>No steps yet</p>;
+    return (
+      <React.Fragment>
+        <p>No steps yet</p>
+        <AddButton add="step" />
+      </React.Fragment>
+    );
+  }
+
+  if (error) {
+    return <p>API Server Error</p>;
   }
 
   //return on loading

@@ -25,7 +25,6 @@ function Courses() {
   const getCourses = async () => {
     try {
       const courseList = await webServiceProvider.get("courses");
-      console.log(courseList);
       setCourses(courseList.courses);
     } catch {
       setError(true);
@@ -46,7 +45,7 @@ function Courses() {
               title={course.title}
               key={course._id}
               imageLink={course.picture}
-              link={`/course/${course._id}`}
+              link={`/courses/${course._id}`}
             />
           );
         })}

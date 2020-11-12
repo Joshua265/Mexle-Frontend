@@ -59,10 +59,7 @@ function Header(props) {
 
         <Typography variant="h6" className={classes.title}>
           <Link to="/" className="whiteLink">
-            <img
-              className={classes.logo}
-              src={props.darkMode ? LightLogo : DarkLogo}
-            />
+            <img className={classes.logo} src={LightLogo} />
           </Link>
         </Typography>
 

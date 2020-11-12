@@ -4,6 +4,7 @@ import { Fab } from "@material-ui/core";
 import { useRootStore } from "context/RootStateContext";
 import CreateCourse from "components/CreateCourse";
 import CreateChapter from "components/CreateChapter";
+import CreateStep from "components/CreateStep";
 
 interface IProps {
   add: string;
@@ -52,6 +53,7 @@ function AddButton(props: IProps) {
         </Fab>
         <CreateCourse open={openCourseCreate} handleClose={handleClose} />
         <CreateChapter open={openChapterCreate} handleClose={handleClose} />
+        <CreateStep open={openStepCreate} handleClose={handleClose} />
       </React.Fragment>
     );
   }

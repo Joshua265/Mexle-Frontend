@@ -40,10 +40,15 @@ function MediaCard(props: props) {
         <CardActionArea>
           <img className={classes.media} src={props.imageLink}></img>
           <CardContent>
-            <Typography gutterBottom variant="h5" component="h2">
+            <Typography
+              color="textSecondary"
+              gutterBottom
+              variant="h5"
+              component="h2"
+            >
               {props.title}
             </Typography>
-            <Typography variant="body2" color="textSecondary" component="p">
+            <Typography variant="body2" color="textPrimary" component="p">
               {props.description}
             </Typography>
           </CardContent>

@@ -12,11 +12,10 @@ import Sidebar from "components/Sidebar";
 
 import Courses from "components/Courses";
 import LoginPage from "components/Login";
-import CreateCourse from "components/CreateCourse";
 import AccountPage from "components/AccountPage";
 import StepsPage from "components/StepsPage";
 import ChapterPage from "components/ChapterPage";
-import SecondHeader from "components/SecondHeader/SecondHeader";
+import HomePage from "components/HomePage";
 
 const cookies = new Cookies();
 
@@ -84,15 +83,16 @@ export default function App() {
         <Sidebar open={open} />
 
         <Switch>
-          <Route path="/" exact component={Courses} />
+          <Route path="/" exact component={HomePage} />
+          <PrivateRoute path="/courses" exact component={Courses} />
           <Route path="/login" exact component={LoginPage} />
           <PrivateRoute
-            path="/course/:CourseId"
+            path="/courses/:CourseId"
             exact
             component={ChapterPage}
           />
           <PrivateRoute
-            path="/course/:CourseId/:ChapterId"
+            path="/courses/:CourseId/:ChapterId"
             exact
             component={StepsPage}
           />
