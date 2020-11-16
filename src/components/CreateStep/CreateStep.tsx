@@ -10,14 +10,16 @@ import CloseIcon from "@material-ui/icons/Close";
 import Slide from "@material-ui/core/Slide";
 import TextField from "@material-ui/core/TextField";
 import { TransitionProps } from "@material-ui/core/transitions";
-import { Grid, Paper } from "@material-ui/core";
+import { Card, CardContent, Grid, Paper } from "@material-ui/core";
 import webServiceProvider from "helpers/webServiceProvider";
 import { useLocation } from "react-router-dom";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import ReactHtmlParser from "react-html-parser";
-import YouTube from "react-youtube";
 import MyCustomUploadAdapterPlugin from "utils/MyCustomUploadAdapterPlugin";
+import transform from "helpers/transform";
+import CreateMultipleChoice from "components/CreateMultipleChoice";
+import MultipleChoice from "components/MultipleChoice";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -37,6 +39,10 @@ const useStyles = makeStyles((theme) => ({
       width: "50ch",
     },
   },
+  mcCard: {
+    minWidth: 275,
+    height: "80%",
+  },
 }));
 
 const opts = {
@@ -48,25 +54,20 @@ const opts = {
   },
 };
 
-function transform(node) {
-  // change render of youtube videos
-  if (node.type === "tag" && node.name === "oembed") {
-    console.log(node);
-    return (
-      <YouTube
-        videoId={node.attribs.url.replace(
-          "https://www.youtube.com/watch?v=",
-          ""
-        )}
-      />
-    );
-  }
-  return;
+interface IMetadata {
+  html: string;
+  multipleChoice: Array<IMultipleChoice>;
 }
 
-interface IForm {
-  title: any;
-  description: any;
+interface IMultipleChoice {
+  question: string;
+  answers: Array<IAnswer>;
+  correctAnswer: number;
+}
+
+interface IAnswer {
+  id: number;
+  text: string;
 }
 
 const Transition = React.forwardRef(function Transition(
@@ -80,7 +81,10 @@ function CreateStep(props) {
   const classes = useStyles();
   const location = useLocation();
   const [open, setOpen] = useState(false);
-  const [data, setData] = useState("");
+  const [metadata, setMetadata] = useState<IMetadata>({
+    html: "",
+    multipleChoice: [],
+  });
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -97,7 +101,7 @@ function CreateStep(props) {
   };
 
   const handleSave = async () => {
-    await webServiceProvider.post("steps/create", form);
+    await webServiceProvider.post("steps/create", { ...form, metadata });
     handleClose();
   };
 
@@ -105,6 +109,33 @@ function CreateStep(props) {
     e.preventDefault();
     setForm({ ...form, [e.target.name]: e.target.value });
   };
+
+  const addMultipleChoiceQuestion = () => {
+    const list = metadata.multipleChoice;
+    list.push({
+      question: "",
+      answers: [],
+      correctAnswer: -1,
+    });
+    setMetadata({ ...metadata, multipleChoice: list });
+  };
+
+  const saveMultipleChoice = (index: number, data: IMultipleChoice) => {
+    const list = metadata.multipleChoice;
+    list[index] = data;
+    setMetadata({ ...metadata, multipleChoice: list });
+  };
+
+  const removeMultipleChoiceQuestion = (index: number) => {
+    setMetadata({
+      ...metadata,
+      multipleChoice: metadata.multipleChoice.filter(
+        (item, id) => id !== index
+      ),
+    });
+  };
+
+  // console.log(metadata.multipleChoice);
 
   return (
     <Dialog
@@ -150,20 +181,46 @@ function CreateStep(props) {
           <Grid item xs={6}>
             <CKEditor
               editor={ClassicEditor}
-              data={data}
+              data={metadata.html}
               config={{
                 extraPlugins: [MyCustomUploadAdapterPlugin],
               }}
               onChange={(event, editor) => {
                 const data = editor.getData();
-                setData(data);
+                setMetadata({ ...metadata, html: data });
               }}
             />
+            <Button onClick={addMultipleChoiceQuestion}>
+              Multiple Choice Frage Hinzufügen
+            </Button>
+
+            {metadata.multipleChoice.map((mcQuestion, index) => {
+              return (
+                <Card className={classes.mcCard} variant="outlined">
+                  <CardContent>
+                    <Button onClick={() => removeMultipleChoiceQuestion(index)}>
+                      Frage Löschen
+                    </Button>
+                    <CreateMultipleChoice
+                      key={index}
+                      saveCallback={saveMultipleChoice}
+                      id={index}
+                    />
+                  </CardContent>
+                </Card>
+              );
+            })}
           </Grid>
 
           <Grid item xs={6}>
-            <div>{data}</div>
-            <div>{ReactHtmlParser(data, { transform: transform })}</div>
+            {/* <div>{data}</div> */}
+            <div>
+              {ReactHtmlParser(metadata.html, { transform: transform })}
+            </div>
+
+            {metadata.multipleChoice.map((data, index) => {
+              return <MultipleChoice key={index} data={data} />;
+            })}
           </Grid>
         </Grid>
       </Paper>

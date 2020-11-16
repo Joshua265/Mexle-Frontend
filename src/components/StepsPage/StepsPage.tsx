@@ -9,6 +9,7 @@ import FinishPage from "components/FinishPage";
 import StepsProgress from "components/StepsProgress";
 import AddButton from "container/AddButton";
 import webServiceProvider from "helpers/webServiceProvider";
+import transform from "helpers/transform";
 
 const useStyles = makeStyles((theme) => ({
   coursePage: {
@@ -31,24 +32,37 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+interface IMetadata {
+  html: String;
+}
+
+interface IChapters {
+  _id: string;
+  courseId: string;
+  title: string;
+  description: string;
+}
+
 interface IStep {
   StepId: string;
   chapterId: string;
   title: string;
   description: string;
-  html: string;
-  exercise: string;
+  metadata: IMetadata;
 }
 
 function StepsPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [steps, setSteps] = useState<IStep[]>([]);
   const [error, setError] = useState(false);
+  const [chapter, setChapter] = useState<IChapters>();
   const classes = useStyles();
   const location = useLocation();
+  const chapterId = location.pathname.split("/")[3];
 
   useEffect(() => {
     fetchSteps();
+    fetchChapter();
   }, []);
 
   const getActiveStep = (step) => {
@@ -58,18 +72,29 @@ function StepsPage() {
   //replace with fetch steps by chapterId function
   const fetchSteps = async () => {
     try {
-      const stepList = await webServiceProvider.get(
-        `steps/${location.pathname.split("/")[3]}`
-      );
+      const stepList = await webServiceProvider.get(`steps/${chapterId}`);
       setSteps(stepList.steps);
     } catch {
       setError(true);
     }
   };
 
+  const fetchChapter = async () => {
+    const chapter = await webServiceProvider.get(`chapters/${chapterId}`);
+    setChapter(chapter.chapter);
+  };
+
   //when pressed finish
   if (currentStep === -1) {
-    return <FinishPage courseName="Course Title" />;
+    return (
+      <FinishPage
+        courseName={chapter ? chapter.title : ""}
+        redirect={location.pathname.replace(
+          chapter ? `/${chapter._id}` : "",
+          ""
+        )}
+      />
+    );
   }
 
   //return when steps are loaded
@@ -83,9 +108,17 @@ function StepsPage() {
         />
         <Paper className={classes.content} elevation={1}>
           <Typography variant="h6" component="h1">
-            Chapter Title | {steps[currentStep].title}
+            {chapter ? chapter.title : ""} | {steps[currentStep].title}
           </Typography>
-          <div>{ReactHtmlParser(steps[currentStep].html)}</div>
+          <React.Fragment>
+            {steps[currentStep].metadata ? (
+              ReactHtmlParser(steps[currentStep].metadata.html, {
+                transform: transform,
+              })
+            ) : (
+              <React.Fragment />
+            )}
+          </React.Fragment>
         </Paper>
         <AddButton add="step" />
       </div>

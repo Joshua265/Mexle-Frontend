@@ -32,7 +32,7 @@ function ChapterPage() {
 
   const getChapters = async () => {
     const chapterList = await webServiceProvider.get(
-      `chapters/${location.pathname.split("/")[2]}`
+      `chapters/courseId/${location.pathname.split("/")[2]}`
     );
     setChapters(chapterList.chapters);
   };
@@ -59,7 +59,7 @@ function ChapterPage() {
   if (chapters.length === 0) {
     return (
       <React.Fragment>
-        <p>Es sind noch keine Kaptitel für diesen Kurs verfügbar!</p>{" "}
+        <p>Es sind noch keine Kaptitel für diesen Kurs verfügbar!</p>
         <AddButton add="chapter" />
       </React.Fragment>
     );

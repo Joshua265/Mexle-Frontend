@@ -67,6 +67,14 @@ export default function App() {
           margin: "20px",
         },
       },
+      MuiTable: {
+        root: {
+          body: {
+            borderColor: "red",
+            color: "red",
+          },
+        },
+      },
     },
   });
 
