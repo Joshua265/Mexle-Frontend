@@ -12,6 +12,7 @@ import TextField from "@material-ui/core/TextField";
 import { TransitionProps } from "@material-ui/core/transitions";
 import { Paper } from "@material-ui/core";
 import webServiceProvider from "helpers/webServiceProvider";
+import { useRootStore } from "context/RootStateContext";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -34,9 +35,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface IForm {
-  title: any;
-  description: any;
-  picture: any;
+  title?: string;
+  description?: string;
+  picture?: string;
+  _id: string;
+}
+
+interface IProps {
+  open: boolean;
+  handleClose: Function;
+  edit: boolean;
+  data?: IForm;
 }
 
 const Transition = React.forwardRef(function Transition(
@@ -46,14 +55,25 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function CreateCourse(props) {
+function CreateCourse(props: IProps) {
   const classes = useStyles();
+  const { userStore } = useRootStore();
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState({
-    title: "",
-    description: "",
-    picture: "",
-  });
+  const [form, setForm] = useState(
+    props.edit && props.data
+      ? {
+          title: props.data.title,
+          description: props.data.description || "",
+          picture: props.data.picture,
+          author: userStore.username,
+        }
+      : {
+          title: "",
+          description: "",
+          picture: "",
+          author: userStore.username,
+        }
+  );
 
   useEffect(() => {
     setOpen(props.open);
@@ -65,7 +85,17 @@ function CreateCourse(props) {
   };
 
   const handleSave = async () => {
-    await webServiceProvider.post("courses/create", form);
+    if (props.edit && props.data) {
+      await webServiceProvider.post(`courses/edit/${props.data._id}`, {
+        ...form,
+        author: userStore.username,
+      });
+    } else {
+      await webServiceProvider.post("courses/create", {
+        ...form,
+        author: userStore.username,
+      });
+    }
     handleClose();
   };
 
@@ -92,10 +122,10 @@ function CreateCourse(props) {
             <CloseIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            Neuen Kurs erstellen
+            {props.edit ? "Kurs Bearbeiten" : "Neuen Kurs erstellen"}
           </Typography>
           <Button autoFocus color="inherit" onClick={handleSave}>
-            Hinzufügen
+            {props.edit ? "Ändern" : "Hinzufügen"}
           </Button>
         </Toolbar>
       </AppBar>
@@ -106,14 +136,15 @@ function CreateCourse(props) {
           autoComplete="off"
           onChange={(e) => handleFormChange(e)}
         >
-          <TextField name="title" label="Titel" />
+          <TextField name="title" label="Titel" value={form.title} />
           <TextField
             name="description"
             label="Beschreibung"
+            value={form.description}
             multiline
             rows={4}
           />
-          <TextField name="picture" label="Bild URL" />
+          <TextField name="picture" label="Bild URL" value={form.picture} />
         </form>
       </Paper>
     </Dialog>

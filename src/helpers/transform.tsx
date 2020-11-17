@@ -5,6 +5,14 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 
+const opts = {
+  minHeight: "390px",
+  minWidth: "640px",
+  playerVars: {
+    // https://developers.google.com/youtube/player_parameters
+  },
+};
+
 function transform(node) {
   // change render of youtube videos
   if (node.type === "tag" && node.name === "oembed") {
@@ -14,6 +22,7 @@ function transform(node) {
           "https://www.youtube.com/watch?v=",
           ""
         )}
+        opts={opts}
       />
     );
   }

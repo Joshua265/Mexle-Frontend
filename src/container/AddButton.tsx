@@ -51,9 +51,21 @@ function AddButton(props: IProps) {
         >
           <AddIcon />
         </Fab>
-        <CreateCourse open={openCourseCreate} handleClose={handleClose} />
-        <CreateChapter open={openChapterCreate} handleClose={handleClose} />
-        <CreateStep open={openStepCreate} handleClose={handleClose} />
+        <CreateCourse
+          edit={false}
+          open={openCourseCreate}
+          handleClose={handleClose}
+        />
+        <CreateChapter
+          edit={false}
+          open={openChapterCreate}
+          handleClose={handleClose}
+        />
+        <CreateStep
+          edit={false}
+          open={openStepCreate}
+          handleClose={handleClose}
+        />
       </React.Fragment>
     );
   }

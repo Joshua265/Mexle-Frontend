@@ -1,4 +1,5 @@
 const path = require("path");
+const { styles } = require("@ckeditor/ckeditor5-dev-utils");
 
 module.exports = {
   mode: "production", // "production" | "development" | "none"
@@ -93,8 +94,63 @@ module.exports = {
         exclude: "/node_modules/",
       },
       {
+        loader: require.resolve("file-loader"),
+        // Exclude `js` files to keep the "css" loader working as it injects
+        // its runtime that would otherwise be processed through the "file" loader.
+        // Also exclude `html` and `json` extensions so they get processed
+        // by webpack's internal loaders.
+        exclude: [
+          /\.(js|mjs|jsx|ts|tsx)$/,
+          /\.html$/,
+          /\.json$/,
+          /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
+          /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/,
+        ],
+        options: {
+          name: "static/media/[name].[hash:8].[ext]",
+        },
+      },
+      {
+        test: cssModuleRegex,
+        exclude: [/ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/],
+        // (...)
+      },
+      {
+        test: cssRegex,
+        exclude: [cssModuleRegex, /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/],
+        // (...)
+      },
+      {
         oneOf: [
-          // ... (rules)
+          {
+            test: /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
+            use: ["raw-loader"],
+          },
+          {
+            test: /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/,
+            use: [
+              {
+                loader: "style-loader",
+                options: {
+                  injectType: "singletonStyleTag",
+                  attributes: {
+                    "data-cke": true,
+                  },
+                },
+              },
+              {
+                loader: "postcss-loader",
+                options: styles.getPostCssConfig({
+                  themeImporter: {
+                    themePath: require.resolve(
+                      "@ckeditor/ckeditor5-theme-lark"
+                    ),
+                  },
+                  minify: true,
+                }),
+              },
+            ],
+          },
         ],
         // only use one of these nested rules
       },

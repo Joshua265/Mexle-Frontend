@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Card,
@@ -11,6 +11,8 @@ import {
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { useRootStore } from "context/RootStateContext";
+import CreateCourse from "components/CreateCourse";
+import CreateChapter from "components/CreateChapter";
 
 const useStyles = makeStyles({
   root: {
@@ -27,12 +29,48 @@ interface props {
   title: string;
   description?: string;
   imageLink?: string;
-  link?: string;
+  link: string;
+  kind: "Course" | "Chapter";
 }
 
 function MediaCard(props: props) {
   const classes = useStyles();
+  const [open, setOpen] = useState(false);
   const { userStore } = useRootStore();
+
+  if (open) {
+    return (
+      <React.Fragment>
+        {props.kind === "Course" ? (
+          <CreateCourse
+            edit={true}
+            open={open}
+            handleClose={() => setOpen(false)}
+            data={{
+              title: props.title,
+              description: props.description,
+              picture: props.imageLink,
+              _id: props.link.split("/")[2],
+            }}
+          />
+        ) : props.kind === "Chapter" ? (
+          <CreateChapter
+            edit={true}
+            open={open}
+            handleClose={() => setOpen(false)}
+            data={{
+              title: props.title,
+              description: props.description,
+              picture: props.imageLink,
+              _id: props.link.split("/")[2],
+            }}
+          />
+        ) : (
+          <div />
+        )}
+      </React.Fragment>
+    );
+  }
 
   return (
     <Card raised variant="outlined" className={classes.root}>
@@ -59,8 +97,8 @@ function MediaCard(props: props) {
           <Button size="small" color="primary">
             Löschen
           </Button>
-          <Button size="small" color="primary">
-            KursDetails ändern
+          <Button onClick={() => setOpen(true)} size="small" color="primary">
+            Bearbeiten
           </Button>
         </CardActions>
       ) : (

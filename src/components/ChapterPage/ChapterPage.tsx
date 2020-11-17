@@ -49,6 +49,7 @@ function ChapterPage() {
             title={chapter.title}
             description={chapter.description}
             link={`${location.pathname}/${chapter._id}`}
+            kind="Chapter"
           />
         ))}
         <AddButton add="chapter" />

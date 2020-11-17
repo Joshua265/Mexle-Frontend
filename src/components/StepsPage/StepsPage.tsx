@@ -3,13 +3,16 @@ import { useLocation } from "react-router-dom";
 import ReactHtmlParser from "react-html-parser";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { Backdrop, Paper, Typography } from "@material-ui/core";
+import { Backdrop, Paper, Typography, Button } from "@material-ui/core";
 import FinishPage from "components/FinishPage";
 
 import StepsProgress from "components/StepsProgress";
 import AddButton from "container/AddButton";
 import webServiceProvider from "helpers/webServiceProvider";
 import transform from "helpers/transform";
+import { useRootStore } from "context/RootStateContext";
+import CreateStep from "components/CreateStep";
+import MultipleChoice from "components/MultipleChoice";
 
 const useStyles = makeStyles((theme) => ({
   coursePage: {
@@ -34,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
 
 interface IMetadata {
   html: String;
+  multipleChoice: any;
 }
 
 interface IChapters {
@@ -44,7 +48,7 @@ interface IChapters {
 }
 
 interface IStep {
-  StepId: string;
+  _id: string;
   chapterId: string;
   title: string;
   description: string;
@@ -56,8 +60,10 @@ function StepsPage() {
   const [steps, setSteps] = useState<IStep[]>([]);
   const [error, setError] = useState(false);
   const [chapter, setChapter] = useState<IChapters>();
+  const [open, setOpen] = useState(false);
   const classes = useStyles();
   const location = useLocation();
+  const { userStore } = useRootStore();
   const chapterId = location.pathname.split("/")[3];
 
   useEffect(() => {
@@ -72,7 +78,9 @@ function StepsPage() {
   //replace with fetch steps by chapterId function
   const fetchSteps = async () => {
     try {
-      const stepList = await webServiceProvider.get(`steps/${chapterId}`);
+      const stepList = await webServiceProvider.get(
+        `steps/chapterId/${chapterId}`
+      );
       setSteps(stepList.steps);
     } catch {
       setError(true);
@@ -110,10 +118,30 @@ function StepsPage() {
           <Typography variant="h6" component="h1">
             {chapter ? chapter.title : ""} | {steps[currentStep].title}
           </Typography>
+          {userStore.role === "admin" ? (
+            <React.Fragment>
+              <Button onClick={() => setOpen(true)}>Bearbeiten</Button>
+              <CreateStep
+                edit={true}
+                open={open}
+                handleClose={() => setOpen(false)}
+                id={steps[currentStep]._id}
+              />
+            </React.Fragment>
+          ) : (
+            <React.Fragment />
+          )}
           <React.Fragment>
             {steps[currentStep].metadata ? (
               ReactHtmlParser(steps[currentStep].metadata.html, {
                 transform: transform,
+              })
+            ) : (
+              <React.Fragment />
+            )}
+            {steps[currentStep].metadata.multipleChoice ? (
+              steps[currentStep].metadata.multipleChoice.map((data, index) => {
+                return <MultipleChoice key={index} data={data} />;
               })
             ) : (
               <React.Fragment />

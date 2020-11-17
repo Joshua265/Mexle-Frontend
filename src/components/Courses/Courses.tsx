@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Paper, Divider, Typography, Box, Backdrop } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import courseList from "fakeApi/courses.json";
 import MediaCard from "container/MediaCard";
 import AddButton from "container/AddButton";
 import webServiceProvider from "helpers/webServiceProvider";
-
-import { API_SERVER } from "utils/config";
 
 interface ICourse {
   _id: string;
@@ -31,8 +28,6 @@ function Courses() {
     }
   };
 
-  console.log(API_SERVER);
-
   if (courses) {
     return (
       <React.Fragment>
@@ -46,6 +41,7 @@ function Courses() {
               key={course._id}
               imageLink={course.picture}
               link={`/courses/${course._id}`}
+              kind="Course"
             />
           );
         })}

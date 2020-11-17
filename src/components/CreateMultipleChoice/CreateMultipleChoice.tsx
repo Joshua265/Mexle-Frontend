@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Button, TextField, List, ListItem } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import MyCustomUploadAdapterPlugin from "utils/MyCustomUploadAdapterPlugin";
+import CustomCKEditor from "container/CustomCKEditor";
 
 interface IProps {
   saveCallback: Function;
   id: number;
+  data: IMultipleChoice;
+}
+
+interface IMultipleChoice {
+  question: string;
+  answers: Array<IAnswer>;
+  correctAnswer: number;
 }
 
 interface IAnswer {
@@ -16,10 +21,16 @@ interface IAnswer {
 }
 
 function CreateMultipleChoice(props: IProps) {
-  const [answers, setAnswers] = useState<Array<IAnswer>>([]);
-  const [question, setQuestion] = useState("");
-  const [correctAnswer, setCorrectAnswer] = useState(-1);
-  const [numberAnswers, setNumberAnswers] = useState(0);
+  const [answers, setAnswers] = useState<Array<IAnswer>>(
+    props.data.answers || []
+  );
+  const [question, setQuestion] = useState(props.data.question || "");
+  const [correctAnswer, setCorrectAnswer] = useState(
+    props.data.correctAnswer || -1
+  );
+  const [numberAnswers, setNumberAnswers] = useState(
+    props.data.answers.length || 0
+  );
 
   const addAnswer = () => {
     setNumberAnswers(numberAnswers + 1);
@@ -51,17 +62,7 @@ function CreateMultipleChoice(props: IProps) {
 
   return (
     <React.Fragment>
-      <CKEditor
-        editor={ClassicEditor}
-        data={question}
-        config={{
-          extraPlugins: [MyCustomUploadAdapterPlugin],
-        }}
-        onChange={(event, editor) => {
-          const data = editor.getData();
-          setQuestion(data);
-        }}
-      />
+      <CustomCKEditor data={question} onChange={(data) => setQuestion(data)} />
       <List>
         <Button onClick={addAnswer}>Antwort hinzufügen</Button>
         {answers.length > 0 ? (
