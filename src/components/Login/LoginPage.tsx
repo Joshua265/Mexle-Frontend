@@ -35,7 +35,7 @@ const useStyles = makeStyles((th) => ({
 
 function LoginPage() {
   const classes = useStyles();
-  const {userStore} = useRootStore();
+  const { userStore } = useRootStore();
   const history = useHistory();
   const location = useLocation();
   let [username, setUsername] = useState("");
@@ -44,10 +44,12 @@ function LoginPage() {
   const handleLogin = () => {
     userStore.login(username, password);
 
-    history.push(qs.parse(location.search, { ignoreQueryPrefix: true }).path || "/");
+    history.push(
+      qs.parse(location.search, { ignoreQueryPrefix: true }).path || "/"
+    );
   };
-  if(userStore.loggedIn) {
-    return(<Redirect to="/account"/>)
+  if (userStore.loggedIn) {
+    return <Redirect to="/account" />;
   }
 
   return (
@@ -68,9 +70,11 @@ function LoginPage() {
           <Button variant="contained" color="primary" onClick={handleLogin}>
             Login
           </Button>
-          {/* <Link className="whiteLink">
-            <Button variant="contained" color='primary'>Sign Up</Button>
-          </Link> */}
+          <Link className="whiteLink">
+            <Button variant="contained" color="primary">
+              Sign Up
+            </Button>
+          </Link>
         </div>
       </Paper>
     </form>

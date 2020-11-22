@@ -1,6 +1,3 @@
-edit course / chapter / step done
-falstad integration
-hide course / chapter / step
 user finished courses / chapters / steps
 formula questions
 sign up
@@ -8,3 +5,7 @@ accountpage
 use uploaded images as preview image (course, chapter)
 refactor backend (seperate routes and controller)
 mobile design
+
+diagrams io mit svg output
+templates
+link referenz

@@ -15,7 +15,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
 import { useRootStore } from "context/RootStateContext";
-import { useObserver, observer } from "mobx-react";
+import { Observer } from "mobx-react";
 
 import DarkLogo from "./mexle_dark.svg";
 import LightLogo from "./mexle_light.svg";
@@ -42,9 +42,9 @@ const useStyles = makeStyles((theme) => ({
 
 function Header(props) {
   const classes = useStyles();
-  const { userStore } = useRootStore();
+  const { userStore, localStore } = useRootStore();
 
-  return useObserver(() => (
+  return (
     <AppBar className={classes.header}>
       <Toolbar>
         {/* <IconButton
@@ -63,18 +63,30 @@ function Header(props) {
           </Link>
         </Typography>
 
-        <Switch onChange={props.toggleDarkMode} checked={props.darkMode} />
-        <Link
-          to={userStore.loggedIn ? "/account" : "/login"}
-          className="whiteLink"
-        >
-          <Button color="inherit">
-            <AccountCircleIcon />
-          </Button>
-        </Link>
+        <Observer>
+          {() => (
+            <Switch
+              onChange={(e) => localStore.toggleDarkMode(e.target.checked)}
+              checked={localStore.darkMode}
+            />
+          )}
+        </Observer>
+
+        <Observer>
+          {() => (
+            <Link
+              className="whiteLink"
+              to={userStore.loggedIn ? "/account" : "/login"}
+            >
+              <Button color="inherit">
+                <AccountCircleIcon />
+              </Button>
+            </Link>
+          )}
+        </Observer>
       </Toolbar>
     </AppBar>
-  ));
+  );
 }
 
-export default observer(Header);
+export default Header;

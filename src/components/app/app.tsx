@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import Cookies from "universal-cookie";
+import { useRootStore } from "context/RootStateContext";
 
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { CssBaseline } from "@material-ui/core";
@@ -17,26 +17,19 @@ import StepsPage from "components/StepsPage";
 import ChapterPage from "components/ChapterPage";
 import HomePage from "components/HomePage";
 
-const cookies = new Cookies();
-
 export default function App() {
   const [open, setOpen] = useState(false);
-  const [prefersDarkMode, setPreferesDarkMode] = useState(
-    cookies.get("darkMode") === "true" ? true : false || false
-  );
+  const { localStore } = useRootStore();
 
   const handleDrawer = () => {
     setOpen(!open);
   };
 
-  const toggleDarkMode = () => {
-    cookies.set("darkMode", !prefersDarkMode, { path: "/" });
-    setPreferesDarkMode(!prefersDarkMode);
-  };
+  console.log(localStore.darkMode);
 
   const theme = createMuiTheme({
     palette: {
-      type: prefersDarkMode ? "dark" : "light",
+      type: localStore.darkMode ? "dark" : "light",
       primary: {
         main: "#62929E",
         light: "#EEE5E9",
@@ -82,11 +75,7 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Router>
-        <Header
-          handleDrawer={handleDrawer}
-          toggleDarkMode={toggleDarkMode}
-          darkMode={prefersDarkMode}
-        />
+        <Header handleDrawer={handleDrawer} />
 
         <Sidebar open={open} />
 

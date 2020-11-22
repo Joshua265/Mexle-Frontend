@@ -38,6 +38,7 @@ interface IForm {
   title?: string;
   description?: string;
   picture?: string;
+  visible?: boolean;
   _id: string;
 }
 
@@ -65,12 +66,14 @@ function CreateCourse(props: IProps) {
           title: props.data.title,
           description: props.data.description || "",
           picture: props.data.picture,
+          visible: props.data.visible,
           author: userStore.username,
         }
       : {
           title: "",
           description: "",
           picture: "",
+          visible: true,
           author: userStore.username,
         }
   );

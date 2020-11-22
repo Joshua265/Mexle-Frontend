@@ -4,6 +4,7 @@ import Table from "@material-ui/core/Table";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
+import { MathComponent } from "mathjax-react";
 
 const opts = {
   minHeight: "390px",
@@ -15,17 +16,35 @@ const opts = {
 
 function transform(node) {
   // change render of youtube videos
-  if (node.type === "tag" && node.name === "oembed") {
+  if (
+    node.type === "tag" &&
+    node.name === "oembed" &&
+    node.attribs.url.includes("yout")
+  ) {
+    return <YouTube videoId={node.attribs.url.split("/").pop()} opts={opts} />;
+  }
+  // change render of youtube videos
+  if (
+    node.type === "tag" &&
+    node.name === "oembed" &&
+    node.attribs.url.includes("falstad")
+  ) {
     return (
-      <YouTube
-        videoId={node.attribs.url.replace(
-          "https://www.youtube.com/watch?v=",
-          ""
-        )}
-        opts={opts}
+      <iframe
+        src={node.attribs.url}
+        style={{ width: "100%", minHeight: "400px" }}
       />
     );
   }
+  //change math display
+  if (node.type === "tag" && node.name === "math") {
+    let text = "";
+    node.children.forEach((el) => {
+      text = text.concat(`${el.children[0].data}`);
+    });
+    return <MathComponent tex={String.raw`${text}`} display={false} />;
+  }
+
   //change design of table
   if (node.type === "tag" && node.name === "table") {
     return (

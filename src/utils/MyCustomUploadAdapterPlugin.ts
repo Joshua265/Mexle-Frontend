@@ -1,5 +1,4 @@
 import webServiceProvider from 'helpers/webServiceProvider';
-import SimpleUploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/simpleuploadadapter';
 
 
 interface MyUploadAdapter {
@@ -47,7 +46,7 @@ class MyUploadAdapter {
 }
 
 export default function MyCustomUploadAdapterPlugin( editor ) {
-    editor.plugins.get( 'FileRepository' ).createUploadAdapter = ( loader ) => {
+    editor.plugins.get( 'filerepository' ).createUploadAdapter = ( loader ) => {
         // Configure the URL to the upload script in your back-end here!
         return new MyUploadAdapter( loader );
     };

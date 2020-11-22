@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, TextField, List, ListItem } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import CustomCKEditor from "container/CustomCKEditor";
+import CustomCKEditor from "container/CustomCKEditor/CustomCKEditor";
 
 interface IProps {
   saveCallback: Function;
