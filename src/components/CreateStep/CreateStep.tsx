@@ -253,7 +253,7 @@ function CreateStep(props: IProps) {
           </Grid>
 
           <Grid item xs={6}>
-            {/* <div>{metadata.html}</div> */}
+            <div>{metadata.html}</div>
             <div>
               {ReactHtmlParser(metadata.html, { transform: transform })}
             </div>

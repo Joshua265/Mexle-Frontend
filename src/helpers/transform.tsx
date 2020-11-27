@@ -5,6 +5,7 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 import { MathComponent } from "mathjax-react";
+import {getGeogebraStyle} from 'helpers/Geogebra';
 
 const opts = {
   minHeight: "390px",
@@ -31,9 +32,21 @@ function transform(node) {
   ) {
     return (
       <iframe
+        title={node.attribs.url}
         src={node.attribs.url}
         style={{ width: "100%", minHeight: "400px" }}
       />
+    );
+  }
+  // change render of geogebra
+  if (
+    node.type === "tag" &&
+    node.name === "oembed" &&
+    node.attribs.url.includes("geogebra.org")
+  ) {
+    const style = getGeogebraStyle(node.attribs.url)
+    return (
+      <iframe title={node.attribs.url} src={node.attribs.url} height={style.height} width={style.width}></iframe>
     );
   }
   //change math display

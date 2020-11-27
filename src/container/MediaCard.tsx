@@ -94,6 +94,7 @@ function MediaCard(props: props) {
             data={{
               title: props.title,
               description: props.description,
+              visible: visible,
               picture: props.imageLink,
               _id: id,
             }}
@@ -106,6 +107,7 @@ function MediaCard(props: props) {
             data={{
               title: props.title,
               description: props.description,
+              visible: visible,
               picture: props.imageLink,
               _id: id,
             }}

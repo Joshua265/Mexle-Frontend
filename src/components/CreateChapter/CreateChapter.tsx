@@ -39,6 +39,7 @@ interface IForm {
   title?: string;
   description?: string;
   picture?: string;
+  visible?: boolean;
   _id?: string;
 }
 
@@ -67,6 +68,7 @@ function CreateChapter(props: IProps) {
           title: props.data.title,
           description: props.data.description,
           picture: props.data.picture,
+          visible: props.data.visible,
           author: userStore.username,
           courseId: location.pathname.split("/")[2],
         }
@@ -74,6 +76,7 @@ function CreateChapter(props: IProps) {
           title: "",
           description: "",
           picture: "",
+          visible: false,
           author: userStore.username,
           courseId: location.pathname.split("/")[2],
         }

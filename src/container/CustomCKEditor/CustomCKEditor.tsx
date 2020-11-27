@@ -1,7 +1,8 @@
-import React from "react";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import Cookies from "universal-cookie";
-import Editor from "ckeditor/build/ckeditor";
+import React from 'react';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import Cookies from 'universal-cookie';
+import Editor from 'ckeditor5-custom-build/src/ckeditor';
+import { getGeogebraStyle } from 'helpers/Geogebra';
 
 interface IProps {
   data: string;
@@ -9,11 +10,11 @@ interface IProps {
 }
 
 const cookies = new Cookies();
-const LightTheme = React.lazy(() => import("./lightMode"));
-const DarkTheme = React.lazy(() => import("./darkMode"));
+const LightTheme = React.lazy(() => import('./lightMode'));
+const DarkTheme = React.lazy(() => import('./darkMode'));
 
 const ThemeSelector = ({ children }) => {
-  const darkMode = cookies.get("darkMode") === "true" ? true : false || false;
+  const darkMode = cookies.get('darkMode') === 'true' ? true : false || false;
   return (
     <>
       <React.Suspense fallback={<></>}>
@@ -24,43 +25,70 @@ const ThemeSelector = ({ children }) => {
   );
 };
 
-const API_SERVER = "http://localhost:3001/";
-
 const config = {
   toolbar: [
-    "heading",
-    "|",
-    "bold",
-    "italic",
-    "link",
-    "highlight",
-    "numberedList",
-    "bulletedList",
-    "CodeBlock",
-    "ImageInsert",
-    "mediaEmbed",
-    "|",
-    "MathType",
-    "ChemType",
-    "SpecialCharacters",
-    "insertTable",
-    "|",
-    "undo",
-    "redo",
+    'heading',
+    '|',
+    'bold',
+    'italic',
+    'link',
+    'highlight',
+    'numberedList',
+    'bulletedList',
+    'CodeBlock',
+    'htmlEmbed',
+    'ImageInsert',
+    'mediaEmbed',
+    '|',
+    // "MathType",
+    // "ChemType",
+    'SpecialCharacters',
+    'insertTable',
+    '|',
+    'undo',
+    'redo'
   ],
   mediaEmbed: {
     extraProviders: [
       {
-        name: "falstad",
+        name: 'falstad',
         url: /^falstad\.com\/circuit/,
         html: (match) =>
-          `<p href="http://${match.input}">http://${match.input}</p>`,
+          `<p href="http://${match.input}">http://${match.input}</p>`
       },
-    ],
+      {
+        name: 'geogebra',
+        url: /^geogebra\.org/,
+        html: (match) =>
+          `<iframe title="${match.input}" src="http://${match.input}" height="${
+            getGeogebraStyle(match.input).height
+          }" width="${getGeogebraStyle(match.input).width}"/>`
+      }
+    ]
   },
   mathType: {
-    language: "mathjax",
+    language: 'mathjax'
   },
+  link: {
+    decorators: {
+      toggleDownloadable: {
+        mode: 'manual',
+        label: 'Downloadable',
+        attributes: {
+          download: 'file'
+        }
+      },
+      openInNewTab: {
+        mode: 'manual',
+        label: 'Open in a new tab',
+        defaultValue: true, // This option will be selected by default.
+        attributes: {
+          target: '_blank',
+          rel: 'noopener noreferrer'
+        }
+      }
+    }
+  }
 };
 
 function CustomCKEditor(props: IProps) {
