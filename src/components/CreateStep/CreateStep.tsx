@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
-import Slide from "@material-ui/core/Slide";
+import { Slide as TransitionSlide } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import { TransitionProps } from "@material-ui/core/transitions";
 import {
@@ -28,7 +28,7 @@ import CustomCKEditor from "container/CustomCKEditor/CustomCKEditor";
 const useStyles = makeStyles((theme) => ({
   appBar: {
     position: "relative",
-    marginTop: "64px",
+    marginTop: "112px",
   },
   title: {
     marginLeft: theme.spacing(2),
@@ -76,10 +76,14 @@ const Transition = React.forwardRef(function Transition(
   props: TransitionProps & { children?: React.ReactElement },
   ref: React.Ref<unknown>
 ) {
-  return <Slide direction="up" ref={ref} {...props} />;
+  return <TransitionSlide direction="up" ref={ref} {...props} />;
 });
 
 function CreateStep(props: IProps) {
+  const ref = useRef({
+    current: { disableEnforceFocus: true, disableAutoFocus: true },
+  });
+  console.log(ref.current);
   const classes = useStyles();
   const location = useLocation();
   const { userStore } = useRootStore();
@@ -106,7 +110,7 @@ function CreateStep(props: IProps) {
     if (props.edit) {
       fetchStep();
     }
-  }, []);
+  }, [props]);
 
   useEffect(() => {
     setOpen(props.open);
@@ -176,12 +180,15 @@ function CreateStep(props: IProps) {
     });
   };
 
+  console.log(props);
+
   return (
     <Dialog
       fullScreen
       open={open}
       onClose={handleClose}
       TransitionComponent={Transition}
+      disableEnforceFocus
     >
       <AppBar className={classes.appBar}>
         <Toolbar>
@@ -201,73 +208,66 @@ function CreateStep(props: IProps) {
           </Button>
         </Toolbar>
       </AppBar>
-      <Paper>
-        <form
-          className={classes.form}
-          noValidate
-          autoComplete="off"
-          onChange={(e) => handleFormChange(e)}
-        >
-          <TextField name="title" label="Titel" value={form.title} />
-          <TextField
-            name="description"
-            label="Beschreibung"
-            value={form.description}
-            multiline
-            rows={4}
-          />
-        </form>
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <CustomCKEditor
-              data={metadata.html}
-              onChange={(data) => setMetadata({ ...metadata, html: data })}
+
+      <Grid container spacing={2}>
+        <Grid item xs={6}>
+          <form
+            className={classes.form}
+            noValidate
+            autoComplete="off"
+            onChange={(e) => handleFormChange(e)}
+          >
+            <TextField name="title" label="Titel" value={form.title} />
+            <TextField
+              name="description"
+              label="Beschreibung"
+              value={form.description}
+              multiline
+              rows={4}
             />
-            <Button onClick={addMultipleChoiceQuestion}>
-              Multiple Choice Frage Hinzufügen
-            </Button>
+          </form>
+          <CustomCKEditor
+            data={metadata.html}
+            onChange={(data) => setMetadata({ ...metadata, html: data })}
+          />
+          <Button onClick={addMultipleChoiceQuestion}>
+            Multiple Choice Frage Hinzufügen
+          </Button>
 
-            {metadata.multipleChoice ? (
-              metadata.multipleChoice.map((mcQuestion, index) => {
-                return (
-                  <Card className={classes.mcCard} variant="outlined">
-                    <CardContent>
-                      <Button
-                        onClick={() => removeMultipleChoiceQuestion(index)}
-                      >
-                        Frage Löschen
-                      </Button>
-                      <CreateMultipleChoice
-                        key={index}
-                        data={mcQuestion}
-                        saveCallback={saveMultipleChoice}
-                        id={index}
-                      />
-                    </CardContent>
-                  </Card>
-                );
-              })
-            ) : (
-              <React.Fragment />
-            )}
-          </Grid>
-
-          <Grid item xs={6}>
-            <div>{metadata.html}</div>
-            <div>
-              {ReactHtmlParser(metadata.html, { transform: transform })}
-            </div>
-
-            {metadata.multipleChoice ? (
-              metadata.multipleChoice.map((data, index) => {
-                return <MultipleChoice key={index} data={data} />;
-              })
-            ) : (
-              <React.Fragment />
-            )}
-          </Grid>
+          {metadata.multipleChoice ? (
+            metadata.multipleChoice.map((mcQuestion, index) => {
+              return (
+                <React.Fragment>
+                  <Button onClick={() => removeMultipleChoiceQuestion(index)}>
+                    Frage Löschen
+                  </Button>
+                  {/* <CreateMultipleChoice
+                    key={index}
+                    data={mcQuestion}
+                    saveCallback={saveMultipleChoice}
+                    id={index}
+                  /> */}
+                </React.Fragment>
+              );
+            })
+          ) : (
+            <React.Fragment />
+          )}
         </Grid>
-      </Paper>
+
+        <Grid item xs={6}>
+          {/* <div>{metadata.html}</div> */}
+          <div>{ReactHtmlParser(metadata.html, { transform: transform })}</div>
+
+          {metadata.multipleChoice ? (
+            metadata.multipleChoice.map((data, index) => {
+              return <MultipleChoice key={index} data={data} />;
+            })
+          ) : (
+            <React.Fragment />
+          )}
+        </Grid>
+      </Grid>
     </Dialog>
   );
 }

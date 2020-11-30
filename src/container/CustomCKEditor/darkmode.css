@@ -1,4 +1,5 @@
 :root {
+  --ck-sample-editor-min-height: 400px;
   /* Overrides the border radius setting in the theme. */
   --ck-border-radius: 4px;
 

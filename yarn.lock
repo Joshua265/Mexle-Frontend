@@ -1340,6 +1340,11 @@
     "@ckeditor/ckeditor5-core" "^23.1.0"
     "@ckeditor/ckeditor5-utils" "^23.1.0"
 
+"@ckeditor/ckeditor5-inspector@^2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-inspector/-/ckeditor5-inspector-2.2.1.tgz#898f5b216307c1e9a7dd8297eef171ccc96c35f4"
+  integrity sha512-soaBCqTSakHiwPGjFgopD1jSHytiqSca3Ja0sHn/gpCLdwdnDkmzmnWgyu0VdxeXm0Rt/V9F6W6aBuVQUFcyuw==
+
 "@ckeditor/ckeditor5-link@^23.1.0":
   version "23.1.0"
   resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-link/-/ckeditor5-link-23.1.0.tgz#80913271ee86bde80145315b94bb854109571306"
@@ -3590,7 +3595,11 @@ cipher-base@^1.0.0, cipher-base@^1.0.1, cipher-base@^1.0.3:
 
 "ckeditor5-custom-build@https://github.com/Joshua265/CustomCkEditor.git":
   version "0.0.1"
-  resolved "https://github.com/Joshua265/CustomCkEditor.git#8f4ab0105a535457af87f354ad04042bc14f0a5e"
+  resolved "https://github.com/Joshua265/CustomCkEditor.git#b9ae8124d46e2e745e8ba83a2980b8886016a865"
+  dependencies:
+    react "^17.0.1"
+    reveal.js "^4.1.0"
+    revealjs-react "^0.1.0"
 
 ckeditor5-math@^23.3.0:
   version "23.3.0"
@@ -9785,7 +9794,7 @@ react-dev-utils@^10.2.1:
     strip-ansi "6.0.0"
     text-table "0.2.0"
 
-react-dom@^16.14.0:
+react-dom@^16.13.1, react-dom@^16.14.0:
   version "16.14.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.14.0.tgz#7ad838ec29a777fb3c75c3a190f661cf92ab8b89"
   integrity sha512-1gCeQXDLoIqMgqD3IO2Ah9bnf0w9kzhwN5q4FGnHZ67hBm9yePzB5JJAIQCc8x3pFnNlwFq4RidZggNAAkzWWw==
@@ -9874,7 +9883,7 @@ react-youtube@^7.13.0:
     prop-types "15.7.2"
     youtube-player "5.5.2"
 
-react@^16.0.0, react@^16.14.0:
+react@^16.0.0, react@^16.13.1, react@^16.14.0:
   version "16.14.0"
   resolved "https://registry.yarnpkg.com/react/-/react-16.14.0.tgz#94d776ddd0aaa37da3eda8fc5b6b18a4c9a3114d"
   integrity sha512-0X2CImDkJGApiAlcf0ODKIneSwBPhqJawOa5wCtKbu7ZECrmS26NvtSILynQ66cgkT/RJ4LidJOc3bUESwmU8g==
@@ -9882,6 +9891,14 @@ react@^16.0.0, react@^16.14.0:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.2"
+
+react@^17.0.1:
+  version "17.0.1"
+  resolved "https://registry.yarnpkg.com/react/-/react-17.0.1.tgz#6e0600416bd57574e3f86d92edba3d9008726127"
+  integrity sha512-lG9c9UuMHdcAexXtigOZLX8exLWkW0Ku29qPRU8uhF2R9BN96dLCt0psvzPLlHc5OWkgymP3qwTRgbnw5BKx3w==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
 
 read-cache@^1.0.0:
   version "1.0.0"
@@ -10263,6 +10280,20 @@ reusify@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/reusify/-/reusify-1.0.4.tgz#90da382b1e126efc02146e90845a88db12925d76"
   integrity sha512-U9nH88a3fc/ekCF1l0/UP1IosiuIjyTh7hBvXVMHYgVcfGvt897Xguj2UOLDeI5BG2m7/uwyaLVT6fbtCwTyzw==
+
+reveal.js@^4.0.2, reveal.js@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/reveal.js/-/reveal.js-4.1.0.tgz#db87a754b03810584114e902b2702e96ee1ca63c"
+  integrity sha512-lYOMhxSWgq5jtgspF7eRL0d2rBnHO/VGZ4/qp46yu+eGoWqJkYHEuepEXzx71M8MI6Rf8HBYWaTnKi5uHWcU1Q==
+
+revealjs-react@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/revealjs-react/-/revealjs-react-0.1.0.tgz#ebc101ba2a8b8e3b8eaae132aeb96e6bae7a112c"
+  integrity sha512-ab2QjTLjK7hEnVhLP3zQOYrIwhsdqWrMH/+NxMygtuAxYrNVlbYcCYUUTOljKfEW9ElFqlCxW05ft7TpfjI+sQ==
+  dependencies:
+    react "^16.13.1"
+    react-dom "^16.13.1"
+    reveal.js "^4.0.2"
 
 rework-visit@1.0.0:
   version "1.0.0"

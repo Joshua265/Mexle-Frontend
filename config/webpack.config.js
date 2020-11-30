@@ -357,6 +357,10 @@ module.exports = function (webpackEnv) {
               use: ["raw-loader"],
             },
             {
+              test: /mathtype-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
+              use: ["raw-loader"],
+            },
+            {
               test: /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/,
               use: [
                 {

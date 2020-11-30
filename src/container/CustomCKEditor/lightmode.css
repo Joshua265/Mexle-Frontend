@@ -1,4 +1,8 @@
 :root {
+  --ck-z-default: 100;
+  --ck-z-modal: calc(var(--ck-z-default) + 999);
+
+  --ck-sample-editor-min-height: 400px;
   /* Overrides the border radius setting in the theme. */
   --ck-border-radius: 4px;
 
@@ -30,9 +34,9 @@
   --ck-color-button-default-disabled-background: var(--ck-custom-background);
 
   --ck-color-button-on-background: var(--ck-custom-foreground);
-  --ck-color-button-on-hover-background: hsl(255, 4%, 16%);
-  --ck-color-button-on-active-background: hsl(255, 4%, 14%);
-  --ck-color-button-on-active-shadow: hsl(240, 3%, 19%);
+  --ck-color-button-on-hover-background: hsl(252, 3%, 66%);
+  --ck-color-button-on-active-background: hsl(262, 12%, 82%);
+  --ck-color-button-on-active-shadow: hsl(240, 5%, 77%);
   --ck-color-button-on-disabled-background: var(--ck-custom-foreground);
 
   --ck-color-button-action-background: hsl(168, 76%, 42%);
@@ -59,10 +63,10 @@
 
   /* -- Overrides the default .ck-input class colors. ----------------------------------------- */
 
-  --ck-color-input-background: var(--ck-custom-foreground);
+  --ck-color-input-background: var(--ck-custom-background);
   --ck-color-input-border: hsl(257, 3%, 43%);
   --ck-color-input-text: var(--ck-custom-black);
-  --ck-color-input-disabled-background: hsl(255, 4%, 21%);
+  --ck-color-input-disabled-background: hsl(0, 36%, 38%);
   --ck-color-input-disabled-border: hsl(250, 3%, 38%);
   --ck-color-input-disabled-text: hsl(0, 0%, 46%);
 
@@ -86,7 +90,7 @@
 
   /* -- Overrides the default .ck-tooltip class colors. --------------------------------------- */
 
-  --ck-color-tooltip-background: hsl(252, 7%, 14%);
+  --ck-color-tooltip-background: hsl(0, 0%, 85%);
   --ck-color-tooltip-text: hsl(0, 0%, 93%);
 
   /* -- Overrides the default colors used by the ckeditor5-image package. --------------------- */
@@ -103,4 +107,8 @@
   /* -- Overrides the default colors used by the ckeditor5-link package. ---------------------- */
 
   --ck-color-link-default: hsl(190, 100%, 75%);
+}
+.ck-rounded-corners .ck.ck-balloon-panel,
+.ck.ck-balloon-panel.ck-rounded-corners {
+  z-index: 10055 !important;
 }

@@ -16,6 +16,7 @@ import AccountPage from "components/AccountPage";
 import StepsPage from "components/StepsPage";
 import ChapterPage from "components/ChapterPage";
 import HomePage from "components/HomePage";
+import SecondHeader from "components/SecondHeader/SecondHeader";
 
 export default function App() {
   const [open, setOpen] = useState(false);
@@ -29,16 +30,16 @@ export default function App() {
 
   const theme = createMuiTheme({
     palette: {
-      type: localStore.darkMode ? "dark" : "light",
+      type: "light", //localStore.darkMode ? "dark" : "light",
       primary: {
-        main: "#62929E",
-        light: "#EEE5E9",
-        dark: "#62929E",
+        main: "#006A00",
+        light: "#006A00",
+        dark: "#35D435",
       },
       secondary: {
-        main: "#35D435",
-        light: "#546A7B",
-        dark: "#35D435",
+        main: "#62929E",
+        light: "#62929E",
+        dark: "#62929E",
       },
     },
     overrides: {
@@ -46,7 +47,7 @@ export default function App() {
         elevation1: {
           margin: "20px",
           padding: "20px",
-          height: "89vh",
+          boxSizing: "border-box",
           overflow: "auto",
         },
         elevation2: {
@@ -60,14 +61,6 @@ export default function App() {
           margin: "20px",
         },
       },
-      MuiTable: {
-        root: {
-          body: {
-            borderColor: "red",
-            color: "red",
-          },
-        },
-      },
     },
   });
 
@@ -76,6 +69,7 @@ export default function App() {
       <CssBaseline />
       <Router>
         <Header handleDrawer={handleDrawer} />
+        <SecondHeader />
 
         <Sidebar open={open} />
 
