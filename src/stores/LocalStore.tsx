@@ -8,14 +8,22 @@ interface ILocalStore {
 }
 
 export default class LocalStore implements ILocalStore {
-  // constructor() {
-  //   this.darkMode = cookies.get("darkMode") === "true" ? true : false || false;
-  // }
   @observable darkMode = false;
 
   @action
-  toggleDarkMode(value: boolean): void {
-    cookies.set("darkMode", value, { path: "/" });
-    this.darkMode = value;
+  toggleDarkMode(): void {
+    console.log("toggleDarkMode");
+    cookies.set("darkMode", !this.darkMode);
+    this.darkMode = !this.darkMode;
+  }
+
+  @action
+  getDarkMode(): boolean {
+    return this.darkMode;
+  }
+
+  @action
+  initLocalVariables(): void {
+    this.darkMode = cookies.get("darkMode") === "true" ? true : false || false;
   }
 }

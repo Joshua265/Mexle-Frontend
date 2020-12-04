@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, List, ListItem } from "@material-ui/core";
 import ReactHtmlParser from "react-html-parser";
-import transform from "helpers/transform";
+// import transform from "helpers/transform";
 import { makeStyles } from "@material-ui/core/styles";
 
 interface IProps {
@@ -40,7 +40,7 @@ function MultipleChoice(props: IProps) {
     return (
       <React.Fragment>
         <div>
-          {ReactHtmlParser(props.data.question, { transform: transform })}
+          {/* {ReactHtmlParser(props.data.question, { transform: transform })} */}
         </div>
         <List>
           {props.data.answers.length > 0 ? (
@@ -75,7 +75,7 @@ function MultipleChoice(props: IProps) {
   return (
     <React.Fragment>
       <div>
-        {ReactHtmlParser(props.data.question, { transform: transform })}
+        {/* {ReactHtmlParser(props.data.question, { transform: transform })} */}
       </div>
       <List>
         {props.data.answers.map((ans) => {

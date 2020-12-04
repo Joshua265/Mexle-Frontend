@@ -5,6 +5,7 @@ import { useRootStore } from "context/RootStateContext";
 import CreateCourse from "components/CreateCourse";
 import CreateChapter from "components/CreateChapter";
 import CreateStep from "components/CreateStep";
+import checkForEditShow from "helpers/checkForEditShow";
 
 interface IProps {
   add: string;
@@ -40,7 +41,7 @@ function AddButton(props: IProps) {
     }
   };
 
-  if (userStore.role == "admin") {
+  if (checkForEditShow(userStore.userData)) {
     return (
       <React.Fragment>
         <Fab

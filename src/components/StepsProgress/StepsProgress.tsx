@@ -15,6 +15,7 @@ import {
   Step,
   Drawer,
 } from "@material-ui/core";
+import { useTranslation } from "react-i18next";
 
 const drawerWidth = 240;
 
@@ -56,10 +57,11 @@ interface IStep {
   chapterId: string;
   title: string;
   description: string;
-  metadata: IMetadata;
+  author: string;
+  content: Icontent;
 }
 
-interface IMetadata {
+interface Icontent {
   html: String;
   multipleChoice: any;
 }
@@ -72,33 +74,34 @@ function getSteps(stepList) {
 }
 
 function StepsProgress(props: IProps) {
-  const [activeChapter, setActiveChapter] = useState(0);
+  const [activeStep, setactiveStep] = useState(0);
   const classes = useStyles();
+  const { t } = useTranslation();
 
   const steps = getSteps(props.steps);
 
   const getStepContent = () => {
-    return props.steps[activeChapter].description;
+    return props.steps[activeStep].description;
   };
 
   const handleNext = () => {
-    props.activeStepCallback(activeChapter + 1);
-    setActiveChapter((activeChapter) => activeChapter + 1);
+    props.activeStepCallback(activeStep + 1);
+    setactiveStep((activeStep) => activeStep + 1);
   };
 
   const handleFinish = () => {
     props.activeStepCallback(-1);
-    setActiveChapter(-1);
+    setactiveStep(-1);
   };
 
   const handleBack = () => {
-    props.activeStepCallback(activeChapter - 1);
-    setActiveChapter((activeChapter) => activeChapter - 1);
+    props.activeStepCallback(activeStep - 1);
+    setactiveStep((activeStep) => activeStep - 1);
   };
 
   const handleStepClick = (index) => {
     props.activeStepCallback(index);
-    setActiveChapter(index);
+    setactiveStep(index);
   };
 
   return (
@@ -111,21 +114,21 @@ function StepsProgress(props: IProps) {
         paper: classes.drawerPaper,
       }}
     >
-      <Stepper activeStep={activeChapter} nonLinear orientation="vertical">
+      <Stepper activeStep={activeStep} nonLinear orientation="vertical">
         {steps.map((label, index) => (
           <Step key={index}>
             <StepButton onClick={() => handleStepClick(index)}>
-              <StepLabel>{label}</StepLabel>
-              <StepContent>
-                <Typography>{getStepContent}</Typography>
-              </StepContent>
+              {label}
             </StepButton>
+            <StepContent>
+              <Typography>{getStepContent}</Typography>
+            </StepContent>
           </Step>
         ))}
       </Stepper>
       <div className={classes.actionsContainer}>
         {/* <Button
-          disabled={activeChapter === 0}
+          disabled={activeStep === 0}
           onClick={handleBack}
           className={classes.button}
         >
@@ -135,11 +138,11 @@ function StepsProgress(props: IProps) {
           variant="contained"
           color="primary"
           onClick={
-            activeChapter === steps.length - 1 ? handleFinish : handleNext
+            activeStep === steps.length - 1 ? handleFinish : handleNext
           }
           className={classes.button}
         >
-          {activeChapter === steps.length - 1 ? "Finish" : "Next"}
+          {activeStep === steps.length - 1 ? "Finish" : "Next"}
         </Button> */}
         <Divider />
         <List
@@ -148,11 +151,16 @@ function StepsProgress(props: IProps) {
           aria-label="common"
         >
           <ListItem button>
-            <ListItemText primary="Lizenz" />
+            <ListItemText primary={t("license")} />
           </ListItem>
           <Divider />
           <ListItem button divider>
-            <ListItemText primary="Verzeichnisse" />
+            <ListItemText primary={t("directories")} />
+          </ListItem>
+          <ListItem divider>
+            <ListItemText
+              primary={`${t("author")}: ${props.steps[activeStep].author}`}
+            />
           </ListItem>
         </List>
       </div>

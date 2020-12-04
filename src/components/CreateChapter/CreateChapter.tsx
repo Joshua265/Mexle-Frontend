@@ -18,7 +18,7 @@ import { useRootStore } from "context/RootStateContext";
 const useStyles = makeStyles((theme) => ({
   appBar: {
     position: "relative",
-    marginTop: "64px",
+    top: 0,
   },
   title: {
     marginLeft: theme.spacing(2),
@@ -69,7 +69,6 @@ function CreateChapter(props: IProps) {
           description: props.data.description,
           picture: props.data.picture,
           visible: props.data.visible,
-          author: userStore.username,
           courseId: location.pathname.split("/")[2],
         }
       : {
@@ -77,12 +76,9 @@ function CreateChapter(props: IProps) {
           description: "",
           picture: "",
           visible: false,
-          author: userStore.username,
           courseId: location.pathname.split("/")[2],
         }
   );
-
-  console.log(props);
 
   useEffect(() => {
     setOpen(props.open);

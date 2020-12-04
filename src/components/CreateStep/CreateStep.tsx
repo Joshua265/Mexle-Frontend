@@ -19,16 +19,16 @@ import {
 import webServiceProvider from "helpers/webServiceProvider";
 import { useLocation } from "react-router-dom";
 import ReactHtmlParser from "react-html-parser";
-import transform from "helpers/transform";
+// import transform from "helpers/transform";
 import CreateMultipleChoice from "components/CreateMultipleChoice";
 import MultipleChoice from "components/MultipleChoice";
 import { useRootStore } from "context/RootStateContext";
 import CustomCKEditor from "container/CustomCKEditor/CustomCKEditor";
+import DOMPurify from "dompurify";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
     position: "relative",
-    marginTop: "112px",
   },
   title: {
     marginLeft: theme.spacing(2),
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface IMetadata {
+interface Icontent {
   html: string;
   multipleChoice: Array<IMultipleChoice>;
 }
@@ -80,29 +80,25 @@ const Transition = React.forwardRef(function Transition(
 });
 
 function CreateStep(props: IProps) {
-  const ref = useRef({
-    current: { disableEnforceFocus: true, disableAutoFocus: true },
-  });
-  console.log(ref.current);
   const classes = useStyles();
   const location = useLocation();
   const { userStore } = useRootStore();
   const [open, setOpen] = useState(false);
-  const [metadata, setMetadata] = useState<IMetadata>({
+  const [content, setcontent] = useState<Icontent>({
     html: "",
     multipleChoice: [],
   });
   const [form, setForm] = useState({
     title: "",
     description: "",
-    author: userStore.username,
+    author: userStore.userData.username,
     visible: true,
     chapterId: location.pathname.split("/")[3],
   });
 
   const fetchStep = async () => {
     const step = await webServiceProvider.get(`steps/${props.id}`);
-    setMetadata(step.metadata);
+    setcontent(step.content);
     setForm({ ...form, title: step.title, description: step.description });
   };
 
@@ -110,7 +106,7 @@ function CreateStep(props: IProps) {
     if (props.edit) {
       fetchStep();
     }
-  }, [props]);
+  }, [props.open]);
 
   useEffect(() => {
     setOpen(props.open);
@@ -125,14 +121,14 @@ function CreateStep(props: IProps) {
     if (props.edit) {
       await webServiceProvider.post(`steps/edit/${props.id}`, {
         ...form,
-        metadata,
-        author: userStore.username,
+        content,
+        author: userStore.userData.username,
       });
     } else {
       await webServiceProvider.post("steps/create", {
         ...form,
-        metadata,
-        author: userStore.username,
+        content,
+        author: userStore.userData.username,
       });
     }
 
@@ -145,15 +141,15 @@ function CreateStep(props: IProps) {
   };
 
   const addMultipleChoiceQuestion = () => {
-    console.log(metadata.multipleChoice);
-    if (metadata.multipleChoice) {
-      const list = metadata.multipleChoice;
+    console.log(content.multipleChoice);
+    if (content.multipleChoice) {
+      const list = content.multipleChoice;
       list.push({
         question: "",
         answers: [],
         correctAnswer: -1,
       });
-      setMetadata({ ...metadata, multipleChoice: list });
+      setcontent({ ...content, multipleChoice: list });
     } else {
       const list: IMultipleChoice[] = [];
       list.push({
@@ -161,26 +157,22 @@ function CreateStep(props: IProps) {
         answers: [],
         correctAnswer: -1,
       });
-      setMetadata({ ...metadata, multipleChoice: list });
+      setcontent({ ...content, multipleChoice: list });
     }
   };
 
   const saveMultipleChoice = (index: number, data: IMultipleChoice) => {
-    const list = metadata.multipleChoice;
+    const list = content.multipleChoice;
     list[index] = data;
-    setMetadata({ ...metadata, multipleChoice: list });
+    setcontent({ ...content, multipleChoice: list });
   };
 
   const removeMultipleChoiceQuestion = (index: number) => {
-    setMetadata({
-      ...metadata,
-      multipleChoice: metadata.multipleChoice.filter(
-        (item, id) => id !== index
-      ),
+    setcontent({
+      ...content,
+      multipleChoice: content.multipleChoice.filter((item, id) => id !== index),
     });
   };
-
-  console.log(props);
 
   return (
     <Dialog
@@ -227,15 +219,15 @@ function CreateStep(props: IProps) {
             />
           </form>
           <CustomCKEditor
-            data={metadata.html}
-            onChange={(data) => setMetadata({ ...metadata, html: data })}
+            data={content.html}
+            onChange={(data) => setcontent({ ...content, html: data })}
           />
           <Button onClick={addMultipleChoiceQuestion}>
             Multiple Choice Frage Hinzufügen
           </Button>
 
-          {metadata.multipleChoice ? (
-            metadata.multipleChoice.map((mcQuestion, index) => {
+          {content.multipleChoice ? (
+            content.multipleChoice.map((mcQuestion, index) => {
               return (
                 <React.Fragment>
                   <Button onClick={() => removeMultipleChoiceQuestion(index)}>
@@ -256,11 +248,15 @@ function CreateStep(props: IProps) {
         </Grid>
 
         <Grid item xs={6}>
-          {/* <div>{metadata.html}</div> */}
-          <div>{ReactHtmlParser(metadata.html, { transform: transform })}</div>
+          <div>{content.html}</div>
+          <div>
+            {/* {ReactHtmlParser(DOMPurify.sanitize(content.html), {
+              transform: transform,
+            })} */}
+          </div>
 
-          {metadata.multipleChoice ? (
-            metadata.multipleChoice.map((data, index) => {
+          {content.multipleChoice ? (
+            content.multipleChoice.map((data, index) => {
               return <MultipleChoice key={index} data={data} />;
             })
           ) : (

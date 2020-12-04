@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, FC } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { useRootStore } from "context/RootStateContext";
 
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-import { CssBaseline } from "@material-ui/core";
+import { ThemeProvider } from "@material-ui/core/styles";
+import { Backdrop, CssBaseline } from "@material-ui/core";
+import { SnackbarProvider } from "notistack";
+import { observer } from "mobx-react";
 
 import PrivateRoute from "PrivateRoute";
 
@@ -17,79 +20,62 @@ import StepsPage from "components/StepsPage";
 import ChapterPage from "components/ChapterPage";
 import HomePage from "components/HomePage";
 import SecondHeader from "components/SecondHeader/SecondHeader";
+import SignUpPage from "components/SignUpPage";
 
-export default function App() {
-  const [open, setOpen] = useState(false);
+import getTheme from "helpers/theme";
+
+const ThemeSelector = observer(({ children }) => {
+  // const darkMode = cookies.get("darkMode") === "true" ? true : false || false;
   const { localStore } = useRootStore();
+  const theme = getTheme(localStore.getDarkMode());
+  return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
+});
+
+const App: FC = () => {
+  const { localStore, userStore } = useRootStore();
+  const history = useHistory();
+  const [open, setOpen] = useState(false);
+  const [theme, setTheme] = useState(getTheme(localStore.darkMode));
 
   const handleDrawer = () => {
     setOpen(!open);
   };
 
-  console.log(localStore.darkMode);
-
-  const theme = createMuiTheme({
-    palette: {
-      type: "light", //localStore.darkMode ? "dark" : "light",
-      primary: {
-        main: "#006A00",
-        light: "#006A00",
-        dark: "#35D435",
-      },
-      secondary: {
-        main: "#62929E",
-        light: "#62929E",
-        dark: "#62929E",
-      },
-    },
-    overrides: {
-      MuiPaper: {
-        elevation1: {
-          margin: "20px",
-          padding: "20px",
-          boxSizing: "border-box",
-          overflow: "auto",
-        },
-        elevation2: {
-          height: "46px",
-          marginLeft: "20px",
-          marginRight: "20px",
-        },
-      },
-      MuiTypography: {
-        h2: {
-          margin: "20px",
-        },
-      },
-    },
-  });
+  useEffect(() => {
+    localStore.initLocalVariables();
+  }, []);
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Router>
-        <Header handleDrawer={handleDrawer} />
-        <SecondHeader />
+    <ThemeSelector>
+      <SnackbarProvider>
+        <CssBaseline />
+        <Router>
+          <Header />
+          <SecondHeader />
 
-        <Sidebar open={open} />
+          <Sidebar open={open} />
 
-        <Switch>
-          <Route path="/" exact component={HomePage} />
-          <PrivateRoute path="/courses" exact component={Courses} />
-          <Route path="/login" exact component={LoginPage} />
-          <PrivateRoute
-            path="/courses/:CourseId"
-            exact
-            component={ChapterPage}
-          />
-          <PrivateRoute
-            path="/courses/:CourseId/:ChapterId"
-            exact
-            component={StepsPage}
-          />
-          <PrivateRoute path="/account" exact component={AccountPage} />
-        </Switch>
-      </Router>
-    </ThemeProvider>
+          <Switch>
+            <Route path="/" exact component={HomePage} />
+            <PrivateRoute path="/courses" exact component={Courses} />
+            <Route path="/login" exact component={LoginPage} />
+            <Route path="/signup" exact component={SignUpPage} />
+            <PrivateRoute
+              path="/courses/:CourseId"
+              exact
+              component={ChapterPage}
+            />
+            <PrivateRoute
+              path="/courses/:CourseId/:ChapterId"
+              exact
+              component={StepsPage}
+            />
+            <PrivateRoute path="/account" exact component={AccountPage} />
+          </Switch>
+        </Router>
+      </SnackbarProvider>
+    </ThemeSelector>
   );
-}
+};
+
+export default App;

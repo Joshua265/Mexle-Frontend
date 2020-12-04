@@ -1,0 +1,13 @@
+{
+  "login": "Log In",
+  "homepage": "Welcome to Mexle's e-learning!",
+  "next": "Next",
+  "back": "Back",
+  "edit": "Edit",
+  "finish": "Finish",
+  "author": "Author",
+  "visible": "Visible",
+  "license": "License",
+  "novisibilitychange": "Error changing visibility!",
+  "markfinishedstep": "Complete Step"
+}

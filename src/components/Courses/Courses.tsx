@@ -10,6 +10,8 @@ interface ICourse {
   title: string;
   description: string;
   author: string;
+  language: string;
+  license: string;
   visible: boolean;
   picture: string;
 }
@@ -43,6 +45,8 @@ function Courses() {
               key={course._id}
               imageLink={course.picture}
               author={course.author}
+              language={course.language}
+              license={course.license}
               link={`/courses/${course._id}`}
               kind="Course"
             />

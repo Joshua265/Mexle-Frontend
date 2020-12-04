@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import ReactHtmlParser from "react-html-parser";
+// import HtmlToReactParser from "html-to-react";
 
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -17,10 +17,18 @@ import FinishPage from "components/FinishPage";
 import StepsProgress from "components/StepsProgress";
 import AddButton from "container/AddButton";
 import webServiceProvider from "helpers/webServiceProvider";
-import transform from "helpers/transform";
 import { useRootStore } from "context/RootStateContext";
 import CreateStep from "components/CreateStep";
 import MultipleChoice from "components/MultipleChoice";
+import { useTranslation } from "react-i18next";
+import DOMPurify from "dompurify";
+
+import checkForEditShow from "helpers/checkForEditShow";
+import {
+  htmlToReactParser,
+  isValidNode,
+  processingInstructions,
+} from "helpers/transform";
 
 const drawerWidth = 240;
 
@@ -32,8 +40,9 @@ const useStyles = makeStyles((theme) => ({
     margin: 0,
   },
   content: {
-    margin: "0px 20px 0px 20px",
+    margin: "0px 0px 0px 20px",
     padding: 20,
+    overflowX: "hidden",
     width: `calc(100% - 40)`,
     transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.sharp,
@@ -43,8 +52,9 @@ const useStyles = makeStyles((theme) => ({
   },
   contentShift: {
     marginTop: 0,
-    marginRight: 20,
+    marginRight: 0,
     padding: 20,
+    overflowX: "hidden",
     width: `calc(100% - ${drawerWidth}px - 40)`,
     marginLeft: drawerWidth + 20,
     transition: theme.transitions.create(["margin", "width"], {
@@ -62,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface IMetadata {
+interface Icontent {
   html: String;
   multipleChoice: any;
 }
@@ -70,6 +80,7 @@ interface IMetadata {
 interface IChapters {
   _id: string;
   courseId: string;
+  author: string;
   title: string;
   description: string;
 }
@@ -78,8 +89,9 @@ interface IStep {
   _id: string;
   chapterId: string;
   title: string;
+  author: string;
   description: string;
-  metadata: IMetadata;
+  content: Icontent;
 }
 
 function StepsPage() {
@@ -91,6 +103,7 @@ function StepsPage() {
   const [openStepProgress, setOpenStepProgress] = useState(true);
   const classes = useStyles();
   const location = useLocation();
+  const { t } = useTranslation();
   const { userStore } = useRootStore();
   const chapterId = location.pathname.split("/")[3];
 
@@ -101,6 +114,15 @@ function StepsPage() {
 
   const getActiveStep = (step) => {
     setCurrentStep(step);
+  };
+
+  const handleMarkFinished = () => {
+    if (currentStep === steps.length - 1) {
+      setCurrentStep(-1);
+    } else {
+      setCurrentStep(currentStep + 1);
+    }
+    userStore.addFinished("step", steps[currentStep]._id);
   };
 
   //replace with fetch steps by chapterId function
@@ -161,9 +183,12 @@ function StepsPage() {
             </Typography>
             {
               //only show editButton and edit to certain users
-              userStore.role === "admin" ? (
+              checkForEditShow(
+                userStore.userData,
+                steps[currentStep].author
+              ) ? (
                 <React.Fragment>
-                  <Button onClick={() => setOpen(true)}>Bearbeiten</Button>
+                  <Button onClick={() => setOpen(true)}>{t("edit")}</Button>
                   <CreateStep
                     edit={true}
                     open={open}
@@ -178,15 +203,18 @@ function StepsPage() {
           </Paper>
 
           <React.Fragment>
-            {steps[currentStep].metadata ? (
-              ReactHtmlParser(steps[currentStep].metadata.html, {
-                transform: transform,
-              })
+            {/* {steps[currentStep].content.html} */}
+            {steps[currentStep].content ? (
+              htmlToReactParser.parseWithInstructions(
+                steps[currentStep].content.html,
+                isValidNode,
+                processingInstructions
+              )
             ) : (
               <React.Fragment />
             )}
-            {steps[currentStep].metadata.multipleChoice ? (
-              steps[currentStep].metadata.multipleChoice.map((data, index) => {
+            {steps[currentStep].content.multipleChoice ? (
+              steps[currentStep].content.multipleChoice.map((data, index) => {
                 return <MultipleChoice key={index} data={data} />;
               })
             ) : (
@@ -197,18 +225,16 @@ function StepsPage() {
               disabled={currentStep === 0}
               onClick={() => setCurrentStep(currentStep - 1)}
             >
-              Back
+              {t("back")}
             </Button>
             <Button
               variant="contained"
               color="primary"
-              onClick={
-                currentStep === steps.length - 1
-                  ? () => setCurrentStep(-1)
-                  : () => setCurrentStep(currentStep + 1)
-              }
+              onClick={handleMarkFinished}
             >
-              {currentStep === steps.length - 1 ? "Finish" : "Next"}
+              {currentStep === steps.length - 1
+                ? t("finish")
+                : t("markfinishedstep")}
             </Button>
           </React.Fragment>
         </Paper>

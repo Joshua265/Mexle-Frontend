@@ -1,13 +1,11 @@
 import React from "react";
 import YouTube from "react-youtube";
-import Table from "@material-ui/core/Table";
-import TableRow from "@material-ui/core/TableRow";
-import TableCell from "@material-ui/core/TableCell";
-import TableBody from "@material-ui/core/TableBody";
-import { RevealJS, Slide, H } from "revealjs-react";
-import RevealHighlight from "revealjs-react/plugins/highlight";
 import { MathComponent } from "mathjax-react";
 import { getGeogebraStyle } from "helpers/Geogebra";
+import SlideShow from "container/SlideShow";
+
+var HtmlToReact = require("html-to-react");
+var HtmlToReactParser = require("html-to-react").Parser;
 
 const opts = {
   minHeight: "390px",
@@ -17,109 +15,104 @@ const opts = {
   },
 };
 
-function transform(node) {
-  // change render of youtube videos
-  if (
-    node.type === "tag" &&
-    node.name === "oembed" &&
-    node.attribs.url.includes("yout")
-  ) {
-    return <YouTube videoId={node.attribs.url.split("/").pop()} opts={opts} />;
-  }
-  // change render of falstad simulations
-  if (
-    node.type === "tag" &&
-    node.name === "oembed" &&
-    node.attribs.url.includes("falstad")
-  ) {
-    return (
-      <iframe
-        title={node.attribs.url}
-        src={node.attribs.url}
-        style={{ width: "100%", minHeight: "400px" }}
-      />
-    );
-  }
-  // change render of geogebra
-  if (
-    node.type === "tag" &&
-    node.name === "oembed" &&
-    node.attribs.url.includes("geogebra.org")
-  ) {
-    const style = getGeogebraStyle(node.attribs.url);
-    return (
-      <iframe
-        title={node.attribs.url}
-        src={node.attribs.url}
-        height={style.height}
-        width={style.width}
-      ></iframe>
-    );
-  }
-  //change display of revealjs
-  if (
-    node.type === "tag" &&
-    node.name === "div" &&
-    node.attribs.class === "reveal"
-  ) {
-    return (
-      // <div className="reveal">
-      //   <RevealJS plugins={[RevealHighlight]}>
-      //     {node.children.map((slide) => {
-      //       return (
-      //         <Slide>
-      //           <P size="1">Hello World</P>
-      //         </Slide>
-      //       );
-      //     })}
-      //   </RevealJS>
-      // </div>
-      <div className="reveal">
-        <RevealJS plugins={[RevealHighlight]}>
-          <Slide>
-            <H size="1">Hello, World!</H>
-          </Slide>
-          <Slide>
-            <H size="1">Hello, World!</H>
-          </Slide>
-        </RevealJS>
-      </div>
-    );
-  }
+var isValidNode = function () {
+  return true;
+};
 
-  //change display of math
-  if (node.type === "tag" && node.name === "math") {
-    let text = "";
-    node.children.forEach((el) => {
-      text = text.concat(`${el.children[0].data}`);
-    });
-    return <MathComponent tex={String.raw`${text}`} display={false} />;
-  }
+// Order matters. Instructions are processed in the order they're defined
+var processNodeDefinitions = new HtmlToReact.ProcessNodeDefinitions(React);
+var processingInstructions = [
+  {
+    // Custom <Geogebra> processing
+    shouldProcessNode: function (node) {
+      return (
+        node.type === "tag" &&
+        node.name === "oembed" &&
+        node.attribs.url.includes("geogebra.org")
+      );
+    },
+    processNode: function (node, children) {
+      const style = getGeogebraStyle(node.attribs.url);
+      return (
+        <iframe
+          title={node.attribs.url}
+          src={node.attribs.url}
+          height={style.height}
+          width={style.width}
+        ></iframe>
+      );
+    },
+  },
+  {
+    // Custom <Youtube> processing
+    shouldProcessNode: function (node) {
+      return (
+        node.type === "tag" &&
+        node.name === "oembed" &&
+        node.attribs.url.includes("yout")
+      );
+    },
+    processNode: function (node, children) {
+      return (
+        <YouTube videoId={node.attribs.url.split("v=").pop()} opts={opts} />
+      );
+    },
+  },
+  {
+    // Custom <Falstad> processing
+    shouldProcessNode: function (node) {
+      return (
+        node.type === "tag" &&
+        node.name === "oembed" &&
+        node.attribs.url.includes("falstad")
+      );
+    },
+    processNode: function (node, children) {
+      return (
+        <iframe
+          title={node.attribs.url}
+          src={node.attribs.url}
+          style={{ width: "100%", minHeight: "400px" }}
+        />
+      );
+    },
+  },
+  {
+    // Custom <SlideShow> processing
+    replaceChildren: true,
+    shouldProcessNode: function (node) {
+      return (
+        node.type === "tag" &&
+        node.name === "div" &&
+        node.attribs.class === "reveal"
+      );
+    },
+    processNode: function (node, children) {
+      return <SlideShow steps={children} />;
+    },
+  },
+  // {
+  //   // Custom <Math> processing
+  //   shouldProcessNode: function (node) {
+  //     return (
+  //       node.name === "math" &&
+  //       node.attribs.xmlns === "http://www.w3.org/1998/Math/MathML"
+  //     );
+  //   },
+  //   processNode: function (node, children) {
+  //     console.log(String.raw`${children}`);
+  //     // return React.createElement(MathComponent, { mathml: children });
+  //     return children;
+  //   },
+  // },
+  {
+    // Anything else
+    shouldProcessNode: function (node) {
+      return true;
+    },
+    processNode: processNodeDefinitions.processDefaultNode,
+  },
+];
+var htmlToReactParser = new HtmlToReactParser();
 
-  //change design of table
-  // if (node.type === "tag" && node.name === "table") {
-  //   return (
-  //     <Table size="small">
-  //       <TableBody>
-  //         {node.children[0].children.map((tr) => {
-  //           return (
-  //             <TableRow key={String(Math.random())}>
-  //               {tr.children.map((td) => {
-  //                 return (
-  //                   <TableCell key={String(Math.random())}>
-  //                     {td.children[0].data}
-  //                   </TableCell>
-  //                 );
-  //               })}
-  //             </TableRow>
-  //           );
-  //         })}
-  //       </TableBody>
-  //     </Table>
-  //   );
-  // }
-
-  return;
-}
-
-export default transform;
+export { htmlToReactParser, isValidNode, processingInstructions };

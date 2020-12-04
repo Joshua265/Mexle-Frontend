@@ -1,22 +1,50 @@
 import axios from "axios";
-const API_SERVER = "http://localhost:3001/";
+import Cookie from "universal-cookie";
+
+const API_SERVER: string = process.env.REACT_APP_API_SERVER || "";
+
+const cookie = new Cookie();
 
 const webServiceProvider = {
-  get: async (url: string, params?: object) => {
+  get: async (url: string, params?: object, token?: string) => {
+    if (!token) {
+      token = cookie.get("token") || "";
+    }
     if (params) {
-      const response = await axios.get(API_SERVER! + url, params);
+      const response = await axios.get(API_SERVER + url, {
+        ...params,
+        headers: { Authorization: `Bearer ${token}` },
+      });
       return response.data;
     } else {
-      const response = await axios.get(API_SERVER! + url);
+      const response = await axios.get(API_SERVER + url, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       return response.data;
     }
   },
-  post: async (url: string, params?: object) => {
+  post: async (url: string, params?: object, token?: string) => {
+    console.log(process.env);
+    if (!token) {
+      token = cookie.get("token") || "";
+    }
     if (params) {
-      const response = await axios.post(API_SERVER! + url, params);
+      const response = await axios.post(
+        String.prototype.concat(API_SERVER, url),
+        params,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       return response.data;
     } else {
-      const response = await axios.post(API_SERVER! + url);
+      const response = await axios.post(
+        String.prototype.concat(API_SERVER, url),
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       return response.data;
     }
   },

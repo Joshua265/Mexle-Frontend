@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import { Link } from "react-router-dom";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -7,18 +7,22 @@ import {
   Toolbar,
   Typography,
   Button,
-  IconButton,
   Switch,
+  Select,
+  MenuItem,
 } from "@material-ui/core";
 
 import MenuIcon from "@material-ui/icons/Menu";
+import TranslateIcon from "@material-ui/icons/Translate";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
 import { useRootStore } from "context/RootStateContext";
-import { Observer } from "mobx-react";
+import { useObserver, observer } from "mobx-react";
+import { useTranslation } from "react-i18next";
 
 import DarkLogo from "./mexle_dark.svg";
 import LightLogo from "./mexle_light.svg";
+import languages from "helpers/languages";
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -26,7 +30,6 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     margin: 0,
     flexGrow: 1,
-    zIndex: 1400,
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -38,13 +41,19 @@ const useStyles = makeStyles((theme) => ({
     height: "38px",
     marginTop: "10px",
   },
+  select: {
+    display: "flex",
+    alignItems: "center",
+    color: "white",
+  },
 }));
 
-function Header(props) {
+const Header: FC = () => {
   const classes = useStyles();
+  const { t, i18n } = useTranslation();
   const { userStore, localStore } = useRootStore();
 
-  return (
+  return useObserver(() => (
     <AppBar className={classes.header}>
       <Toolbar>
         {/* <IconButton
@@ -63,30 +72,44 @@ function Header(props) {
           </Link>
         </Typography>
 
-        <Observer>
-          {() => (
-            <Switch
-              onChange={(e) => localStore.toggleDarkMode(e.target.checked)}
-              checked={localStore.darkMode}
-            />
-          )}
-        </Observer>
+        <Select
+          label="language"
+          renderValue={function (value) {
+            return (
+              <span className={classes.select}>
+                <TranslateIcon />
+                {" " + languages.find((el) => el.value === value)?.label}
+              </span>
+            );
+          }}
+          value={userStore.userData.language || i18n.language || "Deutsch"}
+          onChange={(e) => i18n.changeLanguage(e.target.value as string)}
+        >
+          {languages.map((lng) => {
+            return (
+              <MenuItem value={lng.value} key={lng.value}>
+                {lng.label}
+              </MenuItem>
+            );
+          })}
+        </Select>
 
-        <Observer>
-          {() => (
-            <Link
-              className="whiteLink"
-              to={userStore.loggedIn ? "/account" : "/login"}
-            >
-              <Button color="inherit">
-                <AccountCircleIcon />
-              </Button>
-            </Link>
-          )}
-        </Observer>
+        <Switch
+          onChange={() => localStore.toggleDarkMode()}
+          checked={localStore.darkMode}
+        />
+
+        <Link
+          className="whiteLink"
+          to={userStore.loggedIn ? "/account" : "/login"}
+        >
+          <Button color="inherit">
+            {userStore.loggedIn ? <AccountCircleIcon /> : <p>{t("login")}</p>}
+          </Button>
+        </Link>
       </Toolbar>
     </AppBar>
-  );
-}
+  ));
+};
 
 export default Header;

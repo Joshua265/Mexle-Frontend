@@ -15,6 +15,9 @@ import { useRootStore } from "context/RootStateContext";
 import CreateCourse from "components/CreateCourse";
 import CreateChapter from "components/CreateChapter";
 import webServiceProvider from "helpers/webServiceProvider";
+import checkForEditShow from "helpers/checkForEditShow";
+import { useSnackbar } from "notistack";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles({
   root: {
@@ -32,6 +35,9 @@ interface props {
   description?: string;
   imageLink?: string;
   author?: string;
+  language?: string;
+  license?: string;
+  directorys?: Array<any>;
   link: string;
   kind: "Course" | "Chapter";
 }
@@ -41,6 +47,8 @@ function MediaCard(props: props) {
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(false);
   const { userStore } = useRootStore();
+  const { enqueueSnackbar } = useSnackbar();
+  const { t } = useTranslation();
 
   const id =
     props.kind === "Course"
@@ -56,17 +64,21 @@ function MediaCard(props: props) {
   const handleVisibility = async (e) => {
     e.preventDefault();
     const visible = e.target.checked;
-    if (props.kind === "Course") {
-      await webServiceProvider.post(`courses/visible/${id}`, {
-        visible: visible,
-        user: userStore.username,
-      });
-    }
-    if (props.kind === "Chapter") {
-      await webServiceProvider.post(`chapters/visible/${id}`, {
-        visible: visible,
-        user: userStore.username,
-      });
+    try {
+      if (props.kind === "Course") {
+        await webServiceProvider.post(`courses/visible/${id}`, {
+          visible: visible,
+          user: userStore.userData.username,
+        });
+      }
+      if (props.kind === "Chapter") {
+        await webServiceProvider.post(`chapters/visible/${id}`, {
+          visible: visible,
+          user: userStore.userData.username,
+        });
+      }
+    } catch (e) {
+      enqueueSnackbar(t("novisibilitychange"), { variant: "error" });
     }
     setVisible(visible);
   };
@@ -96,6 +108,9 @@ function MediaCard(props: props) {
               description: props.description,
               visible: visible,
               picture: props.imageLink,
+              license: props.license,
+              directory: props.directorys,
+              language: props.language || "",
               _id: id,
             }}
           />
@@ -137,26 +152,33 @@ function MediaCard(props: props) {
               {props.description}
             </Typography>
             <Typography variant="body2" color="textPrimary" component="p">
-              Author: {props.author}
+              {t("author")}: {props.author}
             </Typography>
+            {props.license ? (
+              <Typography variant="body2" color="textPrimary" component="p">
+                {t("license")}: {props.license}
+              </Typography>
+            ) : (
+              <React.Fragment />
+            )}
           </CardContent>
         </CardActionArea>
       </Link>
-      {userStore.role === "admin" ? (
+      {checkForEditShow(userStore.userData) ? (
         <CardActions>
-          <Typography>Sichtbar:</Typography>
+          <Typography>{t("visible")}:</Typography>
           <Switch
             onChange={(e) => handleVisibility(e)}
             checked={visible}
-            disabled={userStore.username !== props.author}
+            disabled={!checkForEditShow(userStore.userData, props.author)}
           ></Switch>
           <Button
             onClick={() => setOpen(true)}
             size="small"
             color="primary"
-            disabled={userStore.username !== props.author}
+            disabled={!checkForEditShow(userStore.userData, props.author)}
           >
-            Bearbeiten
+            {t("edit")}
           </Button>
         </CardActions>
       ) : (
