@@ -1,6 +1,6 @@
 import { Button } from "@material-ui/core";
 import { useRootStore } from "context/RootStateContext";
-import { Observer } from "mobx-react";
+import { Observer } from "mobx-react-lite";
 import React from "react";
 import { useHistory } from "react-router-dom";
 

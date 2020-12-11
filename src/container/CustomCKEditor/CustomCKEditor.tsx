@@ -4,7 +4,7 @@ import Cookies from "universal-cookie";
 import Editor from "ckeditor5-custom-build/src/ckeditor";
 import { getGeogebraStyle } from "helpers/Geogebra";
 import { useTranslation } from "react-i18next";
-import { observer } from "mobx-react";
+import { observer } from "mobx-react-lite";
 import { useRootStore } from "context/RootStateContext";
 
 interface IProps {
@@ -17,12 +17,11 @@ const LightTheme = React.lazy(() => import("./lightMode"));
 const DarkTheme = React.lazy(() => import("./darkMode"));
 
 const ThemeSelector = observer(({ children }) => {
-  // const darkMode = cookies.get("darkMode") === "true" ? true : false || false;
   const { localStore } = useRootStore();
   return (
     <>
       <React.Suspense fallback={<></>}>
-        {localStore.getDarkMode() ? <DarkTheme /> : <LightTheme />}
+        {localStore.localVariables.darkMode ? <DarkTheme /> : <LightTheme />}
       </React.Suspense>
       {children}
     </>
@@ -51,6 +50,9 @@ function CustomCKEditor(props: IProps) {
     },
     mathType: {
       language: i18n.language.substring(0, 2),
+    },
+    hide: {
+      icon: "../images/Hide.svg",
     },
     language: i18n.language.substring(0, 2),
   };

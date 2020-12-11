@@ -49,6 +49,7 @@ function LoginPage() {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const { userStore } = useRootStore();
+  const { userData } = userStore;
   const history = useHistory();
   const location = useLocation();
   const [username, setUsername] = useState("");
@@ -56,7 +57,7 @@ function LoginPage() {
   const [loggingIn, setLoggingIn] = useState(false);
 
   useEffect(() => {
-    if (!userStore.loggedIn && !loggingIn) {
+    if (!userData.loggedIn && !loggingIn) {
       autoLogin();
     }
   }, []);
@@ -90,9 +91,7 @@ function LoginPage() {
       history.push(
         qs.parse(location.search, { ignoreQueryPrefix: true }).path || "/"
       );
-      console.log(userData);
     } catch (e) {
-      console.log(e);
       enqueueSnackbar("Wrong Username or Password!", { variant: "error" });
     }
   };
@@ -101,7 +100,7 @@ function LoginPage() {
     return <Backdrop open />;
   }
 
-  if (userStore.loggedIn) {
+  if (userData.loggedIn) {
     return <Redirect to="/account" />;
   }
 

@@ -6,7 +6,7 @@ import { useRootStore } from "context/RootStateContext";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { Backdrop, CssBaseline } from "@material-ui/core";
 import { SnackbarProvider } from "notistack";
-import { observer } from "mobx-react";
+import { observer } from "mobx-react-lite";
 
 import PrivateRoute from "PrivateRoute";
 
@@ -23,11 +23,11 @@ import SecondHeader from "components/SecondHeader/SecondHeader";
 import SignUpPage from "components/SignUpPage";
 
 import getTheme from "helpers/theme";
+import LicensePage from "components/LicensePage";
 
 const ThemeSelector = observer(({ children }) => {
-  // const darkMode = cookies.get("darkMode") === "true" ? true : false || false;
   const { localStore } = useRootStore();
-  const theme = getTheme(localStore.getDarkMode());
+  const theme = getTheme(localStore.localVariables.darkMode);
   return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
 });
 
@@ -35,7 +35,9 @@ const App: FC = () => {
   const { localStore, userStore } = useRootStore();
   const history = useHistory();
   const [open, setOpen] = useState(false);
-  const [theme, setTheme] = useState(getTheme(localStore.darkMode));
+  const [theme, setTheme] = useState(
+    getTheme(localStore.localVariables.darkMode)
+  );
 
   const handleDrawer = () => {
     setOpen(!open);
@@ -57,14 +59,21 @@ const App: FC = () => {
 
           <Switch>
             <Route path="/" exact component={HomePage} />
-            <PrivateRoute path="/courses" exact component={Courses} />
+
             <Route path="/login" exact component={LoginPage} />
             <Route path="/signup" exact component={SignUpPage} />
+            <PrivateRoute path="/courses" exact component={Courses} />
+
             <PrivateRoute
               path="/courses/:CourseId"
               exact
               component={ChapterPage}
             />
+            {/* <PrivateRoute
+              path="/courses/:CourseId/license"
+              exact
+              component={LicensePage}
+            /> */}
             <PrivateRoute
               path="/courses/:CourseId/:ChapterId"
               exact

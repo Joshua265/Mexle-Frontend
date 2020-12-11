@@ -3,6 +3,7 @@ import YouTube from "react-youtube";
 import { MathComponent } from "mathjax-react";
 import { getGeogebraStyle } from "helpers/Geogebra";
 import SlideShow from "container/SlideShow";
+import Hide from "container/Hide";
 
 var HtmlToReact = require("html-to-react");
 var HtmlToReactParser = require("html-to-react").Parser;
@@ -89,6 +90,20 @@ var processingInstructions = [
     },
     processNode: function (node, children) {
       return <SlideShow steps={children} />;
+    },
+  },
+  {
+    // Custom <Hide> processing
+    replaceChildren: true,
+    shouldProcessNode: function (node) {
+      return (
+        node.type === "tag" &&
+        node.name === "div" &&
+        node.attribs.class === "Hide"
+      );
+    },
+    processNode: function (node, children) {
+      return <Hide hidden={children} />;
     },
   },
   // {

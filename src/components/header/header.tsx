@@ -17,12 +17,14 @@ import TranslateIcon from "@material-ui/icons/Translate";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
 import { useRootStore } from "context/RootStateContext";
-import { useObserver, observer } from "mobx-react";
+import { useObserver, observer } from "mobx-react-lite";
 import { useTranslation } from "react-i18next";
 
 import DarkLogo from "./mexle_dark.svg";
 import LightLogo from "./mexle_light.svg";
 import languages from "helpers/languages";
+
+import { isObservable } from "mobx";
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -48,12 +50,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Header: FC = () => {
+const Header: FC = observer((props) => {
   const classes = useStyles();
   const { t, i18n } = useTranslation();
   const { userStore, localStore } = useRootStore();
+  const { localVariables } = localStore;
+  const { userData } = userStore;
 
-  return useObserver(() => (
+  return (
     <AppBar className={classes.header}>
       <Toolbar>
         {/* <IconButton
@@ -82,7 +86,7 @@ const Header: FC = () => {
               </span>
             );
           }}
-          value={userStore.userData.language || i18n.language || "Deutsch"}
+          value={userData.language || i18n.language || "Deutsch"}
           onChange={(e) => i18n.changeLanguage(e.target.value as string)}
         >
           {languages.map((lng) => {
@@ -96,20 +100,23 @@ const Header: FC = () => {
 
         <Switch
           onChange={() => localStore.toggleDarkMode()}
-          checked={localStore.darkMode}
+          checked={localVariables.darkMode}
         />
 
-        <Link
-          className="whiteLink"
-          to={userStore.loggedIn ? "/account" : "/login"}
-        >
-          <Button color="inherit">
-            {userStore.loggedIn ? <AccountCircleIcon /> : <p>{t("login")}</p>}
-          </Button>
-        </Link>
+        {userData.loggedIn ? (
+          <Link className="whiteLink" to="/account">
+            <Button color="inherit">
+              <AccountCircleIcon />
+            </Button>
+          </Link>
+        ) : (
+          <Link className="whiteLink" to="/login">
+            <Button color="inherit">{t("login")}</Button>
+          </Link>
+        )}
       </Toolbar>
     </AppBar>
-  ));
-};
+  );
+});
 
 export default Header;

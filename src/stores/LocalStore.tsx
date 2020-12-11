@@ -1,29 +1,23 @@
 import { observable, action } from "mobx";
+import { ObservableValue } from "mobx/dist/internal";
 import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
 
 interface ILocalStore {
-  darkMode: boolean;
+  localVariables: Object;
 }
 
 export default class LocalStore implements ILocalStore {
-  @observable darkMode = false;
+  localVariables = observable({ darkMode: false });
 
-  @action
-  toggleDarkMode(): void {
-    console.log("toggleDarkMode");
-    cookies.set("darkMode", !this.darkMode);
-    this.darkMode = !this.darkMode;
-  }
+  toggleDarkMode = action((): void => {
+    cookies.set("darkMode", !this.localVariables.darkMode);
+    this.localVariables.darkMode = !this.localVariables.darkMode;
+  });
 
-  @action
-  getDarkMode(): boolean {
-    return this.darkMode;
-  }
-
-  @action
-  initLocalVariables(): void {
-    this.darkMode = cookies.get("darkMode") === "true" ? true : false || false;
-  }
+  initLocalVariables = action((): void => {
+    this.localVariables.darkMode =
+      cookies.get("darkMode") === "true" ? true : false || false;
+  });
 }

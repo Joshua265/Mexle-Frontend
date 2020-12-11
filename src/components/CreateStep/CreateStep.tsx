@@ -18,13 +18,17 @@ import {
 } from "@material-ui/core";
 import webServiceProvider from "helpers/webServiceProvider";
 import { useLocation } from "react-router-dom";
-import ReactHtmlParser from "react-html-parser";
+// import ReactHtmlParser from "react-html-parser";
 // import transform from "helpers/transform";
 import CreateMultipleChoice from "components/CreateMultipleChoice";
 import MultipleChoice from "components/MultipleChoice";
 import { useRootStore } from "context/RootStateContext";
 import CustomCKEditor from "container/CustomCKEditor/CustomCKEditor";
-import DOMPurify from "dompurify";
+import {
+  htmlToReactParser,
+  isValidNode,
+  processingInstructions,
+} from "helpers/transform";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -83,7 +87,6 @@ function CreateStep(props: IProps) {
   const classes = useStyles();
   const location = useLocation();
   const { userStore } = useRootStore();
-  const [open, setOpen] = useState(false);
   const [content, setcontent] = useState<Icontent>({
     html: "",
     multipleChoice: [],
@@ -108,12 +111,7 @@ function CreateStep(props: IProps) {
     }
   }, [props.open]);
 
-  useEffect(() => {
-    setOpen(props.open);
-  }, [props.open]);
-
   const handleClose = () => {
-    setOpen(false);
     props.handleClose();
   };
 
@@ -174,10 +172,12 @@ function CreateStep(props: IProps) {
     });
   };
 
+  console.log(content.html);
+
   return (
     <Dialog
       fullScreen
-      open={open}
+      open={props.open}
       onClose={handleClose}
       TransitionComponent={Transition}
       disableEnforceFocus
@@ -248,11 +248,13 @@ function CreateStep(props: IProps) {
         </Grid>
 
         <Grid item xs={6}>
-          <div>{content.html}</div>
+          <div>{JSON.stringify(content.html)}</div>
           <div>
-            {/* {ReactHtmlParser(DOMPurify.sanitize(content.html), {
-              transform: transform,
-            })} */}
+            {htmlToReactParser.parseWithInstructions(
+              content.html,
+              isValidNode,
+              processingInstructions
+            )}
           </div>
 
           {content.multipleChoice ? (

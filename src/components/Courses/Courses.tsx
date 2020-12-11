@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import MediaCard from "container/MediaCard";
 import AddButton from "container/AddButton";
 import webServiceProvider from "helpers/webServiceProvider";
+import { useHistory } from "react-router-dom";
 
 interface ICourse {
   _id: string;
@@ -19,6 +20,7 @@ interface ICourse {
 function Courses() {
   const [courses, setCourses] = useState<ICourse[]>([]);
   const [error, setError] = useState(false);
+  const history = useHistory();
   useEffect(() => {
     getCourses();
   }, []);
@@ -26,6 +28,10 @@ function Courses() {
   const getCourses = async () => {
     try {
       const courseList = await webServiceProvider.get("courses");
+      console.log(courseList);
+      if (courseList === "Forbidden") {
+        history.push("/login");
+      }
       setCourses(courseList.courses);
     } catch {
       setError(true);

@@ -1,4 +1,4 @@
-import { observable, action } from "mobx";
+import { action, observable } from "mobx";
 import Cookie from "universal-cookie";
 import Date from "moment";
 import webServiceProvider from "helpers/webServiceProvider";
@@ -6,20 +6,24 @@ import webServiceProvider from "helpers/webServiceProvider";
 const cookie = new Cookie();
 
 interface IUserStore {
-  loggedIn: boolean;
   userData: IUserData;
-  token: string;
+  login: Function;
+  logout: Function;
+  addFinished: Function;
+  verifyToken: Function;
 }
 
 interface IUserData {
-  username: String;
-  email: String;
-  role: String;
-  language: String;
-  finishedCourses: Array<any>;
-  finishedChapters: Array<any>;
-  finishedSteps: Array<any>;
+  username: string;
+  email: string;
+  role: string;
+  language: string;
+  finishedCourses: IFinishedObject[];
+  finishedChapters: IFinishedObject[];
+  finishedSteps: IFinishedObject[];
   createdAt?: Date;
+  loggedIn: boolean;
+  token: string;
 }
 
 interface IFinishedObject {
@@ -42,7 +46,7 @@ const updateFinished = async (
 };
 
 export default class UserStore implements IUserStore {
-  @observable userData: IUserData = {
+  userData: IUserData = observable({
     username: "",
     email: "",
     role: "",
@@ -50,21 +54,16 @@ export default class UserStore implements IUserStore {
     finishedCourses: [],
     finishedChapters: [],
     finishedSteps: [],
-  };
-  @observable loggedIn = false;
-  @observable token = cookie.get("token") || "";
+    loggedIn: false,
+    token: cookie.get("token") || "",
+  });
 
-  @action
-  login(userData: IUserData, token: string): void {
-    this.loggedIn = true;
-    this.userData = userData;
-    this.token = token;
+  login = action((userData: IUserData, token: string): void => {
+    this.userData = { ...userData, token: token, loggedIn: true };
     cookie.set("token", token);
-  }
+  });
 
-  @action
-  logout(): void {
-    this.loggedIn = false;
+  logout = action((): void => {
     this.userData = {
       username: "",
       email: "",
@@ -73,13 +72,13 @@ export default class UserStore implements IUserStore {
       finishedCourses: [],
       finishedChapters: [],
       finishedSteps: [],
+      loggedIn: false,
+      token: "",
     };
-    this.token = "";
     cookie.remove("token", { path: "/" });
-  }
+  });
 
-  @action
-  addFinished(type: "course" | "chapter" | "step", id: string) {
+  addFinished = action((type: "course" | "chapter" | "step", id: string) => {
     const finishedObject: IFinishedObject = { id, date: Date.now() };
     updateFinished(type, finishedObject);
     switch (type) {
@@ -96,14 +95,13 @@ export default class UserStore implements IUserStore {
         break;
       }
     }
-  }
+  });
 
-  @action
-  verifyToken = async (localToken: string) => {
+  verifyToken = action(async (localToken: string) => {
     const {
       userData,
       token,
     } = await webServiceProvider.post("user/verifytoken", { localToken });
     this.login(userData, token);
-  };
+  });
 }
