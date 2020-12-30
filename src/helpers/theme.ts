@@ -14,6 +14,11 @@ const getTheme = (darkMode: boolean) => {
         light: "#62929E",
         dark: "#62929E",
       },
+      success: {
+        main: "#35D435",
+        light: "#35D435",
+        dark: "#35D435",
+      },
     },
     overrides: {
       MuiPaper: {

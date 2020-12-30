@@ -1,26 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import { useLocation } from "react-router-dom";
-import { Backdrop, Typography } from "@material-ui/core";
+import { Backdrop, Typography, Grid, Container } from "@material-ui/core";
+import { IChapters } from "types";
 
 import MediaCard from "container/MediaCard";
 import AddButton from "container/AddButton";
 import webServiceProvider from "helpers/webServiceProvider";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: "100%",
     minWidth: "500px",
     margin: "auto",
   },
-});
-
-interface IChapters {
-  _id: string;
-  courseId: string;
-  title: string;
-  description: string;
-}
+  cardGrid: {
+    paddingTop: theme.spacing(8),
+    paddingBottom: theme.spacing(8),
+  },
+}));
 
 function ChapterPage() {
   useEffect(() => {
@@ -43,15 +41,23 @@ function ChapterPage() {
         <Typography variant="h2" component="h3">
           Kapitel
         </Typography>
-        {chapters.map((chapter) => (
-          <MediaCard
-            key={chapter._id}
-            title={chapter.title}
-            description={chapter.description}
-            link={`${location.pathname}/${chapter._id}`}
-            kind="Chapter"
-          />
-        ))}
+        <Container className={classes.cardGrid} maxWidth="md">
+          <Grid container spacing={4}>
+            {chapters.map((chapter, index) => (
+              <Grid item key={index} xs={12} sm={6} md={4}>
+                <MediaCard
+                  _id={chapter._id}
+                  author={chapter.author}
+                  key={chapter._id}
+                  title={chapter.title}
+                  description={chapter.description}
+                  link={`${location.pathname}/${chapter._id}`}
+                  kind="Chapter"
+                />
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
         <AddButton add="chapter" />
       </React.Fragment>
     );

@@ -1,5 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+/*
+Entire Page needs rework for mobx chapter storage
+
+
+*/
+import React, { useState, useEffect, FC } from "react";
+import { useLocation, useHistory } from "react-router-dom";
 // import HtmlToReactParser from "html-to-react";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -10,6 +15,7 @@ import {
   Button,
   IconButton,
   Divider,
+  CircularProgress,
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import FinishPage from "components/FinishPage";
@@ -22,6 +28,7 @@ import CreateStep from "components/CreateStep";
 import MultipleChoice from "components/MultipleChoice";
 import { useTranslation } from "react-i18next";
 import DOMPurify from "dompurify";
+import { observer } from "mobx-react-lite";
 
 import checkForEditShow from "helpers/checkForEditShow";
 import {
@@ -29,6 +36,7 @@ import {
   isValidNode,
   processingInstructions,
 } from "helpers/transform";
+import { IStep, IChapters } from "types";
 
 const drawerWidth = 240;
 
@@ -48,173 +56,90 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    height: "calc(100vh - 112px)",
+    // height: "calc(100vh - 112px)",
   },
   contentShift: {
     marginTop: 0,
     marginRight: 0,
     padding: 20,
     overflowX: "hidden",
-    width: `calc(100% - ${drawerWidth}px - 40)`,
+    width: `calc(100% - ${drawerWidth}px - 40)`, //${theme.spacing(7) + 1})`,
     marginLeft: drawerWidth + 20,
     transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
-    height: "calc(100vh - 112px)",
+    // height: "calc(100vh - 112px)",
   },
   titlePaper: {
     position: "sticky",
-    top: "-20px",
+    top: -20,
     paddingTop: 20,
     margin: -20,
     marginBottom: 0,
   },
 }));
 
-interface Icontent {
-  html: String;
-  multipleChoice: any;
-}
-
-interface IChapters {
-  _id: string;
-  courseId: string;
-  author: string;
-  title: string;
-  description: string;
-}
-
-interface IStep {
-  _id: string;
-  chapterId: string;
-  title: string;
-  author: string;
-  description: string;
-  content: Icontent;
-}
-
-function StepsPage() {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [steps, setSteps] = useState<IStep[]>([]);
-  const [error, setError] = useState(false);
-  const [chapter, setChapter] = useState<IChapters>();
+const StepsPage: FC = observer(() => {
   const [open, setOpen] = useState(false);
   const [openStepProgress, setOpenStepProgress] = useState(true);
   const classes = useStyles();
   const location = useLocation();
+  const history = useHistory();
   const { t } = useTranslation();
-  const { userStore } = useRootStore();
+  const { userStore, stepStore } = useRootStore();
   const chapterId = location.pathname.split("/")[3];
+  const { activeStep, numberSteps, steps, error } = stepStore.steps;
 
   useEffect(() => {
-    fetchSteps();
-    fetchChapter();
+    stepStore.fetchSteps(chapterId);
+    return () => {
+      stepStore.clearSteps();
+    };
   }, []);
 
-  const getActiveStep = (step) => {
-    setCurrentStep(step);
-  };
+  useEffect(() => {
+    if (numberSteps > 0 && activeStep !== -1) {
+      history.push(`?stepId=${steps[activeStep]._id}`);
+    }
+  }, [activeStep, numberSteps, steps, history]);
 
   const handleMarkFinished = () => {
-    if (currentStep === steps.length - 1) {
-      setCurrentStep(-1);
+    if (activeStep === numberSteps - 1) {
+      stepStore.setActiveStep(-1);
     } else {
-      setCurrentStep(currentStep + 1);
+      stepStore.setActiveStep(activeStep + 1);
     }
-    userStore.addFinished("step", steps[currentStep]._id);
-  };
-
-  //replace with fetch steps by chapterId function
-  const fetchSteps = async () => {
-    try {
-      const stepList = await webServiceProvider.get(
-        `steps/chapterId/${chapterId}`
-      );
-      setSteps(stepList.steps);
-    } catch {
-      setError(true);
-    }
-  };
-
-  const fetchChapter = async () => {
-    const chapter = await webServiceProvider.get(`chapters/${chapterId}`);
-    setChapter(chapter.chapter);
+    userStore.addFinished("step", steps[activeStep]._id);
   };
 
   //when pressed finish
-  if (currentStep === -1) {
-    return (
-      <FinishPage
-        courseName={chapter ? chapter.title : ""}
-        redirect={location.pathname.replace(
-          chapter ? `/${chapter._id}` : "",
-          ""
-        )}
-      />
-    );
+  if (activeStep === -1) {
+    return <FinishPage chapterId={chapterId} />;
   }
 
   //return when steps are loaded
-  if (steps && steps.length > 0) {
+  if (steps && numberSteps > 0) {
     return (
       <React.Fragment>
-        <StepsProgress
-          steps={steps}
-          activeStepCallback={getActiveStep}
-          open={openStepProgress}
-        />
+        <StepsProgress open={openStepProgress} />
         <Paper
           className={openStepProgress ? classes.contentShift : classes.content}
           elevation={1}
         >
-          <Paper className={classes.titlePaper} elevation={1}>
-            <Typography variant="h6" component="h1">
-              <IconButton
-                edge="start"
-                // className={classes.menuButton}
-                color="inherit"
-                aria-label="menu"
-                onClick={() => setOpenStepProgress(!openStepProgress)}
-              >
-                <MenuIcon />
-              </IconButton>
-              {chapter ? chapter.title : ""} | {steps[currentStep].title}
-            </Typography>
-            {
-              //only show editButton and edit to certain users
-              checkForEditShow(
-                userStore.userData,
-                steps[currentStep].author
-              ) ? (
-                <React.Fragment>
-                  <Button onClick={() => setOpen(true)}>{t("edit")}</Button>
-                  <CreateStep
-                    edit={true}
-                    open={open}
-                    handleClose={() => setOpen(false)}
-                    id={steps[currentStep]._id}
-                  />
-                </React.Fragment>
-              ) : (
-                <React.Fragment />
-              )
-            }
-          </Paper>
-
           <React.Fragment>
             {/* {steps[currentStep].content.html} */}
-            {steps[currentStep].content ? (
+            {steps[activeStep].content ? (
               htmlToReactParser.parseWithInstructions(
-                steps[currentStep].content.html,
+                steps[activeStep].content.html,
                 isValidNode,
                 processingInstructions
               )
             ) : (
               <React.Fragment />
             )}
-            {steps[currentStep].content.multipleChoice ? (
-              steps[currentStep].content.multipleChoice.map((data, index) => {
+            {steps[activeStep].content.multipleChoice ? (
+              steps[activeStep].content.multipleChoice.map((data, index) => {
                 return <MultipleChoice key={index} data={data} />;
               })
             ) : (
@@ -222,8 +147,8 @@ function StepsPage() {
             )}
             <Divider style={{ margin: 12 }} />
             <Button
-              disabled={currentStep === 0}
-              onClick={() => setCurrentStep(currentStep - 1)}
+              disabled={activeStep === 0}
+              onClick={() => stepStore.setActiveStep(activeStep - 1)}
             >
               {t("back")}
             </Button>
@@ -232,7 +157,7 @@ function StepsPage() {
               color="primary"
               onClick={handleMarkFinished}
             >
-              {currentStep === steps.length - 1
+              {activeStep === steps.length - 1
                 ? t("finish")
                 : t("markfinishedstep")}
             </Button>
@@ -257,7 +182,11 @@ function StepsPage() {
   }
 
   //return on loading
-  return <Backdrop open={true} />;
-}
+  return (
+    <Backdrop open={true}>
+      <CircularProgress color="inherit" />
+    </Backdrop>
+  );
+});
 
 export default StepsPage;

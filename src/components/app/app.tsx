@@ -1,15 +1,18 @@
 import React, { useState, useEffect, FC } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { Router, Switch, Route } from "react-router-dom";
 import { useHistory, useLocation } from "react-router-dom";
 import { useRootStore } from "context/RootStateContext";
 
 import { ThemeProvider } from "@material-ui/core/styles";
-import { Backdrop, CssBaseline } from "@material-ui/core";
+import { Backdrop, CssBaseline, Slide, Collapse } from "@material-ui/core";
+import useScrollTrigger from "@material-ui/core/useScrollTrigger";
+
 import { SnackbarProvider } from "notistack";
 import { observer } from "mobx-react-lite";
 
 import PrivateRoute from "PrivateRoute";
 
+import CollapseOnScroll from "container/CollapseOnScroll";
 import Header from "components/header";
 import Sidebar from "components/Sidebar";
 
@@ -24,6 +27,8 @@ import SignUpPage from "components/SignUpPage";
 
 import getTheme from "helpers/theme";
 import LicensePage from "components/LicensePage";
+import LandingPage from "components/LandingPage/LandingPage";
+import { isObservable } from "mobx";
 
 const ThemeSelector = observer(({ children }) => {
   const { localStore } = useRootStore();
@@ -31,9 +36,14 @@ const ThemeSelector = observer(({ children }) => {
   return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
 });
 
-const App: FC = () => {
-  const { localStore, userStore } = useRootStore();
-  const history = useHistory();
+function HideOnScroll({ children }: JSX.ElementChildrenAttribute) {
+  const trigger = useScrollTrigger({ target: window });
+  console.log(trigger);
+  return <Collapse in={!trigger}>{children}</Collapse>;
+}
+
+const App: FC = observer(() => {
+  const { localStore, userStore, navigationStore } = useRootStore();
   const [open, setOpen] = useState(false);
   const [theme, setTheme] = useState(
     getTheme(localStore.localVariables.darkMode)
@@ -51,14 +61,14 @@ const App: FC = () => {
     <ThemeSelector>
       <SnackbarProvider>
         <CssBaseline />
-        <Router>
+
+        <Router history={navigationStore.history}>
+          {/* <Sidebar open={open} /> */}
           <Header />
+
           <SecondHeader />
-
-          <Sidebar open={open} />
-
           <Switch>
-            <Route path="/" exact component={HomePage} />
+            <Route path="/" exact component={LandingPage} />
 
             <Route path="/login" exact component={LoginPage} />
             <Route path="/signup" exact component={SignUpPage} />
@@ -76,7 +86,6 @@ const App: FC = () => {
             /> */}
             <PrivateRoute
               path="/courses/:CourseId/:ChapterId"
-              exact
               component={StepsPage}
             />
             <PrivateRoute path="/account" exact component={AccountPage} />
@@ -85,6 +94,6 @@ const App: FC = () => {
       </SnackbarProvider>
     </ThemeSelector>
   );
-};
+});
 
 export default App;

@@ -18,8 +18,6 @@ import {
 } from "@material-ui/core";
 import webServiceProvider from "helpers/webServiceProvider";
 import { useLocation } from "react-router-dom";
-// import ReactHtmlParser from "react-html-parser";
-// import transform from "helpers/transform";
 import CreateMultipleChoice from "components/CreateMultipleChoice";
 import MultipleChoice from "components/MultipleChoice";
 import { useRootStore } from "context/RootStateContext";
@@ -29,6 +27,7 @@ import {
   isValidNode,
   processingInstructions,
 } from "helpers/transform";
+import { IStep, IAnswer, IMultipleChoice, IContent } from "types";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -53,22 +52,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface Icontent {
-  html: string;
-  multipleChoice: Array<IMultipleChoice>;
-}
-
-interface IMultipleChoice {
-  question: string;
-  answers: Array<IAnswer>;
-  correctAnswer: number;
-}
-
-interface IAnswer {
-  id: number;
-  text: string;
-}
-
 interface IProps {
   open: boolean;
   handleClose: Function;
@@ -87,7 +70,7 @@ function CreateStep(props: IProps) {
   const classes = useStyles();
   const location = useLocation();
   const { userStore } = useRootStore();
-  const [content, setcontent] = useState<Icontent>({
+  const [content, setcontent] = useState<IContent>({
     html: "",
     multipleChoice: [],
   });
@@ -133,7 +116,7 @@ function CreateStep(props: IProps) {
     handleClose();
   };
 
-  const handleFormChange = (e) => {
+  const handleFormChange = (e: any) => {
     e.preventDefault();
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -168,11 +151,11 @@ function CreateStep(props: IProps) {
   const removeMultipleChoiceQuestion = (index: number) => {
     setcontent({
       ...content,
-      multipleChoice: content.multipleChoice.filter((item, id) => id !== index),
+      multipleChoice: content.multipleChoice.filter(
+        (item: IMultipleChoice, id: number) => id !== index
+      ),
     });
   };
-
-  console.log(content.html);
 
   return (
     <Dialog
@@ -220,28 +203,30 @@ function CreateStep(props: IProps) {
           </form>
           <CustomCKEditor
             data={content.html}
-            onChange={(data) => setcontent({ ...content, html: data })}
+            onChange={(data: any) => setcontent({ ...content, html: data })}
           />
           <Button onClick={addMultipleChoiceQuestion}>
             Multiple Choice Frage Hinzufügen
           </Button>
 
           {content.multipleChoice ? (
-            content.multipleChoice.map((mcQuestion, index) => {
-              return (
-                <React.Fragment>
-                  <Button onClick={() => removeMultipleChoiceQuestion(index)}>
-                    Frage Löschen
-                  </Button>
-                  {/* <CreateMultipleChoice
+            content.multipleChoice.map(
+              (mcQuestion: IMultipleChoice, index: number) => {
+                return (
+                  <React.Fragment>
+                    <Button onClick={() => removeMultipleChoiceQuestion(index)}>
+                      Frage Löschen
+                    </Button>
+                    {/* <CreateMultipleChoice
                     key={index}
                     data={mcQuestion}
                     saveCallback={saveMultipleChoice}
                     id={index}
                   /> */}
-                </React.Fragment>
-              );
-            })
+                  </React.Fragment>
+                );
+              }
+            )
           ) : (
             <React.Fragment />
           )}
@@ -258,9 +243,11 @@ function CreateStep(props: IProps) {
           </div>
 
           {content.multipleChoice ? (
-            content.multipleChoice.map((data, index) => {
-              return <MultipleChoice key={index} data={data} />;
-            })
+            content.multipleChoice.map(
+              (data: IMultipleChoice, index: number) => {
+                return <MultipleChoice key={index} data={data} />;
+              }
+            )
           ) : (
             <React.Fragment />
           )}

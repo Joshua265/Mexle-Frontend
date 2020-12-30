@@ -10,6 +10,7 @@ import {
   Switch,
   Select,
   MenuItem,
+  Avatar,
 } from "@material-ui/core";
 
 import MenuIcon from "@material-ui/icons/Menu";
@@ -23,8 +24,6 @@ import { useTranslation } from "react-i18next";
 import DarkLogo from "./mexle_dark.svg";
 import LightLogo from "./mexle_light.svg";
 import languages from "helpers/languages";
-
-import { isObservable } from "mobx";
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -103,17 +102,12 @@ const Header: FC = observer((props) => {
           checked={localVariables.darkMode}
         />
 
-        {userData.loggedIn ? (
-          <Link className="whiteLink" to="/account">
-            <Button color="inherit">
-              <AccountCircleIcon />
-            </Button>
-          </Link>
-        ) : (
-          <Link className="whiteLink" to="/login">
-            <Button color="inherit">{t("login")}</Button>
-          </Link>
-        )}
+        <Link
+          className="whiteLink"
+          to={userStore.userData.loggedIn ? "/account" : "/login"}
+        >
+          <Avatar color="inherit">{userStore.userData.username[0]}</Avatar>
+        </Link>
       </Toolbar>
     </AppBar>
   );

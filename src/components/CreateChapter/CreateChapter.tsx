@@ -94,7 +94,7 @@ function CreateChapter(props: IProps) {
     handleClose();
   };
 
-  const handleFormChange = (e) => {
+  const handleFormChange = (e: any) => {
     e.preventDefault();
     setForm({ ...form, [e.target.name]: e.target.value });
   };

@@ -9,5 +9,10 @@
   "visible": "Sichtbar",
   "license": "Lizenz",
   "novisibilitychange": "Die Sichtbarkeit konnte nicht geändert werden!",
-  "markfinishedstep": "Schritt abschließen"
+  "markfinishedstep": "Schritt abschließen",
+  "courses": "Kurse",
+  "search": "Suche",
+  "showFinishedCourses": "Zeige abgeschlossene Kurse",
+  "all": "Alle",
+  "language": "Sprache"
 }

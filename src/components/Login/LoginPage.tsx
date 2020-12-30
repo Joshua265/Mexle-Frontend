@@ -73,14 +73,15 @@ function LoginPage() {
       });
       setLoggingIn(false);
       history.push(
-        qs.parse(location.search, { ignoreQueryPrefix: true }).path || "/"
+        String(qs.parse(location.search, { ignoreQueryPrefix: true }).path) ||
+          "/"
       );
     } catch {
       setLoggingIn(false);
     }
   };
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: any) => {
     e.preventDefault();
     try {
       const userData = await webServiceProvider.post("user/login", {
@@ -89,7 +90,8 @@ function LoginPage() {
       });
       userStore.login(userData.userData, userData.token);
       history.push(
-        qs.parse(location.search, { ignoreQueryPrefix: true }).path || "/"
+        String(qs.parse(location.search, { ignoreQueryPrefix: true }).path) ||
+          "/"
       );
     } catch (e) {
       enqueueSnackbar("Wrong Username or Password!", { variant: "error" });

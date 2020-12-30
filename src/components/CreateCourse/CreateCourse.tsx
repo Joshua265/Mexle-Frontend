@@ -123,7 +123,7 @@ function CreateCourse(props: IProps) {
     handleClose();
   };
 
-  const handleFormChange = (e) => {
+  const handleFormChange = (e: any) => {
     e.preventDefault();
     console.log(e.target.value);
     setForm({ ...form, [e.target.name]: e.target.value });

@@ -52,7 +52,7 @@ function CustomCKEditor(props: IProps) {
       language: i18n.language.substring(0, 2),
     },
     hide: {
-      icon: "../images/Hide.svg",
+      icon: "../../images/Hide.svg",
     },
     language: i18n.language.substring(0, 2),
   };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import {
   Card,
   CardActionArea,
@@ -9,7 +9,11 @@ import {
   Button,
   Typography,
   Switch,
+  Chip,
+  Avatar,
+  Icon,
 } from "@material-ui/core";
+import DoneIcon from "@material-ui/icons/Done";
 import { Link } from "react-router-dom";
 import { useRootStore } from "context/RootStateContext";
 import CreateCourse from "components/CreateCourse";
@@ -18,23 +22,54 @@ import webServiceProvider from "helpers/webServiceProvider";
 import checkForEditShow from "helpers/checkForEditShow";
 import { useSnackbar } from "notistack";
 import { useTranslation } from "react-i18next";
+import LibraSvg from "images/libra";
+import Courses from "components/Courses";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    maxWidth: 345,
-    margin: 20,
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+  },
+  rootDone: {
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    borderColor: "#35D435",
+    borderWidth: "2px",
+    position: "relative",
   },
   media: {
-    height: 140,
-    margin: 20,
+    paddingTop: "56.25%",
   },
-});
+  cardContent: {
+    flexGrow: 2,
+  },
+  chip: {
+    marginTop: theme.spacing(1),
+    marginRight: theme.spacing(3),
+  },
+  libra: {
+    fill: theme.palette.text.primary,
+  },
+  doneIcon: {
+    position: "absolute",
+    right: -8,
+    top: -8,
+    zIndex: 10,
+    color: theme.palette.getContrastText("#35D435"),
+    backgroundColor: "#35D435",
+  },
+}));
 
 interface props {
+  _id: string;
   title: string;
   description?: string;
   imageLink?: string;
-  author?: string;
+  author: string;
   language?: string;
   license?: string;
   directorys?: Array<any>;
@@ -46,6 +81,7 @@ function MediaCard(props: props) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [done, setDone] = useState(false);
   const { userStore } = useRootStore();
   const { enqueueSnackbar } = useSnackbar();
   const { t } = useTranslation();
@@ -58,8 +94,33 @@ function MediaCard(props: props) {
       : "";
 
   useEffect(() => {
-    getVisibility();
+    if (checkForEditShow(userStore.userData, props.author)) {
+      getVisibility();
+    }
+    checkDone();
   }, []);
+
+  const checkDone = (): boolean => {
+    if (props.kind === "Course") {
+      if (
+        userStore.userData.finishedCourses.some(
+          (element) => element.id === props._id
+        )
+      ) {
+        setDone(true);
+      }
+    }
+    if (props.kind === "Chapter") {
+      if (
+        userStore.userData.finishedChapters.some(
+          (element) => element.id === props._id
+        )
+      ) {
+        setDone(true);
+      }
+    }
+    return false;
+  };
 
   const handleVisibility = async (e) => {
     e.preventDefault();
@@ -135,11 +196,26 @@ function MediaCard(props: props) {
   }
 
   return (
-    <Card raised variant="outlined" className={classes.root}>
+    <Card
+      raised
+      variant="outlined"
+      className={done ? classes.rootDone : classes.root}
+    >
+      {done ? (
+        <Avatar color="action" className={classes.doneIcon}>
+          <DoneIcon />
+        </Avatar>
+      ) : (
+        <React.Fragment />
+      )}
       <Link to={props.link} className="whiteLink">
         <CardActionArea>
-          <img className={classes.media} src={props.imageLink}></img>
-          <CardContent>
+          <CardMedia
+            className={classes.media}
+            image={props.imageLink}
+            title="Image title"
+          />
+          <CardContent className={classes.cardContent}>
             <Typography
               color="textSecondary"
               gutterBottom
@@ -148,19 +224,24 @@ function MediaCard(props: props) {
             >
               {props.title}
             </Typography>
-            <Typography variant="body2" color="textPrimary" component="p">
+            <Typography
+              variant="body2"
+              color="textPrimary"
+              component="p"
+              noWrap
+            >
               {props.description}
             </Typography>
-            <Typography variant="body2" color="textPrimary" component="p">
-              {t("author")}: {props.author}
-            </Typography>
-            {props.license ? (
-              <Typography variant="body2" color="textPrimary" component="p">
-                {t("license")}: {props.license}
-              </Typography>
-            ) : (
-              <React.Fragment />
-            )}
+            <Chip
+              className={classes.chip}
+              avatar={<Avatar>{props.author[0]}</Avatar>}
+              label={`${t("author")}: ${props.author}`}
+            />
+            <Chip
+              className={classes.chip}
+              avatar={<LibraSvg className={classes.libra} />}
+              label={`${t("license")}: ${props.license || t("none")}`}
+            />
           </CardContent>
         </CardActionArea>
       </Link>
@@ -168,6 +249,7 @@ function MediaCard(props: props) {
         <CardActions>
           <Typography>{t("visible")}:</Typography>
           <Switch
+            color="primary"
             onChange={(e) => handleVisibility(e)}
             checked={visible}
             disabled={!checkForEditShow(userStore.userData, props.author)}
@@ -175,7 +257,7 @@ function MediaCard(props: props) {
           <Button
             onClick={() => setOpen(true)}
             size="small"
-            color="primary"
+            color="secondary"
             disabled={!checkForEditShow(userStore.userData, props.author)}
           >
             {t("edit")}

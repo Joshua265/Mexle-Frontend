@@ -47,7 +47,12 @@ function AddButton(props: IProps) {
         <Fab
           color="primary"
           aria-label="add"
-          style={{ position: "absolute", bottom: 20, right: 20 }}
+          style={{
+            position: "sticky",
+            bottom: 20,
+            float: "right",
+            margin: 20,
+          }}
           onClick={handleOnClick}
         >
           <AddIcon />

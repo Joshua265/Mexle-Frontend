@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, FC } from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -16,6 +16,9 @@ import {
   Drawer,
 } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
+import { IStep, IContent, IFinishedObject } from "types";
+import { observer } from "mobx-react-lite";
+import { useRootStore } from "context/RootStateContext";
 
 const drawerWidth = 240;
 
@@ -34,6 +37,32 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     justifyContent: "space-between",
   },
+  drawerOpen: {
+    paddingTop: "112px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    width: drawerWidth,
+    transition: theme.transitions.create("width", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  drawerClose: {
+    paddingTop: "112px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    transition: theme.transitions.create("width", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    overflowX: "hidden",
+    width: theme.spacing(7) + 1,
+    [theme.breakpoints.up("sm")]: {
+      width: theme.spacing(9) + 1,
+    },
+  },
   button: {
     marginTop: theme.spacing(1),
     marginRight: theme.spacing(1),
@@ -47,61 +76,35 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface IProps {
-  steps: Array<IStep>;
-  activeStepCallback: Function;
   open: boolean;
 }
 
-interface IStep {
-  _id: string;
-  chapterId: string;
-  title: string;
-  description: string;
-  author: string;
-  content: Icontent;
-}
+// //get list of titles from props
+// const getSteps: I = observer((stepList) {
+//   let steps: string[] = [];
+//   stepList.forEach((el) => steps.push(el.title));
+//   return steps;
+// }
 
-interface Icontent {
-  html: String;
-  multipleChoice: any;
-}
-
-//get list of titles from props
-function getSteps(stepList) {
-  let steps: string[] = [];
-  stepList.forEach((el) => steps.push(el.title));
-  return steps;
-}
-
-function StepsProgress(props: IProps) {
-  const [activeStep, setactiveStep] = useState(0);
+const StepsProgress = observer((props: IProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
-
-  const steps = getSteps(props.steps);
-
-  const getStepContent = () => {
-    return props.steps[activeStep].description;
-  };
-
-  const handleNext = () => {
-    props.activeStepCallback(activeStep + 1);
-    setactiveStep((activeStep) => activeStep + 1);
-  };
-
-  const handleFinish = () => {
-    props.activeStepCallback(-1);
-    setactiveStep(-1);
-  };
-
-  const handleBack = () => {
-    props.activeStepCallback(activeStep - 1);
-    setactiveStep((activeStep) => activeStep - 1);
-  };
+  const { stepStore, userStore } = useRootStore();
+  const { steps, activeStep, numberSteps } = stepStore.steps;
 
   const handleStepClick = (index) => {
-    props.activeStepCallback(index);
-    setactiveStep(index);
+    stepStore.setActiveStep(index);
+  };
+
+  const checkFinished = (_id: string) => {
+    if (
+      userStore.userData.finishedSteps.some(
+        (element: IFinishedObject) => element.id === _id
+      )
+    ) {
+      return true;
+    }
+    return false;
   };
 
   return (
@@ -115,35 +118,18 @@ function StepsProgress(props: IProps) {
       }}
     >
       <Stepper activeStep={activeStep} nonLinear orientation="vertical">
-        {steps.map((label, index) => (
-          <Step key={index}>
+        {steps.map((step, index) => (
+          <Step key={index} completed={checkFinished(step._id)}>
             <StepButton onClick={() => handleStepClick(index)}>
-              {label}
+              {step.title}
             </StepButton>
             <StepContent>
-              <Typography>{getStepContent}</Typography>
+              <Typography>{step.description}</Typography>
             </StepContent>
           </Step>
         ))}
       </Stepper>
       <div className={classes.actionsContainer}>
-        {/* <Button
-          disabled={activeStep === 0}
-          onClick={handleBack}
-          className={classes.button}
-        >
-          Back
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={
-            activeStep === steps.length - 1 ? handleFinish : handleNext
-          }
-          className={classes.button}
-        >
-          {activeStep === steps.length - 1 ? "Finish" : "Next"}
-        </Button> */}
         <Divider />
         <List
           component="nav"
@@ -159,13 +145,13 @@ function StepsProgress(props: IProps) {
           </ListItem>
           <ListItem divider>
             <ListItemText
-              primary={`${t("author")}: ${props.steps[activeStep].author}`}
+              primary={`${t("author")}: ${steps[activeStep].author}`}
             />
           </ListItem>
         </List>
       </div>
     </Drawer>
   );
-}
+});
 
 export default StepsProgress;

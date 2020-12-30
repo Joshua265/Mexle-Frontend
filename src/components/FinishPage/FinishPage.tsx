@@ -2,7 +2,8 @@ import React from "react";
 import { Paper, Typography, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Image from "./finish.png";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { useRootStore } from "context/RootStateContext";
 
 const useStyles = makeStyles({
   root: {
@@ -24,8 +25,16 @@ const useStyles = makeStyles({
   },
 });
 
-function FinishPage(props) {
+interface IProps {
+  chapterId: string;
+}
+
+function FinishPage(props: IProps) {
   const classes = useStyles();
+  const { userStore, navigationStore } = useRootStore();
+  const history = useHistory();
+  console.log(history);
+  const lastIndex = history.location.pathname.lastIndexOf("/");
   return (
     <Paper className={classes.root}>
       <img src={Image} className={classes.image} />
@@ -33,10 +42,17 @@ function FinishPage(props) {
         Herzlichen Glückwunsch!
       </Typography>
       <Typography className={classes.text} component="h5" variant="h5">
-        Du hast das Kapitel {props.courseName} abgeschlossen
+        Du hast das Kapitel {props.chapterId} abgeschlossen
       </Typography>
-      <Link to={props.redirect || "/"} className="whiteLink">
-        <Button variant="contained" color="primary">
+      <Link
+        to={history.location.pathname.substring(0, lastIndex) || "/courses"}
+        className="whiteLink"
+      >
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => userStore.addFinished("chapter", props.chapterId)}
+        >
           Als Beendet markieren
         </Button>
       </Link>

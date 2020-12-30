@@ -9,5 +9,10 @@
   "visible": "Visible",
   "license": "License",
   "novisibilitychange": "Error changing visibility!",
-  "markfinishedstep": "Complete Step"
+  "markfinishedstep": "Complete Step",
+  "courses": "Courses",
+  "search": "Search",
+  "showFinishedCourses": "Show finished courses",
+  "all": "All",
+  "language": "Language"
 }

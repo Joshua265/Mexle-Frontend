@@ -16,7 +16,7 @@
     "strict": true,
     "outDir": "dist",
     "baseUrl": "src",
-    "typeRoots": ["./types", "node_modules/@types"],
+    "typeRoots": ["./src/types", "node_modules/@types"],
     "strictNullChecks": true,
     "allowJs": true,
     "lib": ["dom", "dom.iterable", "esnext"],

@@ -62,7 +62,10 @@ function CreateMultipleChoice(props: IProps) {
 
   return (
     <React.Fragment>
-      <CustomCKEditor data={question} onChange={(data) => setQuestion(data)} />
+      <CustomCKEditor
+        data={question}
+        onChange={(data: any) => setQuestion(data)}
+      />
       <List>
         <Button onClick={addAnswer}>Antwort hinzufügen</Button>
         {answers.length > 0 ? (
