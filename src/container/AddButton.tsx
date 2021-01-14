@@ -1,18 +1,18 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import AddIcon from "@material-ui/icons/Add";
 import { Fab } from "@material-ui/core";
-import { useRootStore } from "context/RootStateContext";
 import CreateCourse from "components/CreateCourse";
 import CreateChapter from "components/CreateChapter";
 import CreateStep from "components/CreateStep";
 import checkForEditShow from "helpers/checkForEditShow";
+import { RootStoreContext } from "stores/RootStore";
 
 interface IProps {
   add: string;
 }
 
 function AddButton(props: IProps) {
-  const { userStore } = useRootStore();
+  const { userStore } = useContext(RootStoreContext);
   const [openCourseCreate, setOpenCourseCreate] = useState(false);
   const [openChapterCreate, setOpenChapterCreate] = useState(false);
   const [openStepCreate, setOpenStepCreate] = useState(false);
@@ -48,10 +48,9 @@ function AddButton(props: IProps) {
           color="primary"
           aria-label="add"
           style={{
-            position: "sticky",
+            position: "fixed",
             bottom: 20,
-            float: "right",
-            margin: 20,
+            right: 20,
           }}
           onClick={handleOnClick}
         >

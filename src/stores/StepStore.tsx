@@ -1,9 +1,7 @@
-import { observable, action } from "mobx";
+import { observable, action, makeAutoObservable } from "mobx";
 import { IStep } from "types";
 import webServiceProvider from "helpers/webServiceProvider";
-import NavigationStore from "stores/NavigationStore";
-
-const navigationStore = new NavigationStore();
+import { RootStore } from "./RootStore";
 
 interface ISteps {
   numberSteps: number;
@@ -23,33 +21,35 @@ const defaultSteps = {
   activeStep: 0,
 };
 
-class StepStore implements IStepStore {
+export class StepStore implements IStepStore {
+  rootStore: RootStore;
+  constructor(rootStore: RootStore) {
+    this.rootStore = rootStore;
+    makeAutoObservable(this);
+  }
   steps = observable(defaultSteps);
 
-  fetchSteps = action(
-    async (chapterId: string): Promise<void> => {
-      try {
-        const stepsResponse = await webServiceProvider.get(
-          `steps/chapterId/${chapterId}`
-        );
-        const { steps } = stepsResponse;
-        this.steps.steps = steps;
-        this.steps.numberSteps = steps.length;
-      } catch (e) {
-        this.steps.error = true;
-      }
+  async fetchSteps(chapterId: string): Promise<void> {
+    try {
+      const stepsResponse = await webServiceProvider.get(
+        `steps/chapterId/${chapterId}`
+      );
+      const { steps } = stepsResponse;
+      this.steps.steps = steps;
+      this.steps.numberSteps = steps.length;
+    } catch (e) {
+      this.steps.error = true;
     }
-  );
+  }
 
-  setActiveStep = action((index: number) => {
+  setActiveStep(index: number) {
     this.steps.activeStep = index;
     // navigationStore.history.replace(
     //   `${this.steps.steps[this.steps.activeStep]._id}`
     // );
-  });
+  }
 
   clearSteps = action(() => {
     this.steps = defaultSteps;
   });
 }
-export default StepStore;

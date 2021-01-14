@@ -1,4 +1,4 @@
-import React, { useState, FC } from "react";
+import React, { useState, FC, useContext } from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -18,7 +18,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { IStep, IContent, IFinishedObject } from "types";
 import { observer } from "mobx-react-lite";
-import { useRootStore } from "context/RootStateContext";
+import { RootStoreContext } from "stores/RootStore";
 
 const drawerWidth = 240;
 
@@ -89,7 +89,7 @@ interface IProps {
 const StepsProgress = observer((props: IProps) => {
   const classes = useStyles();
   const { t } = useTranslation();
-  const { stepStore, userStore } = useRootStore();
+  const { stepStore, userStore } = useContext(RootStoreContext);
   const { steps, activeStep, numberSteps } = stepStore.steps;
 
   const handleStepClick = (index) => {

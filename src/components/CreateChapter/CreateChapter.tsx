@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -13,7 +13,7 @@ import { TransitionProps } from "@material-ui/core/transitions";
 import { Paper } from "@material-ui/core";
 import webServiceProvider from "helpers/webServiceProvider";
 import { useLocation } from "react-router-dom";
-import { useRootStore } from "context/RootStateContext";
+import { RootStoreContext } from "stores/RootStore";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -60,7 +60,7 @@ const Transition = React.forwardRef(function Transition(
 function CreateChapter(props: IProps) {
   const classes = useStyles();
   const location = useLocation();
-  const { userStore } = useRootStore();
+  const { userStore } = useContext(RootStoreContext);
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(
     props.edit && props.data

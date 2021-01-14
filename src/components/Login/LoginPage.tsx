@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Redirect, useLocation } from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
+import { Redirect, useLocation, Link } from "react-router-dom";
 import { useHistory } from "react-router";
 import qs from "qs";
 import Cookie from "universal-cookie";
@@ -7,7 +7,6 @@ import Cookie from "universal-cookie";
 import {
   TextField,
   Button,
-  Link,
   Container,
   Grid,
   Avatar,
@@ -17,9 +16,9 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 
-import { useRootStore } from "context/RootStateContext";
 import webServiceProvider from "helpers/webServiceProvider";
 import { useSnackbar } from "notistack";
+import { RootStoreContext } from "stores/RootStore";
 
 const cookie = new Cookie();
 
@@ -48,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
 function LoginPage() {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
-  const { userStore } = useRootStore();
+  const { userStore } = useContext(RootStoreContext);
   const { userData } = userStore;
   const history = useHistory();
   const location = useLocation();
@@ -73,8 +72,9 @@ function LoginPage() {
       });
       setLoggingIn(false);
       history.push(
-        String(qs.parse(location.search, { ignoreQueryPrefix: true }).path) ||
-          "/"
+        String(
+          qs.parse(location.search, { ignoreQueryPrefix: true }).path || "/"
+        )
       );
     } catch {
       setLoggingIn(false);
@@ -90,8 +90,9 @@ function LoginPage() {
       });
       userStore.login(userData.userData, userData.token);
       history.push(
-        String(qs.parse(location.search, { ignoreQueryPrefix: true }).path) ||
-          "/"
+        String(
+          qs.parse(location.search, { ignoreQueryPrefix: true }).path || "/"
+        )
       );
     } catch (e) {
       enqueueSnackbar("Wrong Username or Password!", { variant: "error" });
@@ -145,7 +146,7 @@ function LoginPage() {
                 <Button variant="contained" color="primary" type="submit">
                   Login
                 </Button>
-                <Link href="/signup" className="whiteLink">
+                <Link to="/signup" className="whiteLink">
                   <Button variant="contained" color="primary">
                     Sign Up
                   </Button>

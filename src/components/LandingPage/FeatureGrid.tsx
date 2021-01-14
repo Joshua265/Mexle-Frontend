@@ -24,7 +24,22 @@ const useStyles = makeStyles((theme: Theme) =>
       flexWrap: "wrap",
       justifyContent: "space-around",
       overflow: "hidden",
-      backgroundColor: theme.palette.background.paper,
+      backgroundAttachment: "fixed",
+      background: "inherit",
+      zIndex: 1,
+      boxShadow: "0 0 1rem 0 rgba(0, 0, 0, .3)",
+      "&:before": {
+        content: "",
+        position: "absolute",
+        background: "inherit",
+        zIndex: -1,
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        boxShadow: "inset 0 0 2000px rgba(255, 255, 255, 1)",
+        filter: "blur(20px)",
+      },
     },
     gridList: {
       overflow: "hidden",
@@ -33,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     gridListTile: {
       "&:hover": {
-        backgroundColor: "#006A00",
+        boxShadow: "inset 0 0 2000px rgba(255, 255, 255, .3)",
       },
     },
     icon: {
@@ -41,8 +56,8 @@ const useStyles = makeStyles((theme: Theme) =>
       height: cellHeight - 24,
       marginLeft: 12,
       alignSelf: "center",
-      color: theme.palette.text.primary,
-      fill: theme.palette.text.primary,
+      color: "white",
+      fill: "white",
       "&:hover": {
         marginLeft: 4,
         width: cellHeight - 8,

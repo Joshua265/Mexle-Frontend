@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Route, Redirect, useLocation } from "react-router-dom";
-import { useRootStore } from "context/RootStateContext";
+import { RootStoreContext } from "stores/RootStore";
 
 function PrivateRoute({ component: Component, ...rest }) {
-  const { userStore } = useRootStore();
+  const { userStore } = useContext(RootStoreContext);
   const location = useLocation();
   return (
     <Route

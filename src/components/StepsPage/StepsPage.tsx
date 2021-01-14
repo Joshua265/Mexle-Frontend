@@ -3,7 +3,7 @@ Entire Page needs rework for mobx chapter storage
 
 
 */
-import React, { useState, useEffect, FC } from "react";
+import React, { useState, useEffect, FC, useContext } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 // import HtmlToReactParser from "html-to-react";
 
@@ -17,26 +17,20 @@ import {
   Divider,
   CircularProgress,
 } from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
 import FinishPage from "components/FinishPage";
 
 import StepsProgress from "components/StepsProgress";
 import AddButton from "container/AddButton";
-import webServiceProvider from "helpers/webServiceProvider";
-import { useRootStore } from "context/RootStateContext";
-import CreateStep from "components/CreateStep";
 import MultipleChoice from "components/MultipleChoice";
 import { useTranslation } from "react-i18next";
-import DOMPurify from "dompurify";
 import { observer } from "mobx-react-lite";
 
-import checkForEditShow from "helpers/checkForEditShow";
 import {
   htmlToReactParser,
   isValidNode,
   processingInstructions,
 } from "helpers/transform";
-import { IStep, IChapters } from "types";
+import { RootStoreContext } from "stores/RootStore";
 
 const drawerWidth = 240;
 
@@ -87,7 +81,7 @@ const StepsPage: FC = observer(() => {
   const location = useLocation();
   const history = useHistory();
   const { t } = useTranslation();
-  const { userStore, stepStore } = useRootStore();
+  const { userStore, stepStore } = useContext(RootStoreContext);
   const chapterId = location.pathname.split("/")[3];
   const { activeStep, numberSteps, steps, error } = stepStore.steps;
 

@@ -1,10 +1,15 @@
-import React, { useState, useEffect, FC } from "react";
+import React, { useState, useEffect, useContext, FC } from "react";
 import { Router, Switch, Route } from "react-router-dom";
 import { useHistory, useLocation } from "react-router-dom";
-import { useRootStore } from "context/RootStateContext";
 
 import { ThemeProvider } from "@material-ui/core/styles";
-import { Backdrop, CssBaseline, Slide, Collapse } from "@material-ui/core";
+import {
+  Backdrop,
+  CssBaseline,
+  Slide,
+  Collapse,
+  Toolbar,
+} from "@material-ui/core";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 
 import { SnackbarProvider } from "notistack";
@@ -29,10 +34,11 @@ import getTheme from "helpers/theme";
 import LicensePage from "components/LicensePage";
 import LandingPage from "components/LandingPage/LandingPage";
 import { isObservable } from "mobx";
+import { RootStoreContext } from "stores/RootStore";
 
 const ThemeSelector = observer(({ children }) => {
-  const { localStore } = useRootStore();
-  const theme = getTheme(localStore.localVariables.darkMode);
+  const rootStore = useContext(RootStoreContext);
+  const theme = getTheme(rootStore.localStore.darkMode);
   return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
 });
 
@@ -43,11 +49,9 @@ function HideOnScroll({ children }: JSX.ElementChildrenAttribute) {
 }
 
 const App: FC = observer(() => {
-  const { localStore, userStore, navigationStore } = useRootStore();
+  const { localStore, navigationStore } = useContext(RootStoreContext);
   const [open, setOpen] = useState(false);
-  const [theme, setTheme] = useState(
-    getTheme(localStore.localVariables.darkMode)
-  );
+  const [theme, setTheme] = useState(getTheme(localStore.darkMode));
 
   const handleDrawer = () => {
     setOpen(!open);
@@ -63,10 +67,10 @@ const App: FC = observer(() => {
         <CssBaseline />
 
         <Router history={navigationStore.history}>
-          {/* <Sidebar open={open} /> */}
           <Header />
 
-          <SecondHeader />
+          <Toolbar variant="dense" />
+
           <Switch>
             <Route path="/" exact component={LandingPage} />
 

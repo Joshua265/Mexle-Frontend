@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -12,11 +12,11 @@ import TextField from "@material-ui/core/TextField";
 import { TransitionProps } from "@material-ui/core/transitions";
 import { MenuItem, Paper, Select } from "@material-ui/core";
 import webServiceProvider from "helpers/webServiceProvider";
-import { useRootStore } from "context/RootStateContext";
 import { useTranslation } from "react-i18next";
 import languages from "helpers/languages";
 import axios from "axios";
 import { useSnackbar } from "notistack";
+import { RootStoreContext } from "stores/RootStore";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -64,7 +64,7 @@ const Transition = React.forwardRef(function Transition(
 
 function CreateCourse(props: IProps) {
   const classes = useStyles();
-  const { userStore } = useRootStore();
+  const { userStore } = useContext(RootStoreContext);
   const { t, i18n } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = useState(false);

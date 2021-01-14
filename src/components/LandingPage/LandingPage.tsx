@@ -10,11 +10,13 @@ import {
   Grow,
   Card,
   Slide,
+  useTheme,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import Background from "images/circuit.jpg";
 import Vision from "./Vision";
 import FeatureGrid from "./FeatureGrid";
+import Title from "./Title";
 
 const useStyles = makeStyles((theme: any) => {
   return {
@@ -28,7 +30,7 @@ const useStyles = makeStyles((theme: any) => {
       backgroundSize: "cover",
       margin: 0,
       alignItems: "center",
-      clipPath: "circle(100% at 0% 0%)",
+      clipPath: "circle(900px at 100% 400px)",
       filter: "brightness(0.5)",
     },
     title: {
@@ -38,7 +40,6 @@ const useStyles = makeStyles((theme: any) => {
       msTransform: "translateY(-70%)",
       transform: "translateY(-70%)",
       fontWeight: "bold",
-      color: "white",
       filter: "brightness(1)",
     },
     rightFloat: {
@@ -50,7 +51,6 @@ const useStyles = makeStyles((theme: any) => {
     },
     quote: {
       position: "absolute",
-      color: "white",
       bottom: theme.spacing(8),
       left: theme.spacing(8),
     },
@@ -59,6 +59,7 @@ const useStyles = makeStyles((theme: any) => {
 
 const LandingPage = () => {
   const classes = useStyles();
+  const theme = useTheme();
   const [checked, setChecked] = useState(false);
 
   useEffect(() => {
@@ -69,42 +70,7 @@ const LandingPage = () => {
     <>
       <div className={classes.picture} />
       <div className={classes.title}>
-        <Grow
-          in={checked}
-          style={{ transformOrigin: "0 0 0" }}
-          {...(checked ? { timeout: 1000 } : {})}
-        >
-          <Typography variant="h1" component="h4">
-            <Box fontWeight="fontWeightBold" color="#006A00" display="inline">
-              M
-            </Box>
-            ultimodale
-          </Typography>
-        </Grow>
-        <Grow
-          in={checked}
-          style={{ transformOrigin: "0 0 0" }}
-          {...(checked ? { timeout: 1500 } : {})}
-        >
-          <Typography variant="h1" component="h4">
-            <Box fontWeight="fontWeightBold" color="#006A00" display="inline">
-              EX
-            </Box>
-            perimentier- und
-          </Typography>
-        </Grow>
-        <Grow
-          in={checked}
-          style={{ transformOrigin: "0 0 0" }}
-          {...(checked ? { timeout: 2000 } : {})}
-        >
-          <Typography variant="h1" component="h4">
-            <Box fontWeight="fontWeightBold" color="#006A00" display="inline">
-              LE
-            </Box>
-            rnumgebung
-          </Typography>
-        </Grow>
+        <Title checked={checked} />
       </div>
       <Slide
         in={checked}
@@ -114,14 +80,14 @@ const LandingPage = () => {
         <div className={classes.quote}>
           <Typography variant="h4" component="h4">
             Stelle Dir eine Welt vor in der jeder frei{" "}
-            <Box color="#006A00" display="inline">
+            <Box color="text.hint" display="inline">
               MINT
             </Box>{" "}
             lernen kann.
           </Typography>
           <Typography variant="body1" component="h4">
             - frei nach{" "}
-            <Box color="#006A00" display="inline">
+            <Box color="text.hint" display="inline">
               Jimmy Wales
             </Box>{" "}
             (Wikipedia Gründer)

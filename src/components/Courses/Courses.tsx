@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   Paper,
   Divider,
@@ -18,6 +18,7 @@ import {
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import FilterListIcon from "@material-ui/icons/FilterList";
+import { RootStoreContext } from "stores/RootStore";
 
 import MediaCard from "container/MediaCard";
 import AddButton from "container/AddButton";
@@ -25,7 +26,6 @@ import webServiceProvider from "helpers/webServiceProvider";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import languages from "helpers/languages";
-import { useRootStore } from "context/RootStateContext";
 import { useSnackbar } from "notistack";
 import { ICourse } from "types";
 
@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 function Courses() {
   const history = useHistory();
   const classes = useStyles();
-  const { userStore } = useRootStore();
+  const { userStore } = useContext(RootStoreContext);
   const { t, i18n } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
   const [courses, setCourses] = useState<ICourse[]>([]);

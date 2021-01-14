@@ -13,9 +13,8 @@ import React, { useState, useEffect } from "react";
 
 const useStyles = makeStyles((theme) => ({
   secondHeader: {
-    position: "sticky",
-    width: "100%",
-    zIndex: 1000,
+    marginTop: 64,
+    zIndex: 1070,
     margin: 0,
   },
   secondHeaderClosed: {
@@ -35,7 +34,7 @@ function SecondHeader() {
         return (
           <AppBar
             color="secondary"
-            elevation={2}
+            elevation={3}
             className={
               pathnames.length < 1
                 ? classes.secondHeaderClosed

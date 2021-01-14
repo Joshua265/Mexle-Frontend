@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Paper, Typography, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Image from "./finish.png";
 import { Link, useHistory } from "react-router-dom";
-import { useRootStore } from "context/RootStateContext";
+import { RootStoreContext } from "stores/RootStore";
 
 const useStyles = makeStyles({
   root: {
@@ -31,7 +31,7 @@ interface IProps {
 
 function FinishPage(props: IProps) {
   const classes = useStyles();
-  const { userStore, navigationStore } = useRootStore();
+  const { userStore, navigationStore } = useContext(RootStoreContext);
   const history = useHistory();
   console.log(history);
   const lastIndex = history.location.pathname.lastIndexOf("/");

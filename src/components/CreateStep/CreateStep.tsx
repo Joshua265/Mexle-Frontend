@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -20,7 +20,6 @@ import webServiceProvider from "helpers/webServiceProvider";
 import { useLocation } from "react-router-dom";
 import CreateMultipleChoice from "components/CreateMultipleChoice";
 import MultipleChoice from "components/MultipleChoice";
-import { useRootStore } from "context/RootStateContext";
 import CustomCKEditor from "container/CustomCKEditor/CustomCKEditor";
 import {
   htmlToReactParser,
@@ -28,6 +27,7 @@ import {
   processingInstructions,
 } from "helpers/transform";
 import { IStep, IAnswer, IMultipleChoice, IContent } from "types";
+import { RootStoreContext } from "stores/RootStore";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -69,7 +69,7 @@ const Transition = React.forwardRef(function Transition(
 function CreateStep(props: IProps) {
   const classes = useStyles();
   const location = useLocation();
-  const { userStore } = useRootStore();
+  const { userStore } = useContext(RootStoreContext);
   const [content, setcontent] = useState<IContent>({
     html: "",
     multipleChoice: [],

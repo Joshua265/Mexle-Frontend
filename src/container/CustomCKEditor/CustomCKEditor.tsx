@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import Cookies from "universal-cookie";
 import Editor from "ckeditor5-custom-build/src/ckeditor";
 import { getGeogebraStyle } from "helpers/Geogebra";
 import { useTranslation } from "react-i18next";
 import { observer } from "mobx-react-lite";
-import { useRootStore } from "context/RootStateContext";
+import { RootStoreContext } from "stores/RootStore";
 
 interface IProps {
   data: string;
@@ -17,11 +17,11 @@ const LightTheme = React.lazy(() => import("./lightMode"));
 const DarkTheme = React.lazy(() => import("./darkMode"));
 
 const ThemeSelector = observer(({ children }) => {
-  const { localStore } = useRootStore();
+  const { localStore } = useContext(RootStoreContext);
   return (
     <>
       <React.Suspense fallback={<></>}>
-        {localStore.localVariables.darkMode ? <DarkTheme /> : <LightTheme />}
+        {localStore.darkMode ? <DarkTheme /> : <LightTheme />}
       </React.Suspense>
       {children}
     </>

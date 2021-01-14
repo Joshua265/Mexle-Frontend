@@ -1,8 +1,14 @@
-import { observable, action } from "mobx";
+import { observable, makeAutoObservable } from "mobx";
 import autobind from "autobind-decorator";
 import createBrowserHistory from "history/createBrowserHistory";
+import { RootStore } from "./RootStore";
 
-class NavigationStore {
+export class NavigationStore {
+  rootStore: RootStore;
+  constructor(rootStore: RootStore) {
+    this.rootStore = rootStore;
+    makeAutoObservable(this);
+  }
   @observable location = null;
   history = createBrowserHistory();
 
@@ -22,5 +28,3 @@ class NavigationStore {
     this.history.goForward();
   }
 }
-
-export default NavigationStore;

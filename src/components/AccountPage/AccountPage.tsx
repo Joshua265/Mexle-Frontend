@@ -1,11 +1,11 @@
 import { Button } from "@material-ui/core";
-import { useRootStore } from "context/RootStateContext";
 import { Observer } from "mobx-react-lite";
-import React from "react";
+import React, { useContext } from "react";
 import { useHistory } from "react-router-dom";
+import { RootStoreContext } from "stores/RootStore";
 
 const AccountPage = (): JSX.Element => {
-  const { userStore } = useRootStore();
+  const { userStore } = useContext(RootStoreContext);
   const history = useHistory();
 
   const handleLogout = () => {

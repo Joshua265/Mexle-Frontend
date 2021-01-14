@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import {
   Card,
@@ -15,7 +15,6 @@ import {
 } from "@material-ui/core";
 import DoneIcon from "@material-ui/icons/Done";
 import { Link } from "react-router-dom";
-import { useRootStore } from "context/RootStateContext";
 import CreateCourse from "components/CreateCourse";
 import CreateChapter from "components/CreateChapter";
 import webServiceProvider from "helpers/webServiceProvider";
@@ -24,6 +23,7 @@ import { useSnackbar } from "notistack";
 import { useTranslation } from "react-i18next";
 import LibraSvg from "images/libra";
 import Courses from "components/Courses";
+import { RootStoreContext } from "stores/RootStore";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -82,7 +82,7 @@ function MediaCard(props: props) {
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(false);
   const [done, setDone] = useState(false);
-  const { userStore } = useRootStore();
+  const { userStore } = useContext(RootStoreContext);
   const { enqueueSnackbar } = useSnackbar();
   const { t } = useTranslation();
 

@@ -1,7 +1,8 @@
-import { action, observable } from "mobx";
+import { makeAutoObservable } from "mobx";
 import Cookie from "universal-cookie";
 import Date from "moment";
 import webServiceProvider from "helpers/webServiceProvider";
+import { RootStore } from "./RootStore";
 
 const cookie = new Cookie();
 
@@ -45,8 +46,13 @@ const updateFinished = async (
   }
 };
 
-export default class UserStore implements IUserStore {
-  userData: IUserData = observable({
+export class UserStore implements IUserStore {
+  rootStore: RootStore;
+  constructor(rootStore: RootStore) {
+    this.rootStore = rootStore;
+    makeAutoObservable(this);
+  }
+  userData: IUserData = {
     username: "",
     email: "",
     role: "",
@@ -56,14 +62,14 @@ export default class UserStore implements IUserStore {
     finishedSteps: [],
     loggedIn: false,
     token: cookie.get("token") || "",
-  });
+  };
 
-  login = action((userData: IUserData, token: string): void => {
+  login(userData: IUserData, token: string): void {
     this.userData = { ...userData, token: token, loggedIn: true };
     cookie.set("token", token);
-  });
+  }
 
-  logout = action((): void => {
+  logout(): void {
     this.userData = {
       username: "",
       email: "",
@@ -76,9 +82,9 @@ export default class UserStore implements IUserStore {
       token: "",
     };
     cookie.remove("token", { path: "/" });
-  });
+  }
 
-  addFinished = action((type: "course" | "chapter" | "step", id: string) => {
+  addFinished(type: "course" | "chapter" | "step", id: string) {
     const finishedObject: IFinishedObject = { id, date: Date.now() };
     updateFinished(type, finishedObject);
     switch (type) {
@@ -95,13 +101,13 @@ export default class UserStore implements IUserStore {
         break;
       }
     }
-  });
+  }
 
-  verifyToken = action(async (localToken: string) => {
+  async verifyToken(localToken: string) {
     const {
       userData,
       token,
     } = await webServiceProvider.post("user/verifytoken", { localToken });
     this.login(userData, token);
-  });
+  }
 }
