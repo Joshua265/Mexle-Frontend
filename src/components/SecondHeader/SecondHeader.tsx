@@ -4,12 +4,13 @@ import {
   Paper,
   Typography,
   Toolbar,
-  Button,
+  IconButton,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import { Link as RouterLink } from "react-router-dom";
 import { Route, useHistory } from "react-router-dom";
 import React, { useState, useEffect } from "react";
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 
 const useStyles = makeStyles((theme) => ({
   secondHeader: {
@@ -21,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
     margin: 0,
     width: "0px",
     height: "0px",
+    overflow: "hidden",
   },
 }));
 
@@ -31,6 +33,9 @@ function SecondHeader() {
     <Route>
       {({ location }) => {
         const pathnames = location.pathname.split("/").filter((x) => x);
+        const backPath = "/" + [...pathnames].slice(0, -1).join("/");
+        console.log(pathnames);
+        console.log(backPath);
         return (
           <AppBar
             color="secondary"
@@ -42,6 +47,11 @@ function SecondHeader() {
             }
           >
             <Toolbar variant="dense">
+              <RouterLink to={backPath} className="whiteLink">
+                <IconButton style={{ width: 64, marginRight: 24 }}>
+                  <ArrowBackIosIcon />
+                </IconButton>
+              </RouterLink>
               <Breadcrumbs aria-label="Breadcrumb">
                 <RouterLink color="textSecondary" to="/" className="whiteLink">
                   Home
@@ -51,16 +61,12 @@ function SecondHeader() {
                   const to = `/${pathnames.slice(0, index + 1).join("/")}`;
 
                   return last ? (
-                    <Typography
-                      color="textPrimary"
-                      key={to}
-                      className="whiteLink"
-                    >
+                    <Typography key={to} className="whiteLink">
                       {value}
                     </Typography>
                   ) : (
                     <RouterLink
-                      color="textSecondary"
+                      color="#fffff"
                       to={to}
                       key={to}
                       className="whiteLink"
@@ -69,7 +75,7 @@ function SecondHeader() {
                     </RouterLink>
                   );
                 })}
-              </Breadcrumbs>{" "}
+              </Breadcrumbs>
             </Toolbar>
           </AppBar>
         );

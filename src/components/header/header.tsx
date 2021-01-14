@@ -33,6 +33,10 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     margin: 0,
   },
+  toolbar: {
+    display: "flex",
+    allignItems: "center",
+  },
   menuButton: {
     marginRight: theme.spacing(2),
   },
@@ -40,8 +44,9 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   logo: {
-    height: "38px",
-    marginTop: "10px",
+    width: "64px",
+    // marginTop: "10px",
+    allignSelf: "center",
   },
   select: {
     display: "flex",
@@ -57,8 +62,8 @@ const Header: FC = observer((props) => {
 
   return (
     <>
-      <AppBar className={classes.header} elevation={3}>
-        <Toolbar>
+      <AppBar className={classes.header} elevation={0}>
+        <Toolbar className={classes.toolbar}>
           {/* <IconButton
             edge="start"
             className={classes.menuButton}
@@ -69,12 +74,14 @@ const Header: FC = observer((props) => {
             <MenuIcon />
           </IconButton> */}
 
-          <Typography variant="h6" className={classes.title}>
-            <Link to="/" className="whiteLink">
-              <img className={classes.logo} src={LightLogo} />
-            </Link>
-          </Typography>
+          <Link to="/" className="whiteLink">
+            <img
+              className={classes.logo}
+              src={localStore.darkMode ? DarkLogo : LightLogo}
+            />
+          </Link>
 
+          <div style={{ flexGrow: 2 }} />
           <Select
             label="language"
             renderValue={function (value) {

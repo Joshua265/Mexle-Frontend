@@ -7878,6 +7878,13 @@ material-ui-icons@^1.0.0-beta.36:
   dependencies:
     recompose "^0.26.0"
 
+material-ui-image@^3.3.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/material-ui-image/-/material-ui-image-3.3.1.tgz#88f9a85b9865ef9a73523dc79e299ea203a5f9d8"
+  integrity sha512-cf51V0cDng4e39mG8dcJkVegNW5UzurhLtI5eASJaDAEW+nUmVcUiZiCyokFMMCoirLt6GWHBLRFVcohJV6dag==
+  dependencies:
+    prop-types "^15.5.8"
+
 mathjax-full@^3.0.4:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/mathjax-full/-/mathjax-full-3.1.2.tgz#53ac5b38252379d515d60e99092672b42725bf6a"
@@ -9805,7 +9812,7 @@ prompts@^2.0.1:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@15.7.2, prop-types@^15.5.4, prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@15.7.2, prop-types@^15.5.4, prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==

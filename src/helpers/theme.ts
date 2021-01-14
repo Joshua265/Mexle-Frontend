@@ -53,6 +53,11 @@ const getTheme = (darkMode: boolean) => {
           margin: "20px",
         },
       },
+      MuiBreadcrumbs: {
+        separator: {
+          color: "#ffffff",
+        },
+      },
     },
     zIndex: {
       mobileStepper: 1000,

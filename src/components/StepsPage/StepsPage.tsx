@@ -50,7 +50,6 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    // height: "calc(100vh - 112px)",
   },
   contentShift: {
     marginTop: 0,
@@ -63,7 +62,6 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
-    // height: "calc(100vh - 112px)",
   },
   titlePaper: {
     position: "sticky",
@@ -75,7 +73,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const StepsPage: FC = observer(() => {
-  const [open, setOpen] = useState(false);
   const [openStepProgress, setOpenStepProgress] = useState(true);
   const classes = useStyles();
   const location = useLocation();
