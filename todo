@@ -1,11 +1,29 @@
-user finished courses / chapters / steps
+fix user finished courses / chapters / steps
 formula questions
-sign up
 accountpage
-use uploaded images as preview image (course, chapter)
-refactor backend (seperate routes and controller)
+
+
+
+licensePage
+
+Lizenzangabe der eigenentwickelten Lerninhalte
+Verzeichnismanagement: Möglichkeit für Verzeichnisse, welche über einzelne Seiten hinaus gehen, z.B. für einen Namespace
+Abbildungsverzeichnis
+Tabellenverzeichnis
+Medienverzeichnis
+Formelverzeichnis
+Abkürzungsverzeichnis
+Aufgabenverzeichnis
+Literaturverzeichnis
+(Lizenzenverzeichnis für eingebundene Komponenten --> vermutlich in Lit.verz., Medienverz. und Abb.verz. integriert)
+
+
+
+
 mobile design
 
-diagrams io mit svg output
+Editor:
+diagrams io mit svg output??????
 templates
 link referenz
+fix math display

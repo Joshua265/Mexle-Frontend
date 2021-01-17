@@ -4,6 +4,7 @@ import {
   GridListTile,
   GridListTileBar,
   Typography,
+  Link as MuiLink,
 } from "@material-ui/core";
 import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
@@ -73,13 +74,13 @@ const FeatureGrid = () => {
     <div className={classes.root}>
       <GridList cellHeight={cellHeight} className={classes.gridList}>
         <GridListTile className={classes.gridListTile}>
-          <Link to="/wiki" className="whiteLink">
+          <MuiLink href="https://wiki.mexle.hs-heilbronn.de/start">
             <LocalLibraryIcon className={classes.icon} />
             <GridListTileBar
               title="Wiki"
               subtitle={<span>Infos zum Nachschlagen</span>}
             />
-          </Link>
+          </MuiLink>
         </GridListTile>
         <GridListTile className={classes.gridListTile}>
           <Link to="/courses" className="whiteLink">

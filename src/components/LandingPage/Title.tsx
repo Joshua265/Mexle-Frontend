@@ -11,7 +11,7 @@ const Title = (props) => {
         style={{ transformOrigin: "0 0 0" }}
         {...(props.checked ? { timeout: 1000 } : {})}
       >
-        <Typography variant="h1" component="h4">
+        <Typography variant="h1" component="h4" color="textPrimary">
           <Box fontWeight="fontWeightBold" color="text.hint" display="inline">
             M
           </Box>
@@ -23,7 +23,7 @@ const Title = (props) => {
         style={{ transformOrigin: "0 0 0" }}
         {...(props.checked ? { timeout: 1500 } : {})}
       >
-        <Typography variant="h1" component="h4">
+        <Typography variant="h1" component="h4" color="textPrimary">
           <Box fontWeight="fontWeightBold" color="text.hint" display="inline">
             EX
           </Box>
@@ -35,7 +35,7 @@ const Title = (props) => {
         style={{ transformOrigin: "0 0 0" }}
         {...(props.checked ? { timeout: 2000 } : {})}
       >
-        <Typography variant="h1" component="h4">
+        <Typography variant="h1" component="h4" color="textPrimary">
           <Box fontWeight="fontWeightBold" color="text.hint" display="inline">
             LE
           </Box>

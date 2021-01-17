@@ -44,9 +44,6 @@ export class StepStore implements IStepStore {
 
   setActiveStep(index: number) {
     this.steps.activeStep = index;
-    // navigationStore.history.replace(
-    //   `${this.steps.steps[this.steps.activeStep]._id}`
-    // );
   }
 
   clearSteps = action(() => {

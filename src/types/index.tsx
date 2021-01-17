@@ -16,6 +16,7 @@ export interface IChapters {
   _id: string;
   courseId: string;
   author: string;
+  visible: boolean;
   title: string;
   description: string;
 }
@@ -43,11 +44,28 @@ export interface IStep {
   chapterId: string;
   title: string;
   author: string;
+  visible: boolean;
   description: string;
   content: IContent;
 }
 
-export interface IFinishedObject {
-  id: string;
-  date: number;
+export interface IFinishedCourse {
+  _id: string;
+  userId: string;
+  courseId: string;
+  createdAt: number;
+}
+
+export interface IFinishedChapter {
+  _id: string;
+  userId: string;
+  chapterId: string;
+  createdAt: number;
+}
+
+export interface IFinishedStep {
+  _id: string;
+  userId: string;
+  stepId: string;
+  createdAt: number;
 }

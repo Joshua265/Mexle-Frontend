@@ -67,6 +67,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface props {
   _id: string;
   title: string;
+  visible: boolean;
   description?: string;
   imageLink?: string;
   author: string;
@@ -80,7 +81,7 @@ interface props {
 function MediaCard(props: props) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(props.visible);
   const [done, setDone] = useState(false);
   const { userStore } = useContext(RootStoreContext);
   const { enqueueSnackbar } = useSnackbar();
@@ -93,18 +94,11 @@ function MediaCard(props: props) {
       ? props.link.split("/")[3]
       : "";
 
-  useEffect(() => {
-    if (checkForEditShow(userStore.userData, props.author)) {
-      getVisibility();
-    }
-    checkDone();
-  }, []);
-
   const checkDone = (): boolean => {
-    if (props.kind === "Course") {
+    if (props.kind === "Course" && userStore.userData.loggedIn) {
       if (
         userStore.userData.finishedCourses.some(
-          (element) => element.id === props._id
+          (element) => element._id === props._id
         )
       ) {
         setDone(true);
@@ -113,7 +107,7 @@ function MediaCard(props: props) {
     if (props.kind === "Chapter") {
       if (
         userStore.userData.finishedChapters.some(
-          (element) => element.id === props._id
+          (element) => element._id === props._id
         )
       ) {
         setDone(true);
@@ -217,7 +211,7 @@ function MediaCard(props: props) {
           />
           <CardContent className={classes.cardContent}>
             <Typography
-              color="textSecondary"
+              color="textPrimary"
               gutterBottom
               variant="h5"
               component="h2"

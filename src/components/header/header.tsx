@@ -116,7 +116,9 @@ const Header: FC = observer((props) => {
             {userStore.userData.loggedIn ? (
               <Avatar color="inherit"></Avatar>
             ) : (
-              <Typography variant="button">{t("login")}</Typography>
+              <Typography variant="button" color="inherit">
+                {t("login")}
+              </Typography>
             )}
           </Link>
         </Toolbar>

@@ -16,7 +16,7 @@ import {
   Drawer,
 } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
-import { IStep, IContent, IFinishedObject } from "types";
+import { IStep, IContent, IFinishedStep } from "types";
 import { observer } from "mobx-react-lite";
 import { RootStoreContext } from "stores/RootStore";
 
@@ -96,17 +96,6 @@ const StepsProgress = observer((props: IProps) => {
     stepStore.setActiveStep(index);
   };
 
-  const checkFinished = (_id: string) => {
-    if (
-      userStore.userData.finishedSteps.some(
-        (element: IFinishedObject) => element.id === _id
-      )
-    ) {
-      return true;
-    }
-    return false;
-  };
-
   return (
     <Drawer
       open={props.open}
@@ -119,7 +108,12 @@ const StepsProgress = observer((props: IProps) => {
     >
       <Stepper activeStep={activeStep} nonLinear orientation="vertical">
         {steps.map((step, index) => (
-          <Step key={index} completed={checkFinished(step._id)}>
+          <Step
+            key={index}
+            completed={userStore.userData.finishedSteps.some(
+              (element: IFinishedStep) => element.stepId === step._id
+            )}
+          >
             <StepButton onClick={() => handleStepClick(index)}>
               {step.title}
             </StepButton>

@@ -80,9 +80,6 @@ function Courses() {
     try {
       const courseList = await webServiceProvider.get("courses");
       console.log(courseList);
-      if (courseList === "Forbidden") {
-        history.push("/login");
-      }
       setCourses(courseList.courses);
     } catch {
       setError(true);
@@ -188,6 +185,7 @@ function Courses() {
                     author={course.author}
                     language={course.language}
                     license={course.license}
+                    visible={course.visible}
                     link={`/courses/${course._id}`}
                     kind="Course"
                   />

@@ -44,7 +44,6 @@ const useStyles = makeStyles((theme: any) => {
     },
     rightFloat: {
       position: "absolute",
-      marginTop: theme.spacing(20),
       right: theme.spacing(16),
       msTransform: "translateY(-50%)",
       transform: "translateY(-50%)",

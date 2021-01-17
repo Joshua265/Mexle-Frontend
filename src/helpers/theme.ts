@@ -5,14 +5,14 @@ const getTheme = (darkMode: boolean) => {
     palette: {
       type: darkMode ? "dark" : "light",
       primary: {
-        main: "#006A00",
+        main: darkMode ? "#53dd6c" : "#006A00",
         light: "#006A00",
         dark: "#53dd6c",
       },
       secondary: {
-        main: "#546A7B",
+        main: darkMode ? "#A0DDFF" : "#546A7B",
         light: "#546A7B",
-        dark: "#62929E",
+        dark: "#A0DDFF",
       },
       success: {
         main: "#53dd6c",
@@ -22,7 +22,7 @@ const getTheme = (darkMode: boolean) => {
       text: {
         hint: darkMode ? "#53dd6c" : "#006A00",
         primary: darkMode ? "#ffffff" : "#000000",
-        secondary: darkMode ? "#ffffff" : "#000000",
+        secondary: darkMode ? "#000000" : "#ffffff",
       },
     },
     overrides: {
@@ -31,7 +31,7 @@ const getTheme = (darkMode: boolean) => {
           backgroundColor: darkMode ? "#53dd6c" : "#006A00",
         },
         colorSecondary: {
-          backgroundColor: darkMode ? "#62929E" : "#546A7B",
+          backgroundColor: darkMode ? "#A0DDFF" : "#546A7B",
         },
       },
       MuiPaper: {
@@ -48,16 +48,12 @@ const getTheme = (darkMode: boolean) => {
           marginRight: "20px",
         },
       },
-      MuiTypography: {
-        h2: {
-          margin: "20px",
-        },
-      },
       MuiBreadcrumbs: {
         separator: {
-          color: "#ffffff",
+          color: darkMode ? "#000000" : "#ffffff",
         },
       },
+      MuiFormLabel: { root: { color: darkMode ? "#ffffff" : "#000000" } },
     },
     zIndex: {
       mobileStepper: 1000,

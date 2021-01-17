@@ -13,6 +13,13 @@ import { useTranslation } from "react-i18next";
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
     backgroundColor: theme.palette.background.paper,
+    width: "100%",
+    margin: "auto",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "flex-start",
+    flexDirection: "row",
+    flexWrap: "wrap",
     padding: theme.spacing(6, 0, 4),
   },
   cardGrid: {
@@ -20,13 +27,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: theme.spacing(8),
   },
   courseInfo: {
-    width: theme.breakpoints.values.md,
-    margin: "auto",
+    display: "flex",
+    flexWrap: "wrap",
+    flexDirection: "column",
   },
   courseImage: {
-    maxWidth: theme.breakpoints.values.md / 3,
-    padding: theme.spacing(4),
+    width: theme.breakpoints.values.md / 3,
+    flexGrow: 0,
+    maxHeight: 400 - theme.spacing(12),
     backgroundSize: "contain",
+    // borderWidth: theme.spacing(4),
+    // borderColor: theme.palette.background.paper,
+    // borderStyle: "solid",
+    margin: theme.spacing(0, 4),
   },
 }));
 
@@ -67,44 +80,37 @@ function ChapterPage() {
       <React.Fragment>
         <div className={classes.header}>
           {courseInfo ? (
-            <div className={classes.courseInfo}>
-              <Grid container spacing={4}>
-                <Grid item container xs={12} sm={4} md={4}>
-                  <img
-                    src={courseInfo.picture}
-                    className={classes.courseImage}
-                  />
-                </Grid>
-                <Grid item container xs={12} sm={8} md={8}>
-                  <Typography
-                    component="h1"
-                    variant="h2"
-                    color="textPrimary"
-                    gutterBottom
-                    style={{
-                      margin: 0,
-                      width: "100%",
-                      alignSelf: "center",
-                    }}
-                  >
-                    {courseInfo.title}
-                  </Typography>
-                  <Typography
-                    component="h1"
-                    variant="h5"
-                    color="textPrimary"
-                    gutterBottom
-                    style={{
-                      margin: 0,
-                      width: "100%",
-                      alignSelf: "flex-start",
-                    }}
-                  >
-                    {courseInfo.description}
-                  </Typography>
-                </Grid>
-              </Grid>
-            </div>
+            <>
+              <img src={courseInfo.picture} className={classes.courseImage} />
+              <div className={classes.courseInfo}>
+                <Typography
+                  component="h1"
+                  variant="h2"
+                  color="textPrimary"
+                  gutterBottom
+                  style={{
+                    margin: 0,
+                    width: "100%",
+                    alignSelf: "center",
+                  }}
+                >
+                  {courseInfo.title}
+                </Typography>
+                <Typography
+                  component="h1"
+                  variant="h5"
+                  color="textPrimary"
+                  gutterBottom
+                  style={{
+                    margin: 0,
+                    width: "100%",
+                    alignSelf: "flex-start",
+                  }}
+                >
+                  {courseInfo.description}
+                </Typography>
+              </div>
+            </>
           ) : (
             <Typography
               component="h1"
@@ -124,6 +130,7 @@ function ChapterPage() {
                 <MediaCard
                   _id={chapter._id}
                   author={chapter.author}
+                  visible={chapter.visible}
                   key={chapter._id}
                   title={chapter.title}
                   description={chapter.description}

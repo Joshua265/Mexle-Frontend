@@ -51,11 +51,6 @@ function HideOnScroll({ children }: JSX.ElementChildrenAttribute) {
 const App: FC = observer(() => {
   const { localStore, navigationStore } = useContext(RootStoreContext);
   const [open, setOpen] = useState(false);
-  const [theme, setTheme] = useState(getTheme(localStore.darkMode));
-
-  const handleDrawer = () => {
-    setOpen(!open);
-  };
 
   useEffect(() => {
     localStore.initLocalVariables();
@@ -76,22 +71,19 @@ const App: FC = observer(() => {
 
             <Route path="/login" exact component={LoginPage} />
             <Route path="/signup" exact component={SignUpPage} />
-            <PrivateRoute path="/courses" exact component={Courses} />
+            <Route path="/courses" exact component={Courses} />
 
             <PrivateRoute
               path="/courses/:CourseId"
               exact
               component={ChapterPage}
             />
-            {/* <PrivateRoute
+            <Route
               path="/courses/:CourseId/license"
               exact
               component={LicensePage}
-            /> */}
-            <PrivateRoute
-              path="/courses/:CourseId/:ChapterId"
-              component={StepsPage}
             />
+            <Route path="/courses/:CourseId/:ChapterId" component={StepsPage} />
             <PrivateRoute path="/account" exact component={AccountPage} />
           </Switch>
         </Router>

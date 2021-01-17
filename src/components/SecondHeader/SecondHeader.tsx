@@ -6,13 +6,14 @@ import {
   Toolbar,
   IconButton,
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import { Link as RouterLink } from "react-router-dom";
 import { Route, useHistory } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
+import { useTranslation } from "react-i18next";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   secondHeader: {
     marginTop: 64,
     zIndex: 1070,
@@ -24,18 +25,20 @@ const useStyles = makeStyles((theme) => ({
     height: "0px",
     overflow: "hidden",
   },
+  backIcon: {
+    fill: theme.palette.text.secondary,
+  },
 }));
 
 function SecondHeader() {
   const classes = useStyles();
+  const { t } = useTranslation();
 
   return (
     <Route>
       {({ location }) => {
         const pathnames = location.pathname.split("/").filter((x) => x);
         const backPath = "/" + [...pathnames].slice(0, -1).join("/");
-        console.log(pathnames);
-        console.log(backPath);
         return (
           <AppBar
             color="secondary"
@@ -49,29 +52,24 @@ function SecondHeader() {
             <Toolbar variant="dense">
               <RouterLink to={backPath} className="whiteLink">
                 <IconButton style={{ width: 64, marginRight: 24 }}>
-                  <ArrowBackIosIcon />
+                  <ArrowBackIosIcon className={classes.backIcon} />
                 </IconButton>
               </RouterLink>
               <Breadcrumbs aria-label="Breadcrumb">
-                <RouterLink color="textSecondary" to="/" className="whiteLink">
-                  Home
+                <RouterLink to="/" className="whiteLink">
+                  <Typography color="textSecondary">{t("home")}</Typography>
                 </RouterLink>
                 {pathnames.map((value, index) => {
                   const last = index === pathnames.length - 1;
                   const to = `/${pathnames.slice(0, index + 1).join("/")}`;
 
                   return last ? (
-                    <Typography key={to} className="whiteLink">
+                    <Typography color="textSecondary" key={to}>
                       {value}
                     </Typography>
                   ) : (
-                    <RouterLink
-                      color="#fffff"
-                      to={to}
-                      key={to}
-                      className="whiteLink"
-                    >
-                      {value}
+                    <RouterLink to={to} key={to} className="whiteLink">
+                      <Typography color="textSecondary">{value}</Typography>
                     </RouterLink>
                   );
                 })}
