@@ -154,9 +154,7 @@ function LoginPage() {
                   fullWidth
                   onChange={(e) => setPassword(e.target.value)}
                 />
-                <Link to="/retrievepassword">
-                  <MuiLink>Forgot password?</MuiLink>
-                </Link>
+                <MuiLink>Forgot password?</MuiLink>
               </Grid>
 
               <Grid item xs={12}>

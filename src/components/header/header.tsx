@@ -114,7 +114,9 @@ const Header: FC = observer((props) => {
             to={userStore.userData.loggedIn ? "/account" : "/login"}
           >
             {userStore.userData.loggedIn ? (
-              <Avatar color="inherit"></Avatar>
+              <Avatar color="inherit" src={userStore.avatarUrl}>
+                {userStore.userData.username[0]}
+              </Avatar>
             ) : (
               <Typography variant="button" color="inherit">
                 {t("login")}

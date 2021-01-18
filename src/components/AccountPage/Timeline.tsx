@@ -31,10 +31,7 @@ interface Data {
 }
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    width: "100%",
-    margin: theme.spacing(2),
-  },
+  root: {},
   container: {
     height: 702,
   },

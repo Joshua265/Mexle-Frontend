@@ -8,17 +8,11 @@ import AccountOptions from "./AccountOptions";
 import Timeline from "./Timeline";
 
 const AccountPage = (): JSX.Element => {
-  const { userStore } = useContext(RootStoreContext);
-
   return (
-    <Observer>
-      {() => (
-        <>
-          <AccountInformation />
-          <Timeline />
-        </>
-      )}
-    </Observer>
+    <>
+      <AccountInformation />
+      <Timeline />
+    </>
   );
 };
 

@@ -9,6 +9,7 @@ const cookie = new Cookie();
 
 interface IUserStore {
   userData: IUserData;
+  avatarUrl: String;
   login: Function;
   logout: Function;
   addFinished: Function;
@@ -62,6 +63,8 @@ export class UserStore implements IUserStore {
     token: cookie.get("token") || "",
   };
 
+  avatarUrl = "";
+
   async login(username: string, password: string): Promise<void> {
     const fetchedUserData = await webServiceProvider.post("user/login", {
       username,
@@ -74,6 +77,9 @@ export class UserStore implements IUserStore {
       loggedIn: true,
     };
     cookie.set("token", fetchedUserData.token);
+    if (this.userData.avatar) {
+      this.avatarUrl = `${process.env.REACT_APP_API_SERVER}images/${this.userData.avatar}`;
+    }
   }
 
   logout(): void {
@@ -124,5 +130,8 @@ export class UserStore implements IUserStore {
       loggedIn: true,
     };
     cookie.set("token", fetchedUserData.token);
+    if (this.userData.avatar) {
+      this.avatarUrl = `${process.env.REACT_APP_API_SERVER}images/${this.userData.avatar}`;
+    }
   }
 }
