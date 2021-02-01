@@ -28,10 +28,15 @@ import {
 } from "helpers/transform";
 import { IStep, IAnswer, IMultipleChoice, IContent } from "types";
 import { RootStoreContext } from "stores/RootStore";
+import BlockEditor from "container/BlockEditor";
+import { observer } from "mobx-react-lite";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
     position: "relative",
+  },
+  grid: {
+    padding: theme.spacing(2),
   },
   title: {
     marginLeft: theme.spacing(2),
@@ -66,30 +71,19 @@ const Transition = React.forwardRef(function Transition(
   return <TransitionSlide direction="up" ref={ref} {...props} />;
 });
 
-function CreateStep(props: IProps) {
+const CreateStep = observer((props: IProps) => {
   const classes = useStyles();
   const location = useLocation();
-  const { userStore } = useContext(RootStoreContext);
-  const [content, setcontent] = useState<IContent>({
-    html: "",
-    multipleChoice: [],
-  });
-  const [form, setForm] = useState({
-    title: "",
-    description: "",
-    author: userStore.userData.username,
-    visible: true,
-    chapterId: location.pathname.split("/")[3],
-  });
+  const { userStore, editorStore } = useContext(RootStoreContext);
 
   const fetchStep = async () => {
     const step = await webServiceProvider.get(`steps/${props.id}`);
-    setcontent(step.content);
-    setForm({ ...form, title: step.title, description: step.description });
+    editorStore.initStep(step);
   };
 
   useEffect(() => {
     if (props.edit) {
+      editorStore.edit = true;
       fetchStep();
     }
   }, [props.open]);
@@ -98,64 +92,51 @@ function CreateStep(props: IProps) {
     props.handleClose();
   };
 
-  const handleSave = async () => {
-    if (props.edit) {
-      await webServiceProvider.post(`steps/edit/${props.id}`, {
-        ...form,
-        content,
-        author: userStore.userData.username,
-      });
-    } else {
-      await webServiceProvider.post("steps/create", {
-        ...form,
-        content,
-        author: userStore.userData.username,
-      });
-    }
-
+  const handleSave = () => {
+    editorStore.saveStep();
     handleClose();
   };
 
-  const handleFormChange = (e: any) => {
-    e.preventDefault();
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  // const handleFormChange = (e: any) => {
+  //   e.preventDefault();
+  //   setForm({ ...form, [e.target.name]: e.target.value });
+  // };
 
-  const addMultipleChoiceQuestion = () => {
-    console.log(content.multipleChoice);
-    if (content.multipleChoice) {
-      const list = content.multipleChoice;
-      list.push({
-        question: "",
-        answers: [],
-        correctAnswer: -1,
-      });
-      setcontent({ ...content, multipleChoice: list });
-    } else {
-      const list: IMultipleChoice[] = [];
-      list.push({
-        question: "",
-        answers: [],
-        correctAnswer: -1,
-      });
-      setcontent({ ...content, multipleChoice: list });
-    }
-  };
+  // const addMultipleChoiceQuestion = () => {
+  //   console.log(content.multipleChoice);
+  //   if (content.multipleChoice) {
+  //     const list = content.multipleChoice;
+  //     list.push({
+  //       question: "",
+  //       answers: [],
+  //       correctAnswer: -1,
+  //     });
+  //     setcontent({ ...content, multipleChoice: list });
+  //   } else {
+  //     const list: IMultipleChoice[] = [];
+  //     list.push({
+  //       question: "",
+  //       answers: [],
+  //       correctAnswer: -1,
+  //     });
+  //     setcontent({ ...content, multipleChoice: list });
+  //   }
+  // };
 
-  const saveMultipleChoice = (index: number, data: IMultipleChoice) => {
-    const list = content.multipleChoice;
-    list[index] = data;
-    setcontent({ ...content, multipleChoice: list });
-  };
+  // const saveMultipleChoice = (index: number, data: IMultipleChoice) => {
+  //   const list = content.multipleChoice;
+  //   list[index] = data;
+  //   setcontent({ ...content, multipleChoice: list });
+  // };
 
-  const removeMultipleChoiceQuestion = (index: number) => {
-    setcontent({
-      ...content,
-      multipleChoice: content.multipleChoice.filter(
-        (item: IMultipleChoice, id: number) => id !== index
-      ),
-    });
-  };
+  // const removeMultipleChoiceQuestion = (index: number) => {
+  //   setcontent({
+  //     ...content,
+  //     multipleChoice: content.multipleChoice.filter(
+  //       (item: IMultipleChoice, id: number) => id !== index
+  //     ),
+  //   });
+  // };
 
   return (
     <Dialog
@@ -184,65 +165,45 @@ function CreateStep(props: IProps) {
         </Toolbar>
       </AppBar>
 
-      <Grid container spacing={2}>
-        <Grid item xs={6}>
-          <form
-            className={classes.form}
-            noValidate
-            autoComplete="off"
-            onChange={(e) => handleFormChange(e)}
-          >
-            <TextField name="title" label="Titel" value={form.title} />
+      <Grid container spacing={2} className={classes.grid}>
+        <Grid item xs={12} xl={6} lg={6}>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <TextField
+              name="title"
+              label="Titel"
+              value={editorStore.step.title}
+              onChange={(e) => (editorStore.step.title = e.target.value)}
+            />
             <TextField
               name="description"
               label="Beschreibung"
-              value={form.description}
+              value={editorStore.step.description}
               multiline
               rows={4}
+              onChange={(e) => (editorStore.step.description = e.target.value)}
             />
-          </form>
-          <CustomCKEditor
+          </div>
+
+          {/* <CustomCKEditor
             data={content.html}
             onChange={(data: any) => setcontent({ ...content, html: data })}
+          /> */}
+          <BlockEditor
+            html={props.edit ? editorStore.step.content.html : undefined}
           />
-          <Button onClick={addMultipleChoiceQuestion}>
-            Multiple Choice Frage Hinzufügen
-          </Button>
-
-          {content.multipleChoice ? (
-            content.multipleChoice.map(
-              (mcQuestion: IMultipleChoice, index: number) => {
-                return (
-                  <React.Fragment>
-                    <Button onClick={() => removeMultipleChoiceQuestion(index)}>
-                      Frage Löschen
-                    </Button>
-                    {/* <CreateMultipleChoice
-                    key={index}
-                    data={mcQuestion}
-                    saveCallback={saveMultipleChoice}
-                    id={index}
-                  /> */}
-                  </React.Fragment>
-                );
-              }
-            )
-          ) : (
-            <React.Fragment />
-          )}
         </Grid>
 
-        <Grid item xs={6}>
-          <div>{JSON.stringify(content.html)}</div>
+        <Grid item xs={12} xl={6} lg={6}>
+          {/* <div>{JSON.stringify(editorStore.step.content.html)}</div> */}
           <div>
             {htmlToReactParser.parseWithInstructions(
-              content.html,
+              editorStore.step.content.html,
               isValidNode,
               processingInstructions
             )}
           </div>
 
-          {content.multipleChoice ? (
+          {/* {content.multipleChoice ? (
             content.multipleChoice.map(
               (data: IMultipleChoice, index: number) => {
                 return <MultipleChoice key={index} data={data} />;
@@ -250,11 +211,11 @@ function CreateStep(props: IProps) {
             )
           ) : (
             <React.Fragment />
-          )}
+          )} */}
         </Grid>
       </Grid>
     </Dialog>
   );
-}
+});
 
 export default CreateStep;

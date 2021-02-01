@@ -177,10 +177,10 @@ function CreateCourse(props: IProps) {
               setForm({ ...form, language: String(e.target.value) })
             }
           >
-            {languages.map((lng) => {
+            {Object.keys(languages).map((value) => {
               return (
-                <MenuItem value={lng.value} key={lng.value}>
-                  {lng.label}
+                <MenuItem value={value} key={value}>
+                  {value}
                 </MenuItem>
               );
             })}

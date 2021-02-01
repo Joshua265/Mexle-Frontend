@@ -22,8 +22,9 @@ import checkForEditShow from "helpers/checkForEditShow";
 import { useSnackbar } from "notistack";
 import { useTranslation } from "react-i18next";
 import LibraSvg from "images/libra";
-import Courses from "components/Courses";
+import LanguageIcon from "@material-ui/icons/Language";
 import { RootStoreContext } from "stores/RootStore";
+import languages from "helpers/languages";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -75,7 +76,7 @@ interface props {
   license?: string;
   directorys?: Array<any>;
   link: string;
-  kind: "Course" | "Chapter";
+  type: "Course" | "Chapter";
 }
 
 function MediaCard(props: props) {
@@ -88,14 +89,18 @@ function MediaCard(props: props) {
   const { t } = useTranslation();
 
   const id =
-    props.kind === "Course"
+    props.type === "Course"
       ? props.link.split("/")[2]
-      : props.kind === "Chapter"
+      : props.type === "Chapter"
       ? props.link.split("/")[3]
       : "";
 
-  const checkDone = (): boolean => {
-    if (props.kind === "Course" && userStore.userData.loggedIn) {
+  useEffect(() => {
+    checkDone();
+  });
+
+  const checkDone = (): void => {
+    if (props.type === "Course" && userStore.userData.loggedIn) {
       if (
         userStore.userData.finishedCourses.some(
           (element) => element._id === props._id
@@ -104,7 +109,7 @@ function MediaCard(props: props) {
         setDone(true);
       }
     }
-    if (props.kind === "Chapter") {
+    if (props.type === "Chapter") {
       if (
         userStore.userData.finishedChapters.some(
           (element) => element._id === props._id
@@ -113,20 +118,19 @@ function MediaCard(props: props) {
         setDone(true);
       }
     }
-    return false;
   };
 
   const handleVisibility = async (e) => {
     e.preventDefault();
     const visible = e.target.checked;
     try {
-      if (props.kind === "Course") {
+      if (props.type === "Course") {
         await webServiceProvider.post(`courses/visible/${id}`, {
           visible: visible,
           user: userStore.userData.username,
         });
       }
-      if (props.kind === "Chapter") {
+      if (props.type === "Chapter") {
         await webServiceProvider.post(`chapters/visible/${id}`, {
           visible: visible,
           user: userStore.userData.username,
@@ -139,11 +143,11 @@ function MediaCard(props: props) {
   };
 
   const getVisibility = async () => {
-    if (props.kind === "Course") {
+    if (props.type === "Course") {
       const visible = await webServiceProvider.get(`courses/visible/${id}`);
       setVisible(visible);
     }
-    if (props.kind === "Chapter") {
+    if (props.type === "Chapter") {
       const visible = await webServiceProvider.get(`chapters/visible/${id}`);
       setVisible(visible);
     }
@@ -153,7 +157,7 @@ function MediaCard(props: props) {
   if (open) {
     return (
       <React.Fragment>
-        {props.kind === "Course" ? (
+        {props.type === "Course" ? (
           <CreateCourse
             edit={true}
             open={open}
@@ -169,7 +173,7 @@ function MediaCard(props: props) {
               _id: id,
             }}
           />
-        ) : props.kind === "Chapter" ? (
+        ) : props.type === "Chapter" ? (
           <CreateChapter
             edit={true}
             open={open}
@@ -226,16 +230,29 @@ function MediaCard(props: props) {
             >
               {props.description}
             </Typography>
-            <Chip
-              className={classes.chip}
-              avatar={<Avatar>{props.author[0]}</Avatar>}
-              label={`${t("author")}: ${props.author}`}
-            />
-            <Chip
-              className={classes.chip}
-              avatar={<LibraSvg className={classes.libra} />}
-              label={`${t("license")}: ${props.license || t("none")}`}
-            />
+            {props.type === "Course" ? (
+              <>
+                <Chip
+                  className={classes.chip}
+                  avatar={<Avatar>{props.author[0]}</Avatar>}
+                  label={`${t("author")}: ${props.author}`}
+                />
+                <Chip
+                  className={classes.chip}
+                  avatar={<LibraSvg className={classes.libra} />}
+                  label={`${t("license")}: ${props.license || t("none")}`}
+                />
+                <Chip
+                  className={classes.chip}
+                  avatar={<LanguageIcon className={classes.libra} />}
+                  label={`${t("language")}: ${
+                    languages[props.language || "en-EN"]
+                  }`}
+                />
+              </>
+            ) : (
+              <></>
+            )}
           </CardContent>
         </CardActionArea>
       </Link>

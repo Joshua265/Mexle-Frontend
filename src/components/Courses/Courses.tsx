@@ -68,34 +68,41 @@ function Courses() {
   const [courses, setCourses] = useState<ICourse[]>([]);
   const [error, setError] = useState(false);
   const [openFilter, setOpenFilter] = useState(false);
+
+  const [search, setSearch] = useState("");
   const [languageFilter, setLanguageFilter] = useState(
     userStore.userData.language || i18n.language || "de-DE"
   );
 
+  //fetch courses on mount
   useEffect(() => {
     getCourses();
   }, []);
 
+  //filter by language onChange
+  useEffect(() => {
+    handleSearch();
+  }, [languageFilter]);
+
   const getCourses = async () => {
     try {
       const courseList = await webServiceProvider.get("courses");
-      console.log(courseList);
       setCourses(courseList.courses);
-    } catch {
+    } catch (err) {
+      console.error(err);
       setError(true);
     }
   };
 
-  const handleSearch = async (e: any) => {
-    e.preventDefault();
+  const handleSearch = async () => {
     try {
       const courses = await webServiceProvider.get("courses/filter", {
-        search: e.target.search.value,
+        search: search,
         language: languageFilter,
       });
-      setCourses(courses);
-    } catch (e) {
-      console.log(e);
+      setCourses(courses.courses);
+    } catch (err) {
+      console.error(err);
       enqueueSnackbar(t("couldNotApplyFilter"), { variant: "error" });
     }
   };
@@ -118,7 +125,10 @@ function Courses() {
               component="form"
               elevation={2}
               className={classes.searchField}
-              onSubmit={handleSearch}
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSearch();
+              }}
             >
               <IconButton
                 className={classes.iconButton}
@@ -133,6 +143,8 @@ function Courses() {
                 type="search"
                 id="search"
                 inputProps={{ "aria-label": "search courses" }}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
               />
               <IconButton type="submit" className={classes.iconButton}>
                 <SearchIcon />
@@ -148,22 +160,23 @@ function Courses() {
                     value={languageFilter}
                     onChange={(e) => setLanguageFilter(e.target.value)}
                   >
-                    {languages.map((lng) => {
-                      return (
-                        <MenuItem value={lng.value} key={lng.value}>
-                          {lng.label}
-                        </MenuItem>
-                      );
-                    })}
                     <MenuItem value="all" key="all">
                       {t("all")}
                     </MenuItem>
+                    {Object.keys(languages).map((value) => {
+                      return (
+                        <MenuItem value={value} key={value}>
+                          {languages[value]}
+                        </MenuItem>
+                      );
+                    })}
                   </TextField>
                 </Grid>
                 <Grid item md={4}>
                   <FormControlLabel
-                    defaultChecked={true}
+                    checked
                     control={<Switch name="showFinished" />}
+                    disabled={!userStore.userData.loggedIn}
                     label={t("showFinishedCourses")}
                   />
                 </Grid>
@@ -187,7 +200,7 @@ function Courses() {
                     license={course.license}
                     visible={course.visible}
                     link={`/courses/${course._id}`}
-                    kind="Course"
+                    type="Course"
                   />
                 </Grid>
               );

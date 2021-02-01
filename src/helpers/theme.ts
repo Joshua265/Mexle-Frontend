@@ -1,37 +1,49 @@
 import { createMuiTheme } from "@material-ui/core/styles";
 
+const darkGreen = "#006A00";
+const darkBlue = "#546A7B";
+
+const lightGreen = "#53DD6C";
+const lightBlue = "#A0DDFF";
+
+const white = "#ffffff";
+const black = "#000000";
+
+const textDisabledDarkMode = "rgba(255, 255, 255, 0.5)";
+const textDisabledLightMode = "rgba(0, 0, 0, 0.38)";
+
 const getTheme = (darkMode: boolean) => {
   const theme = createMuiTheme({
     palette: {
       type: darkMode ? "dark" : "light",
       primary: {
-        main: darkMode ? "#53dd6c" : "#006A00",
-        light: "#006A00",
-        dark: "#53dd6c",
+        main: darkMode ? lightGreen : darkGreen,
+        light: darkGreen,
+        dark: lightGreen,
       },
       secondary: {
-        main: darkMode ? "#A0DDFF" : "#546A7B",
-        light: "#546A7B",
-        dark: "#A0DDFF",
+        main: darkMode ? lightBlue : darkBlue,
+        light: darkBlue,
+        dark: lightBlue,
       },
       success: {
-        main: "#53dd6c",
-        light: "#53dd6c",
-        dark: "#53dd6c",
+        main: lightGreen,
+        light: lightGreen,
+        dark: lightGreen,
       },
       text: {
-        hint: darkMode ? "#53dd6c" : "#006A00",
-        primary: darkMode ? "#ffffff" : "#000000",
-        secondary: darkMode ? "#000000" : "#ffffff",
+        hint: darkMode ? lightGreen : darkGreen,
+        primary: darkMode ? white : black,
+        secondary: darkMode ? black : white,
       },
     },
     overrides: {
       MuiAppBar: {
         colorPrimary: {
-          backgroundColor: darkMode ? "#53dd6c" : "#006A00",
+          backgroundColor: darkMode ? lightGreen : darkGreen,
         },
         colorSecondary: {
-          backgroundColor: darkMode ? "#A0DDFF" : "#546A7B",
+          backgroundColor: darkMode ? lightBlue : darkBlue,
         },
       },
       MuiPaper: {
@@ -50,10 +62,15 @@ const getTheme = (darkMode: boolean) => {
       },
       MuiBreadcrumbs: {
         separator: {
-          color: darkMode ? "#000000" : "#ffffff",
+          color: darkMode ? black : white,
         },
       },
-      MuiFormLabel: { root: { color: darkMode ? "#ffffff" : "#000000" } },
+      MuiStepLabel: {
+        label: {
+          color: darkMode ? textDisabledDarkMode : textDisabledLightMode,
+        },
+      },
+      MuiFormLabel: { root: { color: darkMode ? white : black } },
     },
     zIndex: {
       mobileStepper: 1000,

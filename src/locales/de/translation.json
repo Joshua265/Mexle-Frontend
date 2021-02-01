@@ -14,5 +14,14 @@
   "search": "Suche",
   "showFinishedCourses": "Zeige abgeschlossene Kurse",
   "all": "Alle",
-  "language": "Sprache"
+  "language": "Sprache",
+  "LoginReminder": "Bitte Anmelden",
+  "allFeaturesWithLogin": "Nur wenn Sie angemeldet sind, können Sie alle Features nutzen!",
+  "continueWithoutLogin": "Ohne Anmeldung fortfahren",
+  "maxFileSize": "Die maximale Dateigröße beträgt 5MB",
+  "chooseImage": "Bild auswählen",
+  "caption": "Untertitel",
+  "size": "Größe",
+  "directories": "Verzeichnisse",
+  "home": "Startseite"
 }

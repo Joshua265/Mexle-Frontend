@@ -1,6 +1,3 @@
- const languages = [
-  { value: "de-DE", label: "Deutsch" },
-  { value: "en-US", label: "English" },
-];
+const languages: Object = { "de-DE": "Deutsch", "en-US": "English" };
 
 export default languages;

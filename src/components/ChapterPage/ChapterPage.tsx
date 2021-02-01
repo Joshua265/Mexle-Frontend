@@ -9,6 +9,7 @@ import MediaCard from "container/MediaCard";
 import AddButton from "container/AddButton";
 import webServiceProvider from "helpers/webServiceProvider";
 import { useTranslation } from "react-i18next";
+import LoginReminder from "container/LoginReminder";
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -135,13 +136,14 @@ function ChapterPage() {
                   title={chapter.title}
                   description={chapter.description}
                   link={`${location.pathname}/${chapter._id}`}
-                  kind="Chapter"
+                  type="Chapter"
                 />
               </Grid>
             ))}
           </Grid>
         </Container>
         <AddButton add="chapter" />
+        <LoginReminder />
       </React.Fragment>
     );
   }

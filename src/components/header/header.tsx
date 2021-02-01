@@ -1,7 +1,12 @@
 import React, { useContext, FC } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
-import { makeStyles } from "@material-ui/core/styles";
+import {
+  makeStyles,
+  withStyles,
+  createStyles,
+  Theme,
+} from "@material-ui/core/styles";
 import {
   AppBar,
   Toolbar,
@@ -26,8 +31,9 @@ import languages from "helpers/languages";
 import { RootStoreContext } from "stores/RootStore";
 import { isObservable } from "mobx";
 import SecondHeader from "components/SecondHeader";
+import withWidth, { isWidthUp } from "@material-ui/core/withWidth";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   header: {
     position: "sticky",
     width: "100%",
@@ -49,16 +55,43 @@ const useStyles = makeStyles((theme) => ({
     allignSelf: "center",
   },
   select: {
-    display: "flex",
-    alignItems: "center",
-    color: "white",
+    "&:before": {
+      borderWidth: 0,
+    },
+    "&:after": {
+      borderWidth: 0,
+    },
+  },
+  icon: {
+    fill: theme.palette.text.secondary,
   },
 }));
 
-const Header: FC = observer((props) => {
+const StyledSelect = withStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      color: theme.palette.text.secondary,
+      fill: theme.palette.text.secondary,
+      borderWidth: 0,
+
+      display: "flex",
+      alignItems: "flex-start",
+      justifyContent: "flex-start",
+      "&:before": {
+        borderWidth: 0,
+      },
+      "&:after": {
+        borderWidth: 0,
+      },
+    },
+  })
+)(Select);
+
+const Header = observer((props) => {
   const classes = useStyles();
   const { t, i18n } = useTranslation();
   const { localStore, userStore } = useContext(RootStoreContext);
+  const location = useLocation();
 
   return (
     <>
@@ -82,27 +115,33 @@ const Header: FC = observer((props) => {
           </Link>
 
           <div style={{ flexGrow: 2 }} />
-          <Select
+          <StyledSelect
             label="language"
+            className={classes.select}
+            inputProps={{
+              classes: {
+                icon: classes.icon,
+              },
+            }}
             renderValue={function (value) {
               return (
                 <span className={classes.select}>
                   <TranslateIcon />
-                  {" " + languages.find((el) => el.value === value)?.label}
+                  {" " + languages[String(value)]}
                 </span>
               );
             }}
             value={userStore.userData.language || i18n.language || "Deutsch"}
             onChange={(e) => i18n.changeLanguage(e.target.value as string)}
           >
-            {languages.map((lng) => {
+            {Object.keys(languages).map((value) => {
               return (
-                <MenuItem value={lng.value} key={lng.value}>
-                  {lng.label}
+                <MenuItem value={value} key={value}>
+                  {languages[value]}
                 </MenuItem>
               );
             })}
-          </Select>
+          </StyledSelect>
 
           <Switch
             onChange={() => localStore.toggleDarkMode()}
@@ -111,14 +150,18 @@ const Header: FC = observer((props) => {
 
           <Link
             className="whiteLink"
-            to={userStore.userData.loggedIn ? "/account" : "/login"}
+            to={
+              userStore.userData.loggedIn
+                ? "/account"
+                : `/login?path=${location.pathname}`
+            }
           >
             {userStore.userData.loggedIn ? (
               <Avatar color="inherit" src={userStore.avatarUrl}>
                 {userStore.userData.username[0]}
               </Avatar>
             ) : (
-              <Typography variant="button" color="inherit">
+              <Typography variant="button" color="textSecondary">
                 {t("login")}
               </Typography>
             )}

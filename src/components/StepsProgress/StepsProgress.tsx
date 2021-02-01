@@ -1,4 +1,4 @@
-import React, { useState, FC, useContext } from "react";
+import React, { useState, FC, useContext, useEffect } from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -19,49 +19,48 @@ import { useTranslation } from "react-i18next";
 import { IStep, IContent, IFinishedStep } from "types";
 import { observer } from "mobx-react-lite";
 import { RootStoreContext } from "stores/RootStore";
+import webServiceProvider from "helpers/webServiceProvider";
+import CreateStep from "components/CreateStep";
+import checkForEditShow from "helpers/checkForEditShow";
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: drawerWidth,
     flexShrink: 0,
     // display: "flex",
     // flexDirection: "column",
     // justifyContent: "space-between",
   },
   drawerPaper: {
-    width: drawerWidth,
-    paddingTop: "112px",
+    [theme.breakpoints.up("sm")]: {
+      width: drawerWidth,
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: "100vw",
+    },
+    paddingTop: "160px",
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
   },
   drawerOpen: {
-    paddingTop: "112px",
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
-    width: drawerWidth,
+
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
   },
   drawerClose: {
-    paddingTop: "112px",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
+    display: "none",
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
     overflowX: "hidden",
-    width: theme.spacing(7) + 1,
-    [theme.breakpoints.up("sm")]: {
-      width: theme.spacing(9) + 1,
-    },
   },
   button: {
     marginTop: theme.spacing(1),
@@ -70,6 +69,10 @@ const useStyles = makeStyles((theme) => ({
   actionsContainer: {
     marginBottom: theme.spacing(2),
   },
+  stepperWindow: {
+    overflowY: "auto",
+    flexGrow: 2,
+  },
   resetContainer: {
     padding: theme.spacing(3),
   },
@@ -77,6 +80,7 @@ const useStyles = makeStyles((theme) => ({
 
 interface IProps {
   open: boolean;
+  chapterId: string;
 }
 
 // //get list of titles from props
@@ -91,9 +95,22 @@ const StepsProgress = observer((props: IProps) => {
   const { t } = useTranslation();
   const { stepStore, userStore } = useContext(RootStoreContext);
   const { steps, activeStep, numberSteps } = stepStore.steps;
+  const [chapterTitle, setChapterTitle] = useState();
+  const [open, setOpen] = useState(false);
 
   const handleStepClick = (index) => {
     stepStore.setActiveStep(index);
+  };
+
+  useEffect(() => {
+    getChapterTitle();
+  }, []);
+
+  const getChapterTitle = async () => {
+    const title = await webServiceProvider.get(
+      `chapters/titles/${props.chapterId}`
+    );
+    setChapterTitle(title);
   };
 
   return (
@@ -106,23 +123,46 @@ const StepsProgress = observer((props: IProps) => {
         paper: classes.drawerPaper,
       }}
     >
-      <Stepper activeStep={activeStep} nonLinear orientation="vertical">
-        {steps.map((step, index) => (
-          <Step
-            key={index}
-            completed={userStore.userData.finishedSteps.some(
-              (element: IFinishedStep) => element.stepId === step._id
-            )}
-          >
-            <StepButton onClick={() => handleStepClick(index)}>
-              {step.title}
-            </StepButton>
-            <StepContent>
-              <Typography>{step.description}</Typography>
-            </StepContent>
-          </Step>
-        ))}
-      </Stepper>
+      <>
+        <Typography variant="h6" component="h1" style={{ textAlign: "center" }}>
+          {chapterTitle || ""}
+        </Typography>
+        {
+          //only show editButton and edit to certain users
+          checkForEditShow(userStore.userData, steps[activeStep].author) ? (
+            <React.Fragment>
+              <Button onClick={() => setOpen(true)}>{t("edit")}</Button>
+              <CreateStep
+                edit={true}
+                open={open}
+                handleClose={() => setOpen(false)}
+                id={steps[activeStep]._id}
+              />
+            </React.Fragment>
+          ) : (
+            <React.Fragment />
+          )
+        }
+        <div className={classes.stepperWindow}>
+          <Stepper activeStep={activeStep} nonLinear orientation="vertical">
+            {steps.map((step, index) => (
+              <Step
+                key={index}
+                completed={userStore.userData.finishedSteps.some(
+                  (element: IFinishedStep) => element.stepId === step._id
+                )}
+              >
+                <StepButton onClick={() => handleStepClick(index)}>
+                  {step.title}
+                </StepButton>
+                <StepContent>
+                  <Typography>{step.description}</Typography>
+                </StepContent>
+              </Step>
+            ))}
+          </Stepper>
+        </div>
+      </>
       <div className={classes.actionsContainer}>
         <Divider />
         <List

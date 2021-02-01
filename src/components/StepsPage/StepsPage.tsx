@@ -17,6 +17,7 @@ import {
   Divider,
   CircularProgress,
 } from "@material-ui/core";
+import MenuIcon from "@material-ui/icons/Menu";
 import FinishPage from "components/FinishPage";
 
 import StepsProgress from "components/StepsProgress";
@@ -31,6 +32,7 @@ import {
   processingInstructions,
 } from "helpers/transform";
 import { RootStoreContext } from "stores/RootStore";
+import LoginReminder from "container/LoginReminder";
 
 const drawerWidth = 240;
 
@@ -42,26 +44,44 @@ const useStyles = makeStyles((theme) => ({
     margin: 0,
   },
   content: {
-    margin: "0px 0px 0px 20px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    width: "100%",
+    maxWidth: theme.breakpoints.values.lg,
+  },
+  paper: {
+    margin: "auto",
     padding: 20,
     overflowX: "hidden",
     width: `calc(100% - 40)`,
+    maxWidth: theme.breakpoints.values.lg,
     transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
   },
-  contentShift: {
-    marginTop: 0,
-    marginRight: 0,
+  paperShift: {
+    margin: "auto",
     padding: 20,
     overflowX: "hidden",
-    width: `calc(100% - ${drawerWidth}px - 40)`, //${theme.spacing(7) + 1})`,
-    marginLeft: drawerWidth + 20,
+    width: `calc(100% - ${drawerWidth}px - 40)`,
+    maxWidth: theme.breakpoints.values.lg,
+    marginLeft: `max(${drawerWidth + 20}px, auto)`,
     transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
+  },
+  menuButton: {
+    position: "fixed",
+    [theme.breakpoints.up("sm")]: {
+      top: theme.mixins.toolbar.height,
+    },
+    [theme.breakpoints.down("sm")]: {
+      top: 56,
+    },
+    zIndex: 1299,
   },
   titlePaper: {
     position: "sticky",
@@ -113,14 +133,20 @@ const StepsPage: FC = observer(() => {
   if (steps && numberSteps > 0) {
     return (
       <React.Fragment>
-        <StepsProgress open={openStepProgress} />
+        <IconButton
+          className={classes.menuButton}
+          onClick={() => setOpenStepProgress(!openStepProgress)}
+        >
+          <MenuIcon />
+        </IconButton>
+        <StepsProgress open={openStepProgress} chapterId={chapterId} />
         <Paper
-          className={openStepProgress ? classes.contentShift : classes.content}
+          className={openStepProgress ? classes.paperShift : classes.paper}
           elevation={1}
         >
-          <React.Fragment>
+          <div className={classes.content}>
             {/* {steps[currentStep].content.html} */}
-            {steps[activeStep].content ? (
+            {steps[activeStep].content.html ? (
               htmlToReactParser.parseWithInstructions(
                 steps[activeStep].content.html,
                 isValidNode,
@@ -129,32 +155,26 @@ const StepsPage: FC = observer(() => {
             ) : (
               <React.Fragment />
             )}
-            {steps[activeStep].content.multipleChoice ? (
-              steps[activeStep].content.multipleChoice.map((data, index) => {
-                return <MultipleChoice key={index} data={data} />;
-              })
-            ) : (
-              <React.Fragment />
-            )}
-            <Divider style={{ margin: 12 }} />
-            <Button
-              disabled={activeStep === 0}
-              onClick={() => stepStore.setActiveStep(activeStep - 1)}
-            >
-              {t("back")}
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleMarkFinished}
-            >
-              {activeStep === steps.length - 1
-                ? t("finish")
-                : t("markfinishedstep")}
-            </Button>
-          </React.Fragment>
+          </div>
+          <Divider style={{ margin: 12 }} />
+          <Button
+            disabled={activeStep === 0}
+            onClick={() => stepStore.setActiveStep(activeStep - 1)}
+          >
+            {t("back")}
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleMarkFinished}
+          >
+            {activeStep === steps.length - 1
+              ? t("finish")
+              : t("markfinishedstep")}
+          </Button>
         </Paper>
         <AddButton add="step" />
+        <LoginReminder />
       </React.Fragment>
     );
   }

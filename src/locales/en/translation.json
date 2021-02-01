@@ -1,5 +1,5 @@
 {
-  "login": "Log In",
+  "login": "Sign In",
   "homepage": "Welcome to Mexle's e-learning!",
   "next": "Next",
   "back": "Back",
@@ -14,5 +14,14 @@
   "search": "Search",
   "showFinishedCourses": "Show finished courses",
   "all": "All",
-  "language": "Language"
+  "language": "Language",
+  "LoginReminder": "Please Sign in",
+  "allFeaturesWithLogin": "You can only use all available features, if you are signed in!",
+  "continueWithoutLogin": "Continue without signing in",
+  "maxFileSize": "Max. File Size: 5MB",
+  "chooseImage": "Choose Image",
+  "caption": "Caption",
+  "size": "Size",
+  "directories": "Directories",
+  "home": "Home"
 }

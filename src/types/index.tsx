@@ -25,7 +25,7 @@ export interface IChapters {
 
 export type IContent = {
   html: string;
-  multipleChoice: any;
+  multipleChoice?: any;
 };
 
 export interface IMultipleChoice {

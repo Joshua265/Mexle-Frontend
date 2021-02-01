@@ -9,7 +9,7 @@ const cookie = new Cookie();
 
 interface IUserStore {
   userData: IUserData;
-  avatarUrl: String;
+  avatarUrl?: String;
   login: Function;
   logout: Function;
   addFinished: Function;
@@ -23,6 +23,7 @@ interface IUserData {
   language: string;
   description: string;
   coins: number;
+  hhnAccount: boolean;
   avatar?: string;
   finishedCourses: IFinishedCourse[];
   finishedChapters: IFinishedChapter[];
@@ -40,6 +41,7 @@ interface IFinishedObject {
 const defaultUserData = {
   username: "",
   email: "",
+  hhnAccount: false,
   role: "",
   language: "",
   description: "",
@@ -63,7 +65,7 @@ export class UserStore implements IUserStore {
     token: cookie.get("token") || "",
   };
 
-  avatarUrl = "";
+  avatarUrl;
 
   async login(username: string, password: string): Promise<void> {
     const fetchedUserData = await webServiceProvider.post("user/login", {
@@ -78,12 +80,14 @@ export class UserStore implements IUserStore {
     };
     cookie.set("token", fetchedUserData.token);
     if (this.userData.avatar) {
-      this.avatarUrl = `${process.env.REACT_APP_API_SERVER}images/${this.userData.avatar}`;
+      this.avatarUrl = `${process.env.REACT_APP_API_SERVER}images/${this.userData.avatar}` as string;
     }
+    console.log(this);
   }
 
   logout(): void {
     this.userData = defaultUserData;
+    this.avatarUrl = undefined;
     cookie.remove("token", {
       path: "/",
       domain: process.env.REACT_APP_PUBLIC_URL,
@@ -120,7 +124,8 @@ export class UserStore implements IUserStore {
     }
   }
 
-  async verifyToken(localToken: string) {
+  async verifyToken() {
+    const localToken = (await cookie.get("token")) || "";
     const fetchedUserData = await webServiceProvider.post("user/verifytoken", {
       localToken,
     });

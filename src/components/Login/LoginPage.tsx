@@ -79,8 +79,7 @@ function LoginPage() {
   const autoLogin = async () => {
     try {
       setLoggingIn(true);
-      const token = cookie.get("token");
-      await userStore.verifyToken(token);
+      await userStore.verifyToken();
 
       enqueueSnackbar("You have been logged in automatically!", {
         variant: "success",

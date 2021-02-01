@@ -22,6 +22,7 @@ import { RootStoreContext } from "stores/RootStore";
 import { useHistory } from "react-router-dom";
 import MexleCoin from "images/MexleCoin";
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
+import WarningIcon from "@material-ui/icons/Warning";
 import ChangeAvatarDialog from "./ChangeAvatarDialog";
 import { observer } from "mobx-react-lite";
 
@@ -122,6 +123,13 @@ const AccountInformation = observer(() => {
           </Typography>
         </div>
       </div>
+      {userStore.userData.hhnAccount ? (
+        <Typography variant="body1" component="h5" color="error">
+          <WarningIcon /> {t("managedByHHN")}
+        </Typography>
+      ) : (
+        <></>
+      )}
 
       <List className={classes.list}>
         <ListItem>
@@ -133,6 +141,7 @@ const AccountInformation = observer(() => {
               color="secondary"
               variant="contained"
               aria-label="editUsername"
+              disabled={userStore.userData.hhnAccount}
             >
               {t("edit")}
             </Button>
@@ -146,7 +155,8 @@ const AccountInformation = observer(() => {
             <Button
               color="secondary"
               variant="contained"
-              aria-label="editUsername"
+              aria-label="editEmail"
+              disabled={userStore.userData.hhnAccount}
             >
               {t("edit")}
             </Button>
@@ -154,13 +164,15 @@ const AccountInformation = observer(() => {
         </ListItem>
         <ListItem>
           <ListItemText
-            primary={`${t("description")}: ${userStore.userData.description}`}
+            primary={`${t("description")}: ${
+              userStore.userData.description || t("addADescription")
+            }`}
           />
           <ListItemSecondaryAction>
             <Button
               color="secondary"
               variant="contained"
-              aria-label="editUsername"
+              aria-label="editDescription"
             >
               {t("edit")}
             </Button>
@@ -172,6 +184,7 @@ const AccountInformation = observer(() => {
           color="secondary"
           variant="contained"
           className={classes.changePasswordButton}
+          disabled={userStore.userData.hhnAccount}
         >
           {t("changePassword")}
         </Button>

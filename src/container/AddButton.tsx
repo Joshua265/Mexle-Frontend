@@ -6,12 +6,13 @@ import CreateChapter from "components/CreateChapter";
 import CreateStep from "components/CreateStep";
 import checkForEditShow from "helpers/checkForEditShow";
 import { RootStoreContext } from "stores/RootStore";
+import { observer } from "mobx-react-lite";
 
 interface IProps {
   add: string;
 }
 
-function AddButton(props: IProps) {
+const AddButton = observer((props: IProps) => {
   const { userStore } = useContext(RootStoreContext);
   const [openCourseCreate, setOpenCourseCreate] = useState(false);
   const [openChapterCreate, setOpenChapterCreate] = useState(false);
@@ -75,6 +76,6 @@ function AddButton(props: IProps) {
     );
   }
   return <React.Fragment />;
-}
+});
 
 export default AddButton;

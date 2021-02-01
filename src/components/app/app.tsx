@@ -49,11 +49,14 @@ function HideOnScroll({ children }: JSX.ElementChildrenAttribute) {
 }
 
 const App: FC = observer(() => {
-  const { localStore, navigationStore } = useContext(RootStoreContext);
+  const { localStore, navigationStore, userStore } = useContext(
+    RootStoreContext
+  );
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     localStore.initLocalVariables();
+    userStore.verifyToken();
   }, []);
 
   return (
@@ -73,11 +76,7 @@ const App: FC = observer(() => {
             <Route path="/signup" exact component={SignUpPage} />
             <Route path="/courses" exact component={Courses} />
 
-            <PrivateRoute
-              path="/courses/:CourseId"
-              exact
-              component={ChapterPage}
-            />
+            <Route path="/courses/:CourseId" exact component={ChapterPage} />
             <Route
               path="/courses/:CourseId/license"
               exact
