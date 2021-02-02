@@ -48,7 +48,7 @@ const Image = ({ props, id }) => {
           labelStyles={{ color: "black" }}
           buttonText={t("chooseImage")}
           onChange={onDrop}
-          imgExtension={[".jpg", ".png", "jpeg"]}
+          imgExtension={[".jpg", ".png", ".jpeg", ".svg"]}
           maxFileSize={5242880}
         />
       </Grid>
