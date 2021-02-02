@@ -13,6 +13,18 @@ interface IItem {
   html: string;
 }
 
+const emptyStep: IStep = {
+  _id: "",
+  title: "",
+  description: "",
+  author: "",
+  visible: true,
+  chapterId: "",
+  content: {
+    html: "",
+  },
+};
+
 export class EditorStore {
   rootStore: RootStore;
   constructor(rootStore: RootStore) {
@@ -22,22 +34,17 @@ export class EditorStore {
 
   blocks: Array<IItem> = [];
   edit: boolean = false;
-  step: IStep = {
-    _id: "",
-    title: "",
-    description: "",
-    author: "",
-    visible: true,
-    chapterId: "",
-    content: {
-      html: "",
-    },
-  };
+  step: IStep = emptyStep;
 
   initStep(step: IStep) {
     this.edit = true;
     this.step = step;
     this.getBlocksFromHTML(step.content.html);
+  }
+
+  clearStep() {
+    this.edit = false;
+    this.step = emptyStep;
   }
 
   changeOrder(oldIndex: number, newIndex: number) {
@@ -82,7 +89,7 @@ export class EditorStore {
   }
 
   getBlocksFromHTML(html: string) {
-    // @ts-ignore: Unreachable code error
+    // @ts-ignore: Type Error
     this.blocks = editParser(html);
   }
 

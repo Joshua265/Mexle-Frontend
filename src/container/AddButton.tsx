@@ -46,7 +46,7 @@ const AddButton = observer((props: IProps) => {
     return (
       <React.Fragment>
         <Fab
-          color="primary"
+          color="secondary"
           aria-label="add"
           style={{
             position: "fixed",
@@ -67,11 +67,7 @@ const AddButton = observer((props: IProps) => {
           open={openChapterCreate}
           handleClose={handleClose}
         />
-        <CreateStep
-          edit={false}
-          open={openStepCreate}
-          handleClose={handleClose}
-        />
+        <CreateStep open={openStepCreate} handleClose={handleClose} />
       </React.Fragment>
     );
   }

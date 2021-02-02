@@ -6,7 +6,7 @@ interface IProps {
   content?: string;
 }
 
-export const HeaderToHtml = (props: IProps) => {
+export const toHtml = (props: IProps) => {
   const htmlString = `<p>${props.content}</p>`;
   return htmlString;
 };
@@ -17,7 +17,7 @@ const Paragraph = ({ props, id }) => {
 
   useEffect(() => {
     const currentProps: IProps = { content: data };
-    editorStore.changeBlockProps(id, currentProps, HeaderToHtml(currentProps));
+    editorStore.changeBlockProps(id, currentProps, toHtml(currentProps));
   }, [data]);
 
   return (

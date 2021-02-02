@@ -19,6 +19,7 @@ const defaultSteps = {
   steps: new Array<IStep>(),
   error: false,
   activeStep: 0,
+  loaded: false,
 };
 
 export class StepStore implements IStepStore {
@@ -40,6 +41,7 @@ export class StepStore implements IStepStore {
     } catch (e) {
       this.steps.error = true;
     }
+    this.steps.loaded = true;
   }
 
   setActiveStep(index: number) {

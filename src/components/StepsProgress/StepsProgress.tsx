@@ -1,9 +1,8 @@
-import React, { useState, FC, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, Suspense } from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Stepper,
-  StepLabel,
   StepContent,
   StepButton,
   Divider,
@@ -16,12 +15,13 @@ import {
   Drawer,
 } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
-import { IStep, IContent, IFinishedStep } from "types";
+import { IFinishedStep } from "types";
 import { observer } from "mobx-react-lite";
 import { RootStoreContext } from "stores/RootStore";
 import webServiceProvider from "helpers/webServiceProvider";
-import CreateStep from "components/CreateStep";
 import checkForEditShow from "helpers/checkForEditShow";
+
+const CreateStep = React.lazy(() => import("components/CreateStep"));
 
 const drawerWidth = 240;
 
@@ -71,6 +71,7 @@ const useStyles = makeStyles((theme) => ({
   },
   stepperWindow: {
     overflowY: "auto",
+    minHeight: "100px",
     flexGrow: 2,
   },
   resetContainer: {
@@ -131,13 +132,17 @@ const StepsProgress = observer((props: IProps) => {
           //only show editButton and edit to certain users
           checkForEditShow(userStore.userData, steps[activeStep].author) ? (
             <React.Fragment>
-              <Button onClick={() => setOpen(true)}>{t("edit")}</Button>
-              <CreateStep
-                edit={true}
-                open={open}
-                handleClose={() => setOpen(false)}
-                id={steps[activeStep]._id}
-              />
+              <Button onClick={() => setOpen(true)} color="secondary">
+                {t("edit")}
+              </Button>
+              <Suspense fallback={<p>Error loading CreateStep</p>}>
+                <CreateStep
+                  edit
+                  open={open}
+                  handleClose={() => setOpen(false)}
+                  id={steps[activeStep]._id}
+                />
+              </Suspense>
             </React.Fragment>
           ) : (
             <React.Fragment />

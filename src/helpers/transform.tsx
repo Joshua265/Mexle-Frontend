@@ -4,13 +4,14 @@ import { MathComponent } from "mathjax-react";
 import { getGeogebraStyle } from "helpers/Geogebra";
 import SlideShow from "container/SlideShow";
 import Hide from "container/Hide";
+import MathJax from "react-mathjax2";
 
 var HtmlToReact = require("html-to-react");
 var HtmlToReactParser = require("html-to-react").Parser;
 
 const opts = {
-  minHeight: "390px",
-  minWidth: "640px",
+  minHeight: "144px",
+  maxWidth: "100%",
   playerVars: {
     // https://developers.google.com/youtube/player_parameters
   },
@@ -33,15 +34,7 @@ var processingInstructions = [
       );
     },
     processNode: function (node, children) {
-      const style = getGeogebraStyle(node.attribs.url);
-      return (
-        <iframe
-          title={node.attribs.url}
-          src={node.attribs.url}
-          height={style.height}
-          width={style.width}
-        ></iframe>
-      );
+      return <iframe title={node.attribs.url} src={node.attribs.url}></iframe>;
     },
   },
   {
@@ -49,13 +42,27 @@ var processingInstructions = [
     shouldProcessNode: function (node) {
       return (
         node.type === "tag" &&
-        node.name === "oembed" &&
-        node.attribs.url.includes("yout")
+        node.name === "figure" &&
+        node.attribs.class === "youtube"
       );
     },
     processNode: function (node, children) {
+      let url = "";
+      let caption = <></>;
+      children.forEach((child) => {
+        console.log(child);
+        if (child.type === "iframe") {
+          url = child.props.src;
+        }
+        if (child.type === "figcaption") {
+          caption = child;
+        }
+      });
       return (
-        <YouTube videoId={node.attribs.url.split("v=").pop()} opts={opts} />
+        <figure style={{ margin: "auto" }}>
+          <YouTube videoId={url.split("v=").pop()} opts={opts} />
+          {caption}
+        </figure>
       );
     },
   },
@@ -104,6 +111,22 @@ var processingInstructions = [
     },
     processNode: function (node, children) {
       return <Hide hidden={children} />;
+    },
+  },
+  {
+    // Custom <Hide> processing
+    replaceChildren: true,
+    shouldProcessNode: function (node) {
+      return node.type === "tag" && node.name === "latex";
+    },
+    processNode: function (node, children) {
+      return (
+        <MathJax.Context input="ascii">
+          <div>
+            <MathJax.Node>{children}</MathJax.Node>
+          </div>
+        </MathJax.Context>
+      );
     },
   },
   // {

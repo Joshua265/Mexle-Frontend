@@ -14,22 +14,28 @@ import {
   List,
   ListItem,
   ListItemText,
+  Typography,
 } from "@material-ui/core";
 import DragHandleIcon from "@material-ui/icons/DragHandle";
 import AddIcon from "@material-ui/icons/Add";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 
-import { Header, Paragraph, Image } from "./Blocks";
+import { Header, Paragraph, Image, MathInput, Video, Html } from "./Blocks";
 import { RootStoreContext } from "stores/RootStore";
 import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 
 const componentList = {
   paragraph: Paragraph,
   header: Header,
   image: Image,
+  mathinput: MathInput,
+  video: Video,
+  html: Html,
 };
 
 const AddItemDialog = ({ open, handleClose }) => {
+  const { t } = useTranslation();
   return (
     <Dialog
       onClose={() => handleClose()}
@@ -41,7 +47,7 @@ const AddItemDialog = ({ open, handleClose }) => {
         {Object.keys(componentList).map((item) => {
           return (
             <ListItem button onClick={() => handleClose(item)}>
-              <ListItemText primary={String(item)} />
+              <ListItemText primary={t(String(item))} />
             </ListItem>
           );
         })}
@@ -58,19 +64,23 @@ const DragHandle = SortableHandle(({ style }) => (
 
 const SortableItem = SortableElement(({ type, props, id }) => {
   const { editorStore } = useContext(RootStoreContext);
-
+  const { t } = useTranslation();
   const Component = componentList[type];
 
   return (
     <Card style={{ display: "flex", margin: 8 }} variant="outlined">
-      <div>
+      <div style={{ display: "flex", flexDirection: "column" }}>
         <DragHandle style={{}} />
         <IconButton onClick={() => editorStore.removeItem(id)}>
           <DeleteOutlineIcon color="error" />
         </IconButton>
       </div>
-
-      <Component props={props} id={id} />
+      <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
+        <Typography variant="h5" component="h5" color="secondary">
+          {t(type)}
+        </Typography>
+        <Component props={props} id={id} />
+      </div>
     </Card>
   );
 });

@@ -67,7 +67,6 @@ function CreateCourse(props: IProps) {
   const { userStore } = useContext(RootStoreContext);
   const { t, i18n } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
-  const [open, setOpen] = useState(false);
   const [licenses, setLicenses] = useState<Array<any>>([]);
   const [form, setForm] = useState(
     props.edit && props.data
@@ -92,12 +91,10 @@ function CreateCourse(props: IProps) {
   );
 
   useEffect(() => {
-    setOpen(props.open);
+    if (props.open) {
+      getLicenses();
+    }
   }, [props.open]);
-
-  useEffect(() => {
-    getLicenses();
-  }, []);
 
   const getLicenses = async () => {
     try {
@@ -110,7 +107,6 @@ function CreateCourse(props: IProps) {
   };
 
   const handleClose = () => {
-    setOpen(false);
     props.handleClose();
   };
 
@@ -132,7 +128,7 @@ function CreateCourse(props: IProps) {
   return (
     <Dialog
       fullScreen
-      open={open}
+      open={props.open}
       onClose={handleClose}
       TransitionComponent={Transition}
     >

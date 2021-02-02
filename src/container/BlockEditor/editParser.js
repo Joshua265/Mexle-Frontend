@@ -41,6 +41,34 @@ export default function editParser(htmlString) {
         props: { content: element.textContent },
       };
     }
+    if (element.tagName === "LATEX") {
+      lastOpenedTag = null;
+      return {
+        key: uuid(),
+        html: "",
+        type: "mathinput",
+        props: { content: element.textContent },
+      };
+    }
+    if (element.tagName === "FIGURE" && element.className === "youtube") {
+      lastOpenedTag = null;
+      let url = "";
+      let caption = "";
+      Array.from(element.children).forEach((el) => {
+        if (el.tagName === "IFRAME") {
+          url = el.src;
+        }
+        if (el.tagName === "FIGCAPTION") {
+          caption = el.textContent;
+        }
+      });
+      return {
+        key: uuid(),
+        html: "",
+        type: "video",
+        props: { url, caption },
+      };
+    }
     if (["H1", "H2", "H3", "H4", "H5"].includes(element.tagName)) {
       lastOpenedTag = null;
       return {
@@ -53,6 +81,13 @@ export default function editParser(htmlString) {
         },
       };
     }
+    //always at end of function
+    return {
+      key: uuid(),
+      html: "",
+      type: "html",
+      props: { html: element.outerHTML },
+    };
   });
   console.log(DOM);
   console.log(json);

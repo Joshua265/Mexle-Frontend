@@ -32,6 +32,55 @@ function CustomCKEditor(props: IProps) {
   const { t, i18n } = useTranslation();
 
   const config = {
+    toolbar: [
+      "undo",
+      "redo",
+      "|",
+      "bold",
+      "italic",
+      "link",
+      "anchor",
+      "hide",
+      "bulletedList",
+      "numberedList",
+      "|",
+      "highlight",
+      "fontColor",
+      "fontFamily",
+      "fontSize",
+      "|",
+      "indent",
+      "outdent",
+      "|",
+    ],
+    removePlugins: [
+      "Base64UploadAdapter",
+      "BlockQuote",
+      "CodeBlock",
+
+      "Heading",
+
+      "Image",
+      "ImageCaption",
+      "ImageInsert",
+      "ImageResize",
+      "ImageStyle",
+      "ImageToolbar",
+      "ImageUpload",
+      "MathType",
+      "Media",
+      "MediaCaption",
+      "MediaStyle",
+      "MediaToolbar",
+      "MediaTextAlternative",
+      "SlideShow",
+      "Table",
+      "TableCellProperties",
+      "TableProperties",
+      "TableToolbar",
+      "TextTransformation",
+      "Underline",
+    ],
     mediaEmbed: {
       extraProviders: [
         {

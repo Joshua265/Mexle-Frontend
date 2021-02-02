@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   open: boolean;
   handleClose: Function;
-  edit: boolean;
+  edit?: boolean;
   id?: String;
 }
 
@@ -82,13 +82,17 @@ const CreateStep = observer((props: IProps) => {
   };
 
   useEffect(() => {
-    if (props.edit) {
-      editorStore.edit = true;
-      fetchStep();
+    if (props.open) {
+      if (props.edit) {
+        console.log("fetchStep");
+        editorStore.edit = true;
+        fetchStep();
+      }
     }
   }, [props.open]);
 
   const handleClose = () => {
+    editorStore.clearStep();
     props.handleClose();
   };
 

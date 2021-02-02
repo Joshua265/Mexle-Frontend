@@ -1,6 +1,6 @@
 import { observable, makeAutoObservable } from "mobx";
 import autobind from "autobind-decorator";
-import createBrowserHistory from "history/createBrowserHistory";
+import { createBrowserHistory } from "history";
 import { RootStore } from "./RootStore";
 
 export class NavigationStore {

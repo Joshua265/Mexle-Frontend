@@ -3,7 +3,7 @@ Entire Page needs rework for mobx chapter storage
 
 
 */
-import React, { useState, useEffect, FC, useContext } from "react";
+import React, { useState, useEffect, FC, useContext, Suspense } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 // import HtmlToReactParser from "html-to-react";
 
@@ -11,7 +11,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import {
   Backdrop,
   Paper,
-  Typography,
   Button,
   IconButton,
   Divider,
@@ -21,8 +20,6 @@ import MenuIcon from "@material-ui/icons/Menu";
 import FinishPage from "components/FinishPage";
 
 import StepsProgress from "components/StepsProgress";
-import AddButton from "container/AddButton";
-import MultipleChoice from "components/MultipleChoice";
 import { useTranslation } from "react-i18next";
 import { observer } from "mobx-react-lite";
 
@@ -33,6 +30,8 @@ import {
 } from "helpers/transform";
 import { RootStoreContext } from "stores/RootStore";
 import LoginReminder from "container/LoginReminder";
+
+const AddButton = React.lazy(() => import("container/AddButton"));
 
 const drawerWidth = 240;
 
@@ -100,7 +99,7 @@ const StepsPage: FC = observer(() => {
   const { t } = useTranslation();
   const { userStore, stepStore } = useContext(RootStoreContext);
   const chapterId = location.pathname.split("/")[3];
-  const { activeStep, numberSteps, steps, error } = stepStore.steps;
+  const { activeStep, numberSteps, steps, error, loaded } = stepStore.steps;
 
   useEffect(() => {
     stepStore.fetchSteps(chapterId);
@@ -173,17 +172,21 @@ const StepsPage: FC = observer(() => {
               : t("markfinishedstep")}
           </Button>
         </Paper>
-        <AddButton add="step" />
+        <Suspense fallback={<></>}>
+          <AddButton add="step" />
+        </Suspense>
         <LoginReminder />
       </React.Fragment>
     );
   }
 
-  if (steps && steps.length === 0) {
+  if (loaded && steps.length === 0) {
     return (
       <React.Fragment>
         <p>No steps yet</p>
-        <AddButton add="step" />
+        <Suspense fallback={<></>}>
+          <AddButton add="step" />
+        </Suspense>
       </React.Fragment>
     );
   }

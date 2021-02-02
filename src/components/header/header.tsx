@@ -32,6 +32,7 @@ import { RootStoreContext } from "stores/RootStore";
 import { isObservable } from "mobx";
 import SecondHeader from "components/SecondHeader";
 import withWidth, { isWidthUp } from "@material-ui/core/withWidth";
+import MexleCoin from "images/MexleCoin";
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -64,6 +65,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   icon: {
     fill: theme.palette.text.secondary,
+  },
+  mexleCoin: {
+    width: 32,
+    height: 32,
+    margin: "0px 8px 0px 16px",
+  },
+  coinAmount: {
+    marginRight: 16,
   },
 }));
 
@@ -147,6 +156,21 @@ const Header = observer((props) => {
             onChange={() => localStore.toggleDarkMode()}
             checked={localStore.darkMode}
           />
+
+          {userStore.userData.loggedIn ? (
+            <>
+              <MexleCoin className={classes.mexleCoin} />
+              <Typography
+                variant="body1"
+                component="h5"
+                className={classes.coinAmount}
+              >
+                {userStore.userData.coins || 0}
+              </Typography>
+            </>
+          ) : (
+            <React.Fragment />
+          )}
 
           <Link
             className="whiteLink"

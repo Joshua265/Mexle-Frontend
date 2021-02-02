@@ -46,6 +46,8 @@ const useStyles = makeStyles((theme: Theme) =>
       overflow: "hidden",
       width: cellHeight * 2 + 10,
       height: cellHeight * 2 + 10,
+      maxWidth: "calc(100vw - 48px)",
+      maxHeight: "calc(100vw - 48px)",
     },
     gridListTile: {
       "&:hover": {
@@ -55,12 +57,14 @@ const useStyles = makeStyles((theme: Theme) =>
     icon: {
       width: cellHeight - 24,
       height: cellHeight - 24,
+      maxWidth: "calc(50vw - 48px)",
+      maxHeight: "calc(50vw - 48px)",
       marginLeft: 12,
       alignSelf: "center",
       color: "white",
       fill: "white",
       "&:hover": {
-        marginLeft: 4,
+        margin: 0,
         width: cellHeight - 8,
         height: cellHeight - 8,
       },
@@ -72,7 +76,7 @@ const FeatureGrid = () => {
   const classes = useStyles();
   return (
     <div className={classes.root}>
-      <GridList cellHeight={cellHeight} className={classes.gridList}>
+      <GridList cellHeight="auto" className={classes.gridList}>
         <GridListTile className={classes.gridListTile}>
           <MuiLink href="https://wiki.mexle.hs-heilbronn.de/start">
             <LocalLibraryIcon className={classes.icon} />
