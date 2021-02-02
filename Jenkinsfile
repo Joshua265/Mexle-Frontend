@@ -9,19 +9,25 @@ pipeline {
         CI = 'true' 
     }
     stages {
-        stage('Build') { 
+        stage('Install') { 
             steps {
                 sh 'npm install' 
             }
         }
+        
         stage('Test') {
             steps {
-                sh './jenkins/scripts/test.sh'
+                sh 'npm test'
+            }
+        }
+        stage('Build') { 
+            steps {
+                sh 'npm run build' 
             }
         }
         stage('Deliver') { 
             steps {
-                sh './jenkins/scripts/deliver.sh' 
+                sh 'npm start' 
             }
         }
     }
