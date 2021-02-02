@@ -83,6 +83,7 @@ const CreateStep = observer((props: IProps) => {
 
   useEffect(() => {
     if (props.open) {
+      editorStore.clearStep();
       if (props.edit) {
         console.log("fetchStep");
         editorStore.edit = true;
