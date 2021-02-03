@@ -181,9 +181,7 @@ const Header = observer((props) => {
             }
           >
             {userStore.userData.loggedIn ? (
-              <Avatar color="inherit" src={userStore.avatarUrl}>
-                {userStore.userData.username[0]}
-              </Avatar>
+              <Avatar color="inherit" src={userStore.avatarUrl}></Avatar>
             ) : (
               <Typography variant="button" color="textSecondary">
                 {t("login")}

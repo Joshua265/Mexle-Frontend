@@ -9,7 +9,7 @@ import {
   isWidthDown,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
-import Background from "images/circuit.jpg";
+import Background from "images/circuit.png";
 import FeatureGrid from "./FeatureGrid";
 import Title from "./Title";
 import MobileTitle from "./MobileTitle";

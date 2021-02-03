@@ -20,7 +20,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import webServiceProvider from "helpers/webServiceProvider";
 import { useSnackbar } from "notistack";
 import { RootStoreContext } from "stores/RootStore";
-import Background from "images/circuit.jpg";
+import Background from "images/circuit.png";
 
 const cookie = new Cookie();
 
