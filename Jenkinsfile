@@ -1,29 +1,26 @@
 pipeline {
-    agent any 
+    agent docker: {
+        image 'node:12.20.1-buster'
+        args '-p 3000:3000'
+    } 
     environment {
         CI = 'true' 
     }
     stages {
         stage('Install') { 
             steps {
-                nodejs(nodeJSInstallationName: 'Node 12.20.1', configId: '<config-file-provider-id>') {
-                    sh 'npm install'
-                }
+                sh 'npm install'
             }
         }
         stage('Build') { 
             steps {
-                nodejs(nodeJSInstallationName: 'Node 12.20.1', configId: '<config-file-provider-id>') {
-                    sh 'npm run build'
-                }
+                sh 'npm run build'
             }
         }
         stage('Deliver') { 
             steps {
-                nodejs(nodeJSInstallationName: 'Node 12.20.1', configId: '<config-file-provider-id>') {
-                    sh 'npm install -g serve'
-                    sh 'npm run build'
-                }
+                sh 'npm install -g serve'
+                sh 'npm run build'
             }
         }
     }
