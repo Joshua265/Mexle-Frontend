@@ -6,17 +6,24 @@ pipeline {
     stages {
         stage('Install') { 
             steps {
-                sh 'npm install' 
+                nodejs(nodeJSInstallationName: 'Node 12.x', configId: '<config-file-provider-id>') {
+                    sh 'npm install'
+                }
             }
         }
         stage('Build') { 
             steps {
-                sh 'npm run build' 
+                nodejs(nodeJSInstallationName: 'Node 12.x', configId: '<config-file-provider-id>') {
+                    sh 'npm run build'
+                }
             }
         }
         stage('Deliver') { 
             steps {
-                sh 'serve -s build' 
+                nodejs(nodeJSInstallationName: 'Node 12.x', configId: '<config-file-provider-id>') {
+                    sh 'npm install -g serve'
+                    sh 'npm run build'
+                }
             }
         }
     }
