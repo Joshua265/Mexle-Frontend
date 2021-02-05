@@ -18,7 +18,7 @@ const Paragraph = ({ props, id }) => {
   useEffect(() => {
     const currentProps: IProps = { content: data };
     editorStore.changeBlockProps(id, currentProps, toHtml(currentProps));
-  }, [data]);
+  }, [data, editorStore, id]);
 
   return (
     <CustomCKEditor data={data} onChange={(data: string) => setData(data)} />

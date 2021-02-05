@@ -11,7 +11,6 @@ import {
   Switch,
   Chip,
   Avatar,
-  Icon,
 } from "@material-ui/core";
 import DoneIcon from "@material-ui/icons/Done";
 import { Link } from "react-router-dom";
@@ -96,29 +95,28 @@ function MediaCard(props: props) {
       : "";
 
   useEffect(() => {
+    const checkDone = (): void => {
+      if (props.type === "Course" && userStore.userData.loggedIn) {
+        if (
+          userStore.userData.finishedCourses.some(
+            (element) => element._id === props._id
+          )
+        ) {
+          setDone(true);
+        }
+      }
+      if (props.type === "Chapter") {
+        if (
+          userStore.userData.finishedChapters.some(
+            (element) => element._id === props._id
+          )
+        ) {
+          setDone(true);
+        }
+      }
+    };
     checkDone();
-  });
-
-  const checkDone = (): void => {
-    if (props.type === "Course" && userStore.userData.loggedIn) {
-      if (
-        userStore.userData.finishedCourses.some(
-          (element) => element._id === props._id
-        )
-      ) {
-        setDone(true);
-      }
-    }
-    if (props.type === "Chapter") {
-      if (
-        userStore.userData.finishedChapters.some(
-          (element) => element._id === props._id
-        )
-      ) {
-        setDone(true);
-      }
-    }
-  };
+  }, [props.type, userStore.userData, props._id]);
 
   const handleVisibility = async (e) => {
     e.preventDefault();
@@ -142,6 +140,7 @@ function MediaCard(props: props) {
     setVisible(visible);
   };
 
+  //needs fix
   const getVisibility = async () => {
     if (props.type === "Course") {
       const visible = await webServiceProvider.get(`courses/visible/${id}`);

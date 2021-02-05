@@ -3,7 +3,6 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 import { useLocation } from "react-router-dom";
 import { Backdrop, Typography, Grid, Container } from "@material-ui/core";
 import { IChapters, ICourse } from "types";
-import Image from "material-ui-image";
 
 import MediaCard from "container/MediaCard";
 import AddButton from "container/AddButton";
@@ -53,27 +52,26 @@ function ChapterPage() {
   const [chapters, setChapters] = useState<IChapters[]>([]);
   const [courseInfo, setCourseInfo] = useState<ICourse>();
   //local vars
-  const courseId = location.pathname.split("/")[2];
 
   //onMount
   useEffect(() => {
+    const courseId = location.pathname.split("/")[2];
+    //fetch chapters from backend
+    const getChapters = async () => {
+      const chapterList = await webServiceProvider.get(
+        `chapters/courseId/${courseId}`
+      );
+      setChapters(chapterList.chapters);
+    };
+    const getCourseInfo = async () => {
+      const courseInfo = await webServiceProvider.get(
+        `courses/courseinfo/${courseId}`
+      );
+      setCourseInfo(courseInfo);
+    };
     getChapters();
     getCourseInfo();
-  }, []);
-
-  //fetch chapters from backend
-  const getChapters = async () => {
-    const chapterList = await webServiceProvider.get(
-      `chapters/courseId/${courseId}`
-    );
-    setChapters(chapterList.chapters);
-  };
-  const getCourseInfo = async () => {
-    const courseInfo = await webServiceProvider.get(
-      `courses/courseinfo/${courseId}`
-    );
-    setCourseInfo(courseInfo);
-  };
+  }, [location]);
 
   //if chapters available
   if (chapters && chapters.length !== 0) {

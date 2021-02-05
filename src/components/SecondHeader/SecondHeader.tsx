@@ -1,14 +1,12 @@
 import {
   AppBar,
   Breadcrumbs,
-  Paper,
   Typography,
   Toolbar,
   IconButton,
 } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { Link as RouterLink, useLocation } from "react-router-dom";
-import { Route, useHistory } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { useTranslation } from "react-i18next";
@@ -46,41 +44,44 @@ function SecondHeader() {
   );
 
   useEffect(() => {
+    const getName = async (value: string, index: number): Promise<string> => {
+      switch (index) {
+        case 0: {
+          return t(value) || value;
+        }
+        case 1: {
+          return (
+            (await webServiceProvider.get(`courses/titles/${value}`)) || value
+          );
+        }
+        case 2: {
+          return (
+            (await webServiceProvider.get(`chapters/titles/${value}`)) || value
+          );
+        }
+        case 3: {
+          return (
+            (await webServiceProvider.get(`steps/titles/${value}`)) || value
+          );
+        }
+        default: {
+          return value;
+        }
+      }
+    };
+    const pathnames = location.pathname.split(/\/|\?/).filter((x) => x);
     if (pathnames[0] === "courses") {
       pathnames.map(async (value, index) => {
         const title: string = await getName(value, index);
-        setFormattedPathNames([...formattedPathNames, title]);
+        setFormattedPathNames((formattedPathNames) => [
+          ...formattedPathNames,
+          title,
+        ]);
       });
     } else {
-      if (formattedPathNames.length > 0) {
-        setFormattedPathNames([]);
-      }
+      setFormattedPathNames([]);
     }
-  }, [location]);
-
-  const getName = async (value: string, index: number): Promise<string> => {
-    switch (index) {
-      case 0: {
-        return t(value) || value;
-      }
-      case 1: {
-        return (
-          (await webServiceProvider.get(`courses/titles/${value}`)) || value
-        );
-      }
-      case 2: {
-        return (
-          (await webServiceProvider.get(`chapters/titles/${value}`)) || value
-        );
-      }
-      case 3: {
-        return (await webServiceProvider.get(`steps/titles/${value}`)) || value;
-      }
-      default: {
-        return value;
-      }
-    }
-  };
+  }, [location, t]);
 
   return (
     <AppBar

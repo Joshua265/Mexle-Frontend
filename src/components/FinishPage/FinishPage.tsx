@@ -31,13 +31,12 @@ interface IProps {
 
 function FinishPage(props: IProps) {
   const classes = useStyles();
-  const { userStore, navigationStore } = useContext(RootStoreContext);
+  const { userStore } = useContext(RootStoreContext);
   const history = useHistory();
-  console.log(history);
   const lastIndex = history.location.pathname.lastIndexOf("/");
   return (
     <Paper className={classes.root}>
-      <img src={Image} className={classes.image} />
+      <img src={Image} className={classes.image} alt="congrats" />
       <Typography className={classes.text} component="h5" variant="h3">
         Herzlichen Glückwunsch!
       </Typography>

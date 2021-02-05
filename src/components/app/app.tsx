@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useContext, FC } from "react";
+import React, { useEffect, useContext, FC } from "react";
 import { Router, Switch, Route } from "react-router-dom";
 
 import { ThemeProvider } from "@material-ui/core/styles";
-import { CssBaseline, Collapse, Toolbar } from "@material-ui/core";
-import useScrollTrigger from "@material-ui/core/useScrollTrigger";
+import { CssBaseline, Toolbar } from "@material-ui/core";
 
 import { SnackbarProvider } from "notistack";
 import { observer } from "mobx-react-lite";
@@ -30,22 +29,15 @@ const ThemeSelector = observer(({ children }) => {
   return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
 });
 
-function HideOnScroll({ children }: JSX.ElementChildrenAttribute) {
-  const trigger = useScrollTrigger({ target: window });
-  console.log(trigger);
-  return <Collapse in={!trigger}>{children}</Collapse>;
-}
-
 const App: FC = observer(() => {
   const { localStore, navigationStore, userStore } = useContext(
     RootStoreContext
   );
-  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     localStore.initLocalVariables();
     userStore.verifyToken();
-  }, []);
+  }, [localStore, userStore]);
 
   return (
     <ThemeSelector>

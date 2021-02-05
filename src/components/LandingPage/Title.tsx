@@ -1,9 +1,7 @@
 import React from "react";
-import { withStyles, useTheme } from "@material-ui/core/styles";
 import { Typography, Box, Grow } from "@material-ui/core";
 
 const Title = (props) => {
-  const theme = useTheme();
   return (
     <>
       <Grow

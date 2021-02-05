@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -8,25 +8,13 @@ import CloseIcon from "@material-ui/icons/Close";
 import { Slide as TransitionSlide } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import { TransitionProps } from "@material-ui/core/transitions";
-import {
-  Card,
-  CardContent,
-  Grid,
-  Paper,
-  AppBar,
-  Dialog,
-} from "@material-ui/core";
+import { Grid, AppBar, Dialog } from "@material-ui/core";
 import webServiceProvider from "helpers/webServiceProvider";
-import { useLocation } from "react-router-dom";
-import CreateMultipleChoice from "components/CreateMultipleChoice";
-import MultipleChoice from "components/MultipleChoice";
-import CustomCKEditor from "container/CustomCKEditor/CustomCKEditor";
 import {
   htmlToReactParser,
   isValidNode,
   processingInstructions,
 } from "helpers/transform";
-import { IStep, IAnswer, IMultipleChoice, IContent } from "types";
 import { RootStoreContext } from "stores/RootStore";
 import BlockEditor from "container/BlockEditor";
 import { observer } from "mobx-react-lite";
@@ -73,24 +61,21 @@ const Transition = React.forwardRef(function Transition(
 
 const CreateStep = observer((props: IProps) => {
   const classes = useStyles();
-  const location = useLocation();
-  const { userStore, editorStore } = useContext(RootStoreContext);
-
-  const fetchStep = async () => {
-    const step = await webServiceProvider.get(`steps/${props.id}`);
-    editorStore.initStep(step);
-  };
+  const { editorStore } = useContext(RootStoreContext);
 
   useEffect(() => {
-    if (props.open) {
-      editorStore.clearStep();
-      if (props.edit) {
-        console.log("fetchStep");
-        editorStore.edit = true;
-        fetchStep();
-      }
+    editorStore.clearStep();
+    const fetchStep = async () => {
+      const step = await webServiceProvider.get(`steps/${props.id}`);
+      editorStore.initStep(step);
+    };
+
+    if (props.open && props.edit) {
+      console.log("fetchStep");
+      editorStore.edit = true;
+      fetchStep();
     }
-  }, [props.open]);
+  }, [props.open, props.edit, editorStore, props.id]);
 
   const handleClose = () => {
     editorStore.clearStep();

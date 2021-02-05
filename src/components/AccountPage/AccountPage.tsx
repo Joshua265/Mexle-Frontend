@@ -1,10 +1,6 @@
-import { Button } from "@material-ui/core";
-import { Observer } from "mobx-react-lite";
-import React, { useContext } from "react";
-import { RootStoreContext } from "stores/RootStore";
+import React from "react";
 
 import AccountInformation from "components/AccountPage/AccountInformation";
-import AccountOptions from "./AccountOptions";
 import Timeline from "./Timeline";
 
 const AccountPage = (): JSX.Element => {

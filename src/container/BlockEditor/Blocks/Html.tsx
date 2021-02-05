@@ -1,4 +1,4 @@
-import { Select, MenuItem, Input } from "@material-ui/core";
+import { Input } from "@material-ui/core";
 import React, { useState, useEffect, useContext } from "react";
 import { RootStoreContext } from "stores/RootStore";
 
@@ -19,7 +19,7 @@ const Html = ({ props, id }) => {
   useEffect(() => {
     const currentProps: IProps = { html: html };
     editorStore.changeBlockProps(id, currentProps, toHtml(currentProps));
-  }, [html]);
+  }, [html, editorStore, id]);
 
   return (
     <>

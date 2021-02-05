@@ -1,4 +1,4 @@
-import React, { useEffect, useState, FC } from "react";
+import React, { FC } from "react";
 import { Button } from "@material-ui/core";
 
 const LicensePage: FC = () => {

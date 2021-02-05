@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { RootStoreContext } from "stores/RootStore";
-import { Fraction, toTex } from "algebra.js";
+import { toTex } from "algebra.js";
 import { Node, Context } from "react-mathjax";
 import { Input } from "@material-ui/core";
 
@@ -22,7 +22,7 @@ const MathInput = ({ props, id }) => {
   useEffect(() => {
     const currentProps: IProps = { content: data };
     editorStore.changeBlockProps(id, currentProps, toHtml(currentProps));
-  }, [data]);
+  }, [data, editorStore, id]);
 
   return (
     <>

@@ -1,7 +1,5 @@
 import React from "react";
 import YouTube from "react-youtube";
-import { MathComponent } from "mathjax-react";
-import { getGeogebraStyle } from "helpers/Geogebra";
 import SlideShow from "container/SlideShow";
 import Hide from "container/Hide";
 import MathJax from "react-mathjax2";
