@@ -106,7 +106,7 @@ const StepsPage: FC = observer(() => {
     return () => {
       stepStore.clearSteps();
     };
-  }, []);
+  }, [stepStore, chapterId]);
 
   useEffect(() => {
     if (numberSteps > 0 && activeStep !== -1) {

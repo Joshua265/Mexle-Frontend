@@ -101,7 +101,8 @@ const BlockEditor = observer((props: IProps) => {
     if (props.html) {
       editorStore.getBlocksFromHTML(props.html);
     }
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.html, editorStore]);
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
     editorStore.changeOrder(oldIndex, newIndex);

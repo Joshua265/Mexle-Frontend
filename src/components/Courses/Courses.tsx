@@ -1,9 +1,7 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import {
   Paper,
-  Divider,
   Typography,
-  Box,
   Backdrop,
   Grid,
   Container,
@@ -23,16 +21,15 @@ import { RootStoreContext } from "stores/RootStore";
 import MediaCard from "container/MediaCard";
 import AddButton from "container/AddButton";
 import webServiceProvider from "helpers/webServiceProvider";
-import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import languages from "helpers/languages";
 import { useSnackbar } from "notistack";
 import { ICourse } from "types";
 
-type HTMLElementEvent<T extends HTMLElement> = Event & {
+type FormEvent<T extends HTMLDivElement> = Event & {
   target: T & { search: { value: string } };
   // probably you might want to add the currentTarget as well
-  // currentTarget: T;
+  currentTarget: T;
 };
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -60,7 +57,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 function Courses() {
-  const history = useHistory();
   const classes = useStyles();
   const { userStore } = useContext(RootStoreContext);
   const { t, i18n } = useTranslation();
@@ -73,39 +69,24 @@ function Courses() {
   const [languageFilter, setLanguageFilter] = useState(
     userStore.userData.language || i18n.language || "de-DE"
   );
-
-  //fetch courses on mount
-  useEffect(() => {
-    getCourses();
-  }, []);
+  let searchValue = "";
 
   //filter by language onChange
   useEffect(() => {
+    const handleSearch = async () => {
+      try {
+        const courses = await webServiceProvider.get("courses/filter", {
+          search: search,
+          language: languageFilter,
+        });
+        setCourses(courses.courses);
+      } catch (err) {
+        console.error(err);
+        enqueueSnackbar(t("couldNotApplyFilter"), { variant: "error" });
+      }
+    };
     handleSearch();
-  }, [languageFilter]);
-
-  const getCourses = async () => {
-    try {
-      const courseList = await webServiceProvider.get("courses");
-      setCourses(courseList.courses);
-    } catch (err) {
-      console.error(err);
-      setError(true);
-    }
-  };
-
-  const handleSearch = async () => {
-    try {
-      const courses = await webServiceProvider.get("courses/filter", {
-        search: search,
-        language: languageFilter,
-      });
-      setCourses(courses.courses);
-    } catch (err) {
-      console.error(err);
-      enqueueSnackbar(t("couldNotApplyFilter"), { variant: "error" });
-    }
-  };
+  }, [languageFilter, search, t, enqueueSnackbar]);
 
   if (courses) {
     return (
@@ -127,7 +108,7 @@ function Courses() {
               className={classes.searchField}
               onSubmit={(e) => {
                 e.preventDefault();
-                handleSearch();
+                setSearch(searchValue);
               }}
             >
               <IconButton
@@ -143,8 +124,9 @@ function Courses() {
                 type="search"
                 id="search"
                 inputProps={{ "aria-label": "search courses" }}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => {
+                  searchValue = e.target.value;
+                }}
               />
               <IconButton type="submit" className={classes.iconButton}>
                 <SearchIcon />

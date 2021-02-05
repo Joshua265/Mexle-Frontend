@@ -52,7 +52,7 @@ const Video = ({ props, id }) => {
   useEffect(() => {
     const currentProps: IProps = { url: url, caption: caption };
     editorStore.changeBlockProps(id, currentProps, toHtml(currentProps));
-  }, [url, caption, videoId]);
+  }, [url, caption, videoId, editorStore, id]);
 
   return (
     <>

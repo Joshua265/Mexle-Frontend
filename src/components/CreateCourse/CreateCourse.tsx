@@ -91,20 +91,19 @@ function CreateCourse(props: IProps) {
   );
 
   useEffect(() => {
+    const getLicenses = async () => {
+      try {
+        let licenses = await axios.get("https://api.github.com/licenses");
+        licenses.data.push({ key: "-", name: "-" });
+        setLicenses(licenses.data);
+      } catch (e) {
+        enqueueSnackbar(t("errorFetchingLicenses"), { variant: "error" });
+      }
+    };
     if (props.open) {
       getLicenses();
     }
-  }, [props.open]);
-
-  const getLicenses = async () => {
-    try {
-      let licenses = await axios.get("https://api.github.com/licenses");
-      licenses.data.push({ key: "-", name: "-" });
-      setLicenses(licenses.data);
-    } catch (e) {
-      enqueueSnackbar("Error fetching Licenses", { variant: "error" });
-    }
-  };
+  }, [props.open, enqueueSnackbar, t]);
 
   const handleClose = () => {
     props.handleClose();

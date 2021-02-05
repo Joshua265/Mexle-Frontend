@@ -22,7 +22,7 @@ const Header = ({ props, id }) => {
   useEffect(() => {
     const currentProps: IProps = { content: data, headerType: headerType };
     editorStore.changeBlockProps(id, currentProps, HeaderToHtml(currentProps));
-  }, [headerType, data]);
+  }, [headerType, data, editorStore, id]);
 
   return (
     <>

@@ -1,4 +1,4 @@
-import React, { useContext, FC } from "react";
+import React, { useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import {
@@ -11,27 +11,22 @@ import {
   AppBar,
   Toolbar,
   Typography,
-  Button,
   Switch,
   Select,
   MenuItem,
   Avatar,
 } from "@material-ui/core";
 
-import MenuIcon from "@material-ui/icons/Menu";
 import TranslateIcon from "@material-ui/icons/Translate";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
-import { useObserver, observer } from "mobx-react-lite";
+import { observer } from "mobx-react-lite";
 import { useTranslation } from "react-i18next";
 
 import DarkLogo from "./mexle_dark.svg";
 import LightLogo from "./mexle_light.svg";
 import languages from "helpers/languages";
 import { RootStoreContext } from "stores/RootStore";
-import { isObservable } from "mobx";
 import SecondHeader from "components/SecondHeader";
-import withWidth, { isWidthUp } from "@material-ui/core/withWidth";
 import MexleCoin from "images/MexleCoin";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -120,6 +115,7 @@ const Header = observer((props) => {
             <img
               className={classes.logo}
               src={localStore.darkMode ? DarkLogo : LightLogo}
+              alt="logo"
             />
           </Link>
 

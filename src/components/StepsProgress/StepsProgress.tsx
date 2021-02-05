@@ -104,15 +104,14 @@ const StepsProgress = observer((props: IProps) => {
   };
 
   useEffect(() => {
+    const getChapterTitle = async () => {
+      const title = await webServiceProvider.get(
+        `chapters/titles/${props.chapterId}`
+      );
+      setChapterTitle(title);
+    };
     getChapterTitle();
-  }, []);
-
-  const getChapterTitle = async () => {
-    const title = await webServiceProvider.get(
-      `chapters/titles/${props.chapterId}`
-    );
-    setChapterTitle(title);
-  };
+  }, [props.chapterId]);
 
   return (
     <Drawer

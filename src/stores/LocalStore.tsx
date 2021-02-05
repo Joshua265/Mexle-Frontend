@@ -1,4 +1,4 @@
-import { observable, action, makeAutoObservable } from "mobx";
+import { makeAutoObservable } from "mobx";
 import { RootStore } from "./RootStore";
 import Cookies from "universal-cookie";
 

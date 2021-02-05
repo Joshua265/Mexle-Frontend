@@ -1,4 +1,3 @@
-import CustomCKEditor from "container/CustomCKEditor/CustomCKEditor";
 import React, { useState, useEffect, useContext } from "react";
 import { RootStoreContext } from "stores/RootStore";
 import { Input, Slider, Grid, Typography } from "@material-ui/core";
@@ -32,7 +31,7 @@ const Image = ({ props, id }) => {
   useEffect(() => {
     const currentProps: IProps = { content: data, src, imageId, width };
     editorStore.changeBlockProps(id, currentProps, ImageToHtml(currentProps));
-  }, [data, src, imageId, width]);
+  }, [data, src, imageId, width, editorStore, id]);
 
   const onDrop = async (pictureFiles, pictureDataURLs) => {
     setSrc(pictureDataURLs[0]);

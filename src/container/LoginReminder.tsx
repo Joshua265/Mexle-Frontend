@@ -28,7 +28,7 @@ export default function LoginReminder() {
       localStore.reminded = true;
       setOpen(true);
     }
-  }, []);
+  }, [localStore, userStore.userData.loggedIn]);
 
   const handleClose = () => {
     setOpen(false);
@@ -54,7 +54,7 @@ export default function LoginReminder() {
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button autoFocus onClick={handleClose} color="secondary">
+        <Button onClick={handleClose} color="secondary">
           {t("continueWithoutLogin")}
         </Button>
         <Button onClick={handleLogin} color="primary" autoFocus>
