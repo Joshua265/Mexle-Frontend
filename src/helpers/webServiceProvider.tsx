@@ -35,7 +35,6 @@ const webServiceProvider = {
     }
   },
   post: async (url: string, params?: object, token?: string) => {
-    console.log(process.env);
     if (!token) {
       token = cookie.get("token") || "";
     }
@@ -62,32 +61,3 @@ const webServiceProvider = {
 };
 
 export default webServiceProvider;
-
-/*
-const webServiceProvider = {
-  get: async (url: string, params?: string) => {
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", url);
-    if (params) {
-      await xhr.send(JSON.stringify({ params }));
-      return xhr.response;
-    } else {
-      xhr.send();
-      return xhr.response;
-    }
-  },
-  post: async (url: string, params?: string) => {
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", url);
-    if (params) {
-      xhr.send(JSON.stringify({ params }));
-      return xhr.response;
-    } else {
-      xhr.send();
-      return xhr.response;
-    }
-  },
-};
-
-export default webServiceProvider;
-*/

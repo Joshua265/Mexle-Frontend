@@ -18,7 +18,7 @@ i18n
       },
     },
     fallbackLng: "de",
-    debug: true,
+    debug: false,
 
     keySeparator: false,
 
