@@ -3,7 +3,7 @@ pipeline {
     agent {
         docker {
             image 'node:12.20.1-buster'
-            labels:
+            labels
               - "traefik.docker.network=web"
               - "traefik.enable=true"
               - "traefik.reactboilerplate.frontend.rule=Host:mexlefrontend.ddns.net"
@@ -33,14 +33,14 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                sh 'yarn build'
+                    sh 'yarn build'
                 }
             }
         }
         stage('deliver') {
             steps {
                 script {
-                sh 'yarn start'
+                    h 'yarn start'
                 }
             }
         }
