@@ -13,29 +13,21 @@ pipeline {
         stage('Prepare') {
             steps {
                 script {
-                    sh 'npm install yarn -g'
-                    sh 'yarn install'
-                }
-            }
-        }
-        stage('Test') {
-            steps {
-                script {
-                    sh 'yarn test'
+                    sh 'npm install'
                 }
             }
         }
         stage('Build') {
             steps {
                 script {
-                    sh 'yarn build'
+                    sh 'npm run build'
                 }
             }
         }
         stage('deliver') {
             steps {
                 script {
-                    h 'yarn start'
+                    sh 'npm start'
                 }
             }
         }
