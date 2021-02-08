@@ -54,6 +54,7 @@
     "@types/styled-components": "^5.1.4",
     "@types/universal-cookie": "^2.2.0",
     "@types/youtube": "0.0.38",
+    "@wiris/mathtype-ckeditor5": "^7.24.4",
     "algebra.js": "^0.2.6",
     "array-move": "^3.0.1",
     "autobind-decorator": "^2.4.0",
