@@ -1,4 +1,9 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  FunctionComponent,
+} from "react";
 import { RootStoreContext } from "stores/RootStore";
 import { toTex } from "algebra.js";
 import { Node, Context } from "react-mathjax";
@@ -8,12 +13,12 @@ interface IProps {
   content?: string;
 }
 
-export const toHtml = (props: IProps) => {
+export const toHtml = (props: IProps): string => {
   const htmlString = `<latex>${props.content}</latex>`;
   return htmlString;
 };
 
-const MathInput = ({ props, id }) => {
+const MathInput: FunctionComponent<any> = ({ props, id }) => {
   const { editorStore } = useContext(RootStoreContext);
   const [data, setData] = useState(
     props.content || "\\frac{1}{\\sqrt{2}}\\cdot 2"

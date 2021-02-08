@@ -1,7 +1,10 @@
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
-  "rules": { "react-hooks/exhaustive-deps": "warn" },
+  "rules": {
+    "react-hooks/exhaustive-deps": "warn",
+    "@typescript-eslint/explicit-module-boundary-types": "off"
+  },
   "plugins": ["@typescript-eslint", "react", "react-hooks"],
   "extends": [
     "eslint:recommended",

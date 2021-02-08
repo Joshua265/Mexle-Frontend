@@ -114,6 +114,7 @@
     "react-mathjax": "https://github.com/Joshua265/react-mathjax.git",
     "react-mathjax2": "^0.0.2",
     "react-router-dom": "^5.2.0",
+    "react-scripts": "^4.0.2",
     "react-sortable-hoc": "^1.11.0",
     "react-swipeable-views": "^0.13.9",
     "react-youtube": "^7.13.0",
@@ -128,7 +129,7 @@
     "style-loader": "1.0.0",
     "terser-webpack-plugin": "2.3.8",
     "ts-pnp": "1.1.6",
-    "typescript": "^4.0.5",
+    "typescript": "^3.9.7",
     "universal-cookie": "^4.0.4",
     "url-loader": "2.3.0",
     "uuidv4": "^6.2.6",
@@ -215,15 +216,14 @@
     ]
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.0.0",
-    "@typescript-eslint/parser": "^4.0.0",
+    "@typescript-eslint/eslint-plugin": "^2.34.0",
+    "@typescript-eslint/parser": "^2.34.0",
     "babel-eslint": "^10.0.0",
-    "eslint": "^7.5.0",
+    "eslint": "^6.0.0",
     "eslint-config-react-app": "^5.2.1",
-    "eslint-plugin-flowtype": "^5.2.0",
+    "eslint-plugin-flowtype": "^4.7.0",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jsx-a11y": "^6.3.1",
-    "eslint-plugin-react": "^7.20.3",
-    "eslint-plugin-react-hooks": "^4.0.8"
+    "eslint-plugin-react": "^7.20.3"
   }
 }
