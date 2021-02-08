@@ -1,27 +1,48 @@
+#!/bin/groovy
 pipeline {
     agent {
         docker {
-            image 'node:12.20.1-buster'
-            args '-p 3000:3000'
-        } 
+            image 'mexleFrontend'
+        }
     }
     environment {
-        CI = 'true' 
+        CI = 'true'
     }
     stages {
-        stage('Install') { 
-            steps {
-                sh 'npm install'
+        stage('Build Image') {
+        steps {
+            script {
+                sh 'docker-compose up -d'
             }
         }
-        stage('Build') { 
-            steps {
-                sh 'npm run build'
+    }
+    stages {
+        stage('Prepare') {
+        steps {
+            script {
+                sh 'npm install yarn -g'
+                sh 'yarn install'
             }
         }
-        stage('Deliver') { 
-            steps {
-                sh 'npm start'
+    }
+    stage('Test') {
+        steps {
+          script {
+            sh 'yarn test'
+          }
+        }
+    }
+    stage('Build') {
+        steps {
+            script {
+            sh 'yarn build'
+            }
+        }
+    }
+    stage('deliver') {
+        steps {
+            script {
+            sh 'yarn start'
             }
         }
     }
