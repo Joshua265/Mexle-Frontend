@@ -3,12 +3,7 @@ pipeline {
     agent {
         docker {
             image 'node:12.20.1-buster'
-            labels
-              - "traefik.docker.network=web"
-              - "traefik.enable=true"
-              - "traefik.reactboilerplate.frontend.rule=Host:mexlefrontend.ddns.net"
-              - "traefik.reactboilerplate.frontend.port=3000"
-              - "traefik.reactboilerplate.frontend.protocol=web"
+            args '-p 3000:3000'
         }
     }
     environment {
