@@ -2,20 +2,19 @@
 pipeline {
     agent {
         docker {
-            image 'mexlefrontend'
+            image 'node:12.20.1-buster'
+            labels:
+              - "traefik.docker.network=web"
+              - "traefik.enable=true"
+              - "traefik.reactboilerplate.frontend.rule=Host:mexlefrontend.ddns.net"
+              - "traefik.reactboilerplate.frontend.port=3000"
+              - "traefik.reactboilerplate.frontend.protocol=web"
         }
     }
     environment {
         CI = 'true'
     }
     stages {
-        stage('Build Image') {
-            steps {
-                script {
-                    sh 'docker-compose up -d'
-                }
-            }
-        }
         stage('Prepare') {
             steps {
                 script {
