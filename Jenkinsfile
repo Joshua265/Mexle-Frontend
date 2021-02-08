@@ -6,7 +6,7 @@ pipeline {
         } 
     }
     environment {
-        CI = 'false' 
+        CI = 'true' 
     }
     stages {
         stage('Install') { 
@@ -21,8 +21,7 @@ pipeline {
         }
         stage('Deliver') { 
             steps {
-                sh 'npm install -g serve'
-                sh 'serve -s build'
+                sh 'npm start'
             }
         }
     }
