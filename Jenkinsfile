@@ -2,7 +2,7 @@
 pipeline {
     agent {
         docker {
-            image 'mexleFrontend'
+            image 'mexlefrontend'
         }
     }
     environment {
