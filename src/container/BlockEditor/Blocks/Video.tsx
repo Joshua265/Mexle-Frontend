@@ -12,7 +12,7 @@ interface IProps {
 interface IProviders {
   name: string;
   filter: RegExp;
-  html: Function;
+  html(url: string): string;
 }
 
 const providers: IProviders[] = [
@@ -33,7 +33,7 @@ export const toHtml = (props: IProps) => {
     if (matches && matches.length > 0) {
       htmlString = `<figure id="${props.videoId}" class="${
         prov.name
-      }">${prov.html(props.url)}<figcaption>${
+      }">${prov.html(props.url || "")}<figcaption>${
         props.caption
       }</figcaption></figure>`;
     }

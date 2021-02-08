@@ -3,9 +3,8 @@ import YouTube from "react-youtube";
 import SlideShow from "container/SlideShow";
 import Hide from "container/Hide";
 import MathJax from "react-mathjax2";
-
-var HtmlToReact = require("html-to-react");
-var HtmlToReactParser = require("html-to-react").Parser;
+import HtmlToReact from "html-to-react";
+import HtmlToReactParser from "html-to-react/lib/parser";
 
 const opts = {
   minHeight: "144px",
@@ -15,13 +14,13 @@ const opts = {
   },
 };
 
-var isValidNode = function () {
+const isValidNode = function () {
   return true;
 };
 
 // Order matters. Instructions are processed in the order they're defined
-var processNodeDefinitions = new HtmlToReact.ProcessNodeDefinitions(React);
-var processingInstructions = [
+const processNodeDefinitions = new HtmlToReact.ProcessNodeDefinitions(React);
+const processingInstructions = [
   {
     // Custom <Geogebra> processing
     shouldProcessNode: function (node) {
@@ -149,6 +148,6 @@ var processingInstructions = [
     processNode: processNodeDefinitions.processDefaultNode,
   },
 ];
-var htmlToReactParser = new HtmlToReactParser();
+const htmlToReactParser = new HtmlToReactParser();
 
 export { htmlToReactParser, isValidNode, processingInstructions };

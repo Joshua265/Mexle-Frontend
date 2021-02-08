@@ -41,7 +41,7 @@ interface props {
   author?: string;
   language?: string;
   license?: string;
-  directorys?: Array<any>;
+  directories?: Array<any>;
   link: string;
   kind: "Course" | "Chapter";
 }
@@ -113,7 +113,7 @@ function MediaCard(props: props) {
               visible: visible,
               picture: props.imageLink,
               license: props.license,
-              directory: props.directorys,
+              directories: props.directories,
               language: props.language || "",
               _id: id,
             }}

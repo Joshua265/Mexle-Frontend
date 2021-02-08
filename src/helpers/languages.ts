@@ -1,3 +1,3 @@
-const languages: Object = { "de-DE": "Deutsch", "en-US": "English" };
+const languages = { "de-DE": "Deutsch", "en-US": "English" };
 
 export default languages;

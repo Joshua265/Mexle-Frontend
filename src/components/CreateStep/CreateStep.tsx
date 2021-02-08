@@ -47,9 +47,9 @@ const useStyles = makeStyles((theme) => ({
 
 interface IProps {
   open: boolean;
-  handleClose: Function;
+  handleClose(): void;
   edit?: boolean;
-  id?: String;
+  id?: string;
 }
 
 const Transition = React.forwardRef(function Transition(

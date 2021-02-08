@@ -1,13 +1,13 @@
 import { uuid } from "uuidv4";
 
 export default function editParser(htmlString) {
+  //eslint-disable-next-line
   const parser = new DOMParser();
   const DOM = parser.parseFromString(htmlString, "text/html");
 
   const body = DOM.querySelector("body");
   let lastOpenedTag = null;
   const json = Array.from(body.children).map((element, i) => {
-    console.log(Array.from(element.children).toString());
     if (
       element.tagName === "FIGURE" &&
       Array.from(element.children).filter((el) => el.tagName === "IMG")
@@ -89,7 +89,5 @@ export default function editParser(htmlString) {
       props: { html: element.outerHTML },
     };
   });
-  console.log(DOM);
-  console.log(json);
   return json;
 }

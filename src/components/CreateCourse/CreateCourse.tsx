@@ -44,13 +44,13 @@ interface IForm {
   visible?: boolean;
   language: string;
   license?: string;
-  directory?: Object;
+  directories?: Array<any>;
   _id: string;
 }
 
 interface IProps {
   open: boolean;
-  handleClose: Function;
+  handleClose(): void;
   edit: boolean;
   data?: IForm;
 }
@@ -77,7 +77,7 @@ function CreateCourse(props: IProps) {
           visible: props.data.visible,
           language: props.data.language,
           license: props.data.license,
-          directory: props.data.directory,
+          directory: props.data.directories,
         }
       : {
           title: "",
@@ -93,7 +93,7 @@ function CreateCourse(props: IProps) {
   useEffect(() => {
     const getLicenses = async () => {
       try {
-        let licenses = await axios.get("https://api.github.com/licenses");
+        const licenses = await axios.get("https://api.github.com/licenses");
         licenses.data.push({ key: "-", name: "-" });
         setLicenses(licenses.data);
       } catch (e) {

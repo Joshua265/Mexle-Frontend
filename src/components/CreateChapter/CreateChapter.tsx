@@ -45,7 +45,7 @@ interface IForm {
 
 interface IProps {
   open: boolean;
-  handleClose: Function;
+  handleClose(): void;
   edit: boolean;
   data?: IForm;
 }

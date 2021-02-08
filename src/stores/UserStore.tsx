@@ -9,11 +9,11 @@ const cookie = new Cookie();
 
 interface IUserStore {
   userData: IUserData;
-  avatarUrl?: String;
-  login: Function;
-  logout: Function;
-  addFinished: Function;
-  verifyToken: Function;
+  avatarUrl?: string;
+  login(username: string, password: string): Promise<void>;
+  logout(): void;
+  addFinished(type: "course" | "chapter" | "step", id: string): void;
+  verifyToken(): void;
 }
 
 interface IUserData {

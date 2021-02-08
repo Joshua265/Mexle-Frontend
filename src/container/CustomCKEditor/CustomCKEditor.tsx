@@ -9,7 +9,7 @@ import { RootStoreContext } from "stores/RootStore";
 
 interface IProps {
   data: string;
-  onChange: Function;
+  onChange(data: string): void;
 }
 
 const cookies = new Cookies();

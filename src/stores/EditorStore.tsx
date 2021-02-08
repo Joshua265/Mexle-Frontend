@@ -9,7 +9,7 @@ import editParser from "container/BlockEditor/editParser.js";
 interface IItem {
   key: string;
   type: string;
-  props: Object;
+  props: any;
   html: string;
 }
 
@@ -33,7 +33,7 @@ export class EditorStore {
   }
 
   blocks: Array<IItem> = [];
-  edit: boolean = false;
+  edit = false;
   step: IStep = emptyStep;
 
   initStep(step: IStep) {
@@ -78,7 +78,7 @@ export class EditorStore {
     return htmlString;
   }
 
-  changeBlockProps(key: string, props: Object, html: string) {
+  changeBlockProps(key: string, props: any, html: string) {
     const elementIndex: number = this.blocks.findIndex(
       (item) => item.key === key
     );
@@ -89,15 +89,16 @@ export class EditorStore {
   }
 
   getBlocksFromHTML(html: string) {
-    // @ts-ignore: Type Error
     this.blocks = editParser(html);
   }
 
   async saveStep() {
     if (this.edit) {
-      await webServiceProvider.post(`steps/edit/${this.step._id}`, this.step);
+      await webServiceProvider.post(`steps/edit/${this.step._id}`, {
+        ...this.step,
+      });
     } else {
-      await webServiceProvider.post("steps/create", this.step);
+      await webServiceProvider.post("steps/create", { ...this.step });
     }
   }
 }

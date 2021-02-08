@@ -5,9 +5,11 @@ const API_SERVER: string = process.env.REACT_APP_API_SERVER || "";
 
 const cookie = new Cookie();
 
-const serialize = (obj: object) => {
-  var str: string[] = [];
-  for (var p in obj)
+const serialize = (obj: Record<string, unknown>) => {
+  const str: string[] = [];
+  
+  for (const p in obj)
+  //eslint-disable-next-line
     if (obj.hasOwnProperty(p)) {
       str.push(`${p}=${obj[p]}`);
     }
@@ -15,7 +17,11 @@ const serialize = (obj: object) => {
 };
 
 const webServiceProvider = {
-  get: async (url: string, params?: object, token?: string) => {
+  get: async (
+    url: string,
+    params?: Record<string, unknown>,
+    token?: string
+  ) => {
     if (!token) {
       token = cookie.get("token") || "";
     }
@@ -34,7 +40,11 @@ const webServiceProvider = {
       return response.data;
     }
   },
-  post: async (url: string, params?: object, token?: string) => {
+  post: async (
+    url: string,
+    params?: Record<string, unknown>,
+    token?: string
+  ) => {
     if (!token) {
       token = cookie.get("token") || "";
     }
