@@ -4,11 +4,12 @@ pipeline {
         stage('build docker container') {
             steps {
                 sh 'ls'
-                sh 'docker-compose -f docker-compose.integration.yml up -d --force-recreate'
+                sh 'docker-compose -f up -d'
             }
         }
         stage('install') {
             steps {
+                sh 'ls'
                 sh 'docker exec -it mexlefrontend bash'
                 sh 'npm install -g serve'
                 sh 'npm install --production'
