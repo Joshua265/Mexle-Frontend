@@ -3,6 +3,7 @@ pipeline {
     stages {
         stage('build docker container') {
             steps {
+                sh 'ls'
                 sh 'docker-compose -f docker-compose.integration.yml up -d --force-recreate'
             }
         }
