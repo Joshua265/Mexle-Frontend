@@ -1,32 +1,22 @@
 pipeline {
     agent {
-        docker { image 'tmaier/docker-compose' }
+        docker {
+            image 'node:12.20.1-buster'
+            args '--labels traefik.enable=true traefik.http.routers.whoami.rule=Host(`mexlefrontend.ddns.net`) traefik.http.routers.whoami.entrypoints=web traefik.docker.network=web'
+        }
     }
     stages {
-        stage('build docker container') {
+        stage('Build') {
             steps {
-                sh 'docker-compose up -d'
-                sh 'sleep 30'
+                sh 'npm install'
+                sh 'npm run build'
             }
         }
-        stage('install') {
+        stage('Deliver') {
             steps {
-                docker.image('mexlefrontend') {
-                    sh 'npm install -g serve'
-                    sh 'npm install --production'
-                    sh 'npm build'
-                    sh 'serve -s -p 80:443'
-                }
-            }
-        }
-        stage('build') {
-            steps {
-                sh 'npm build'
-            }
-        }
-        stage('serve') {
-            steps {
-                sh 'serve -s -p 80:443'
+                sh './jenkins/scripts/deliver.sh'
+                input message: 'Finished using the web site? (Click "Proceed" to continue)'
+                sh './jenkins/scripts/kill.sh'
             }
         }
     }
