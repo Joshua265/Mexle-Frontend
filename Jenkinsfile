@@ -18,7 +18,7 @@ pipeline {
                 sh 'npm build'
             }
         }
-        stage 'serve' {
+        stage('serve') {
             steps {
                 sh 'serve -s -p 80:443'
             }
