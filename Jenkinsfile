@@ -1,7 +1,6 @@
 pipeline {
-    agent any
-    environment {
-        PATH = "$PATH:/usr/local/bin"
+    agent {
+        docker { image 'tmaier/docker-compose' }
     }
     stages {
         stage('build docker container') {
