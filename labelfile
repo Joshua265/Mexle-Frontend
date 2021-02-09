@@ -1,4 +1,0 @@
-traefik.enable=true
-traefik.http.routers.whoami.rule=Host(`mexlefrontend.ddns.net`)
-traefik.http.routers.whoami.entrypoints=web
-traefik.docker.network=web
