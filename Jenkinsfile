@@ -1,10 +1,22 @@
-node('docker') {
-    stage 'Checkout'
-        checkout scm
-    // stage 'Build & UnitTest'
-    //     sh "docker build -t mexlefrontend:B${BUILD_NUMBER} -f Dockerfile ."
-    //     sh "docker build -t mexlefrontend:test-B${BUILD_NUMBER} -f Dockerfile.Integration ."
-    stage 'Integration Test'
-        sh 'docker-compose -f docker-compose.integration.yml up --force-recreate --abort-on-container-exit'
-        sh 'docker-compose -f docker-compose.integration.yml down -v'
+pipeline {
+    agent any
+    stages {
+        stage 'Checkout' {
+            checkout scm
+        }
+        stage 'build docker container' {
+            sh 'docker-compose -f docker-compose.integration.yml up -d --force-recreate'
+        }
+        stage 'install' {
+            sh 'docker exec -it mexlefrontend bash'
+            sh 'npm install -g serve'
+            sh 'npm install --production'
+        }
+        stage 'build' {
+            sh 'npm build'
+        }
+        stage 'serve' {
+            sh 'serve -s -p 80:443'
+        }
+    }
 }
