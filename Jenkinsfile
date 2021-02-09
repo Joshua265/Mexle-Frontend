@@ -1,10 +1,13 @@
 pipeline {
     agent any
+    environment {
+        PATH = "$PATH:/usr/local/bin"
+    }
     stages {
         stage('build docker container') {
             steps {
                 sh 'ls'
-                sh 'sudo docker-compose -f up -d'
+                sh 'docker-compose -f up -d'
             }
         }
         stage('install') {
