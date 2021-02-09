@@ -10,7 +10,7 @@ pipeline {
         }
         stage('install') {
             steps {
-                sh 'docker exec -it mexlefrontend bash'
+                sh 'docker exec mexlefrontend bash'
                 sh 'npm install -g serve'
                 sh 'npm install --production'
             }
