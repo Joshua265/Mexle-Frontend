@@ -4,7 +4,7 @@ pipeline {
         stage('build docker container') {
             steps {
                 sh 'ls'
-                sh 'docker-compose -f up -d'
+                sh 'sudo docker-compose -f up -d'
             }
         }
         stage('install') {
