@@ -6,12 +6,10 @@ services:
     build:
       context: .
     labels:
-      - "traefik.docker.network=web"
       - "traefik.enable=true"
-      - "traefik.reactboilerplate.frontend.rule=Host:mexlefrontend.ddns.net"
-      - "traefik.reactboilerplate.frontend.port=3000"
-      - "traefik.reactboilerplate.frontend.protocol=web"
-    
+      - "traefik.http.routers.whoami.rule=Host(`mexlefrontend.ddns.net`)"
+      - "traefik.http.routers.whoami.entrypoints=web"
+      - "traefik.docker.network=web"    
   integration:
     depends_on:
       - mexlefrontend
