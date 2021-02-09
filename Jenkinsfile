@@ -6,6 +6,8 @@ pipeline {
     stages {
         stage('build docker container') {
             steps {
+                sh 'echo $PATH'
+                sh 'which docker-compose'
                 sh 'ls'
                 sh 'docker-compose -f up -d'
             }
