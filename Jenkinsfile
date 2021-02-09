@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'node:12.20.1-buster'
-            args '--labels traefik.enable=true traefik.http.routers.whoami.rule=Host(`mexlefrontend.ddns.net`) traefik.http.routers.whoami.entrypoints=web traefik.docker.network=web'
+            args '--name mexlefrontend -l traefik.enable=true -l traefik.http.routers.mexlefrontend.rule=Host(`mexlefrontend.ddns.net`) -l traefik.http.routers.mexlefrontend.entrypoints=web -l traefik.docker.network=web'
         }
     }
     stages {
