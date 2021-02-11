@@ -1,11 +1,16 @@
-version: '3'
+version: '3.7'
 
 services:
-  mexlefrontend:
-    image: "node:12.20.1-buster"
-    container_name: mexlefrontend
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.whoami.rule=Host(`mexlefrontend.ddns.net`)"
-      - "traefik.http.routers.whoami.entrypoints=web"
-      - "traefik.docker.network=web"
+
+  sample:
+    container_name: sample
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - '.:/app'
+      - '/app/node_modules'
+    ports:
+      - 3001:3000
+    environment:
+      - CHOKIDAR_USEPOLLING=true
