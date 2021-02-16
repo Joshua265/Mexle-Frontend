@@ -12,5 +12,7 @@ services:
       - '/app/node_modules'
     ports:
       - 3000:3000
+    labels:
+       - "traefik.http.routers.sample.rule=Host(`mexlefrontend.ddns.net`)"
     environment:
       - CHOKIDAR_USEPOLLING=true
