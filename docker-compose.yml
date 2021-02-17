@@ -10,9 +10,9 @@ services:
     volumes:
       - '.:/app'
       - '/app/node_modules'
-    ports:
-      - 3000:3000
     labels:
-       - "traefik.http.routers.sample.rule=Host(`mexlefrontend.ddns.net`)"
+      - "traefik.enable=true"
+      - "traefik.http.routers.sample.rule=Host(`mexlefrontend.ddns.net`)"
+      - "traefik.http.routers.sample.entrypoints=web"
     environment:
       - CHOKIDAR_USEPOLLING=true
