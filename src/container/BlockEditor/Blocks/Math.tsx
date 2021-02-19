@@ -6,7 +6,6 @@ import React, {
 } from "react";
 import { RootStoreContext } from "stores/RootStore";
 import { toTex } from "algebra.js";
-import { Node, Context } from "react-mathjax";
 import { Input } from "@material-ui/core";
 
 interface IProps {
@@ -35,9 +34,6 @@ const MathInput: FunctionComponent<any> = ({ props, id }) => {
         value={data}
         onChange={(e) => setData(toTex(e.target.value))}
       ></Input>
-      <Context input="ascii">
-        <Node>{data}</Node>
-      </Context>
     </>
   );
 };

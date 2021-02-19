@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import Cookies from "universal-cookie";
-import Editor from "ckeditor5-custom-build/src/ckeditor";
+import Editor from "ckeditor5-custom-build/build/ckeditor";
 import { getGeogebraStyle } from "helpers/Geogebra";
 import { useTranslation } from "react-i18next";
 import { observer } from "mobx-react-lite";

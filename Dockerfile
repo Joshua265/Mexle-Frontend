@@ -9,12 +9,17 @@ ENV PATH /app/node_modules/.bin:$PATH
 
 # install app dependencies
 COPY package.json ./
-RUN npm install --production --silent
-RUN npm install serve -g --silent
-RUN npm build --silent
+RUN apk add --no-cache git
+RUN yarn install
+RUN npm install -g serve
 
 # add app
 COPY . ./
+
+#build app
+RUN yarn run build
+
+EXPOSE 80
 
 # start app
 CMD ["serve", "-s", "build", "-l", "80"]
