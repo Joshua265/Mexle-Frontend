@@ -2,21 +2,18 @@ version: '3.7'
 
 services:
 
-  sample:
-    container_name: sample
+  frontend:
+    container_name: frontend
     build:
       context: .
       dockerfile: Dockerfile
-    environment:
-      - REACT_APP_API_SERVER=http://api.mexle.org/
-      - REACT_APP_PUBLIC_URL=http://mexlefrontend.ddns.net/
     volumes:
       - '.:/app'
       - '/app/node_modules'
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.sample.rule=Host(`mexlefrontend.ddns.net`)"
-      - "traefik.http.routers.sample.entrypoints=web"
+      - "traefik.http.routers.frontend.rule=Host(`mexle.org`)"
+      - "traefik.http.routers.frontend.entrypoints=web"
     networks: 
       - default
 
