@@ -19,7 +19,7 @@ COPY . ./
 #build app
 RUN yarn run build
 
-EXPOSE 3000
+EXPOSE 80
 
 # start app
-CMD ["serve", "-s", "build", "-l", "3000"]
+CMD ["serve", "-s", "build", "-l", "80"]
