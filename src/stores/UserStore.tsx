@@ -1,9 +1,9 @@
-import { makeAutoObservable } from "mobx";
-import Cookie from "universal-cookie";
-import Date from "moment";
-import webServiceProvider from "helpers/webServiceProvider";
-import { RootStore } from "./RootStore";
-import { IFinishedCourse, IFinishedChapter, IFinishedStep } from "types";
+import { makeAutoObservable } from 'mobx';
+import Cookie from 'universal-cookie';
+import Date from 'moment';
+import webServiceProvider from 'helpers/webServiceProvider';
+import { RootStore } from './RootStore';
+import { IFinishedCourse, IFinishedChapter, IFinishedStep } from 'types';
 
 const cookie = new Cookie();
 
@@ -12,7 +12,7 @@ interface IUserStore {
   avatarUrl?: string;
   login(username: string, password: string): Promise<void>;
   logout(): void;
-  addFinished(type: "course" | "chapter" | "step", id: string): void;
+  addFinished(type: 'course' | 'chapter' | 'step', id: string): void;
   verifyToken(): void;
 }
 
@@ -39,19 +39,19 @@ interface IFinishedObject {
 }
 
 const defaultUserData = {
-  username: "",
-  email: "",
+  username: '',
+  email: '',
   hhnAccount: false,
-  role: "",
-  language: "",
-  description: "",
+  role: '',
+  language: '',
+  description: '',
   coins: -1,
   avatar: undefined,
   finishedCourses: [],
   finishedChapters: [],
   finishedSteps: [],
   loggedIn: false,
-  token: "",
+  token: ''
 };
 
 export class UserStore implements IUserStore {
@@ -62,59 +62,58 @@ export class UserStore implements IUserStore {
   }
   userData: IUserData = {
     ...defaultUserData,
-    token: cookie.get("token") || "",
+    token: cookie.get('token') || ''
   };
 
   avatarUrl;
 
   async login(username: string, password: string): Promise<void> {
-    const fetchedUserData = await webServiceProvider.post("user/login", {
+    const fetchedUserData = await webServiceProvider.post('user/login', {
       username,
-      password,
+      password
     });
 
     this.userData = {
       ...fetchedUserData.userData,
       token: fetchedUserData.token,
-      loggedIn: true,
+      loggedIn: true
     };
-    cookie.set("token", fetchedUserData.token);
+    cookie.set('token', fetchedUserData.token);
     if (this.userData.avatar) {
       this.avatarUrl = `${process.env.REACT_APP_API_SERVER}images/${this.userData.avatar}` as string;
     }
-    console.log(this);
   }
 
   logout(): void {
     this.userData = defaultUserData;
     this.avatarUrl = undefined;
-    cookie.remove("token", {
-      path: "/",
-      domain: process.env.REACT_APP_PUBLIC_URL,
+    cookie.remove('token', {
+      path: '/',
+      domain: process.env.REACT_APP_PUBLIC_URL
     });
-    cookie.set("token", undefined);
+    cookie.set('token', undefined);
   }
 
-  async addFinished(type: "course" | "chapter" | "step", id: string) {
+  async addFinished(type: 'course' | 'chapter' | 'step', id: string) {
     const finishedObject: IFinishedObject = { id, createdAt: Date.now() };
     try {
       const resFinishedObject = await webServiceProvider.post(
-        "user/addfinished",
+        'user/addfinished',
         {
           type,
-          finishedObject,
+          finishedObject
         }
       );
       switch (type) {
-        case "course": {
+        case 'course': {
           this.userData.finishedCourses.push(resFinishedObject.obj);
           break;
         }
-        case "chapter": {
+        case 'chapter': {
           this.userData.finishedChapters.push(resFinishedObject.obj);
           break;
         }
-        case "step": {
+        case 'step': {
           this.userData.finishedSteps.push(resFinishedObject.obj);
           break;
         }
@@ -125,16 +124,19 @@ export class UserStore implements IUserStore {
   }
 
   async verifyToken() {
-    const localToken = (await cookie.get("token")) || "";
-    const fetchedUserData = await webServiceProvider.post("user/verifytoken", {
-      localToken,
+    const localToken = (await cookie.get('token')) || '';
+    if (!localToken) {
+      return;
+    }
+    const fetchedUserData = await webServiceProvider.post('user/verifytoken', {
+      localToken
     });
     this.userData = {
       ...fetchedUserData.userData,
       token: fetchedUserData.token,
-      loggedIn: true,
+      loggedIn: true
     };
-    cookie.set("token", fetchedUserData.token);
+    cookie.set('token', fetchedUserData.token);
     if (this.userData.avatar) {
       this.avatarUrl = `${process.env.REACT_APP_API_SERVER}images/${this.userData.avatar}`;
     }
