@@ -1,7 +1,7 @@
-import React, { useState, useContext } from "react";
-import { Redirect, useLocation, Link } from "react-router-dom";
-import { useHistory } from "react-router";
-import qs from "qs";
+import React, { useState, useContext } from 'react';
+import { Redirect, useLocation, Link } from 'react-router-dom';
+import { useHistory } from 'react-router';
+import qs from 'qs';
 
 import {
   TextField,
@@ -10,49 +10,49 @@ import {
   Grid,
   Avatar,
   Typography,
-  Link as MuiLink,
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+  Link as MuiLink
+} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
-import { useSnackbar } from "notistack";
-import { RootStoreContext } from "stores/RootStore";
-import Background from "images/circuit.png";
-import { useTranslation } from "react-i18next";
+import { useSnackbar } from 'notistack';
+import { RootStoreContext } from 'stores/RootStore';
+import Background from 'images/circuit.png';
+import { useTranslation } from 'react-i18next';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: `calc(100vh - ${48 + 64}px)`,
+    height: `calc(100vh - ${48 + 64}px)`
   },
   image: {
     backgroundImage: `url(${Background})`,
-    backgroundRepeat: "no-repeat",
+    backgroundRepeat: 'no-repeat',
     backgroundColor:
-      theme.palette.type === "light"
+      theme.palette.type === 'light'
         ? theme.palette.grey[50]
         : theme.palette.grey[900],
-    backgroundSize: "cover",
-    backgroundPosition: "center",
+    backgroundSize: 'cover',
+    backgroundPosition: 'center'
   },
   paper: {
     margin: theme.spacing(8, 4),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.secondary.main
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(1)
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-    display: "flex",
-    justifyContent: "space-between",
-  },
+    display: 'flex',
+    justifyContent: 'space-between'
+  }
 }));
 
 function LoginPage() {
@@ -63,8 +63,8 @@ function LoginPage() {
   const { t } = useTranslation();
   const history = useHistory();
   const location = useLocation();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleLogin = async (e: any) => {
     e.preventDefault();
@@ -72,12 +72,12 @@ function LoginPage() {
       await userStore.login(username, password);
       history.push(
         String(
-          qs.parse(location.search, { ignoreQueryPrefix: true }).path || "/"
+          qs.parse(location.search, { ignoreQueryPrefix: true }).path || '/'
         )
       );
     } catch (e) {
       console.log(e);
-      enqueueSnackbar(t("wrongNameOrPassword"), { variant: "error" });
+      enqueueSnackbar(e.message, { variant: 'error' });
     }
   };
 

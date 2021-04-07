@@ -1,27 +1,29 @@
-import React, { useEffect, useContext, FC } from "react";
-import { Router, Switch, Route } from "react-router-dom";
+import React, { useEffect, useContext, FC } from 'react';
+import { Router, Switch, Route } from 'react-router-dom';
 
-import { ThemeProvider } from "@material-ui/core/styles";
-import { CssBaseline, Toolbar } from "@material-ui/core";
+import { ThemeProvider } from '@material-ui/core/styles';
+import { CssBaseline, Toolbar } from '@material-ui/core';
 
-import { SnackbarProvider } from "notistack";
-import { observer } from "mobx-react-lite";
+import { SnackbarProvider } from 'notistack';
+import { observer } from 'mobx-react-lite';
 
-import PrivateRoute from "PrivateRoute";
+import PrivateRoute from 'PrivateRoute';
 
-import Header from "components/header";
+import Header from 'components/header';
 
-import Courses from "components/Courses";
-import LoginPage from "components/Login";
-import AccountPage from "components/AccountPage";
-import StepsPage from "components/StepsPage";
-import ChapterPage from "components/ChapterPage";
-import SignUpPage from "components/SignUpPage";
+import Courses from 'components/Courses';
+import LoginPage from 'components/Login';
+import AccountPage from 'components/AccountPage';
+import StepsPage from 'components/StepsPage';
+import ChapterPage from 'components/ChapterPage';
+import SignUpPage from 'components/SignUpPage';
+import ConfirmPage from 'components/ConfirmPage';
 
-import getTheme from "helpers/theme";
-import LicensePage from "components/LicensePage";
-import LandingPage from "components/LandingPage/LandingPage";
-import { RootStoreContext } from "stores/RootStore";
+import getTheme from 'helpers/theme';
+import LicensePage from 'components/LicensePage';
+import LandingPage from 'components/LandingPage/LandingPage';
+import { RootStoreContext } from 'stores/RootStore';
+import BetaStamp from 'container/BetaStamp';
 
 const ThemeSelector = observer(({ children }) => {
   const rootStore = useContext(RootStoreContext);
@@ -48,6 +50,7 @@ const App: FC = observer(() => {
           <Header />
 
           <Toolbar variant="dense" />
+          <BetaStamp />
 
           <Switch>
             <Route path="/" exact component={LandingPage} />
@@ -55,6 +58,7 @@ const App: FC = observer(() => {
             <Route path="/login" exact component={LoginPage} />
             <Route path="/signup" exact component={SignUpPage} />
             <Route path="/courses" exact component={Courses} />
+            <Route path="/confirm/:token" exact component={ConfirmPage} />
 
             <Route path="/courses/:CourseId" exact component={ChapterPage} />
             <Route

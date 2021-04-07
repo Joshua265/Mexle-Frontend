@@ -125,7 +125,7 @@ export class UserStore implements IUserStore {
 
   async verifyToken() {
     const localToken = (await cookie.get('token')) || '';
-    if (!localToken) {
+    if (!localToken || localToken === 'undefined') {
       return;
     }
     const fetchedUserData = await webServiceProvider.post('user/verifytoken', {
