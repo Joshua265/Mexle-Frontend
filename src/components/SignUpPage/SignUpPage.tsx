@@ -1,61 +1,67 @@
-import React, { useState } from "react";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
-import webServiceProvider from "helpers/webServiceProvider";
-import { useHistory } from "react-router";
-import { useSnackbar } from "notistack";
+import React, { useState } from 'react';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Link from '@material-ui/core/Link';
+import Grid from '@material-ui/core/Grid';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
+import webServiceProvider from 'helpers/webServiceProvider';
+import { useHistory } from 'react-router';
+import { useSnackbar } from 'notistack';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.secondary.main
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(3),
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(3)
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
+    margin: theme.spacing(3, 0, 2)
+  }
 }));
 
 export default function SignUpPage() {
   const classes = useStyles();
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [disable, setDisable] = useState(false);
 
   const handleSignUp = async (e) => {
     e.preventDefault();
     setDisable(true);
     try {
-      await webServiceProvider.post("user/signup", {
+      await webServiceProvider.post('user/signup', {
         username,
         email,
-        password,
+        password
       });
-      history.push("/login");
+      enqueueSnackbar(
+        "We've sent you an e-mail, please verify your identity!",
+        {
+          variant: 'success'
+        }
+      );
+      history.push('/login');
     } catch (e) {
       setDisable(false);
-      enqueueSnackbar("User with that Username already exists", {
-        variant: "error",
+      enqueueSnackbar('User with that Username already exists', {
+        variant: 'error'
       });
     }
   };
@@ -123,7 +129,7 @@ export default function SignUpPage() {
             className={classes.submit}
             disabled={disable}
           >
-            {disable ? <CircularProgress /> : "Sign Up"}
+            {disable ? <CircularProgress /> : 'Sign Up'}
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
